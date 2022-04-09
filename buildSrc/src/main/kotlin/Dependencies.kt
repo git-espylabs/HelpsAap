@@ -33,7 +33,8 @@ object Libs {
         "androidx.fragment:fragment:${Versions.androidxFragment}",
         "io.coil-kt:coil:${Versions.coil}",
         "com.github.bumptech.glide:glide:${Versions.glide}",
-        "androidx.multidex:multidex:${Versions.multiDexVers}"
+        "androidx.multidex:multidex:${Versions.multiDexVers}",
+        "com.google.dagger:hilt-android:${Versions.hilt}"
     )
 
     val testImplementations = listOf(
@@ -45,7 +46,11 @@ object Libs {
         "androidx.test.ext:junit:${Versions.androidXjUnit}"
     )
 
-    const val ANDROIDX_ROOM_COMPILER = "androidx.room:room-compiler:${Versions.room}"
+    val kaptDependencyNotions = listOf(
+        "androidx.room:room-compiler:${Versions.room}",
+        "com.google.dagger:hilt-android-compiler:${Versions.hilt}",
+        "androidx.hilt:hilt-compiler:${Versions.androidxHiltCompiler}"
+    )
 }
 
 object Plugins {

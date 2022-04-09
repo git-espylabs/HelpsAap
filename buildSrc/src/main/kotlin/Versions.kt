@@ -33,4 +33,6 @@ object Versions {
     const val espresso = "3.4.0"
     const val androidXjUnit = "1.1.3"
     const val multiDexVers = "2.0.1"
+    const val hilt = "2.38.1"
+    const val androidxHiltCompiler = "1.0.0"
 }

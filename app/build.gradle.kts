@@ -4,6 +4,7 @@ plugins {
     id("kotlin-android")
     id("kotlin-kapt")
     id("androidx.navigation.safeargs.kotlin")
+    id("dagger.hilt.android.plugin")
 }
 
 
@@ -70,7 +71,11 @@ android {
 
 dependencies {
     Libs.implementations.forEach(::implementation)
-    kapt(Libs.ANDROIDX_ROOM_COMPILER)
+    Libs.kaptDependencyNotions.forEach(::kapt)
     Libs.testImplementations.forEach(::testImplementation)
     Libs.androidTestImplementations.forEach(::androidTestImplementation)
+}
+
+kapt {
+    correctErrorTypes = true
 }
