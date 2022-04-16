@@ -1,15 +1,25 @@
 plugins {
-    id ("com.android.application")
-    id ("org.jetbrains.kotlin.android")
-    id("kotlin-android")
-    id("kotlin-kapt")
-    id("androidx.navigation.safeargs.kotlin")
-    id("dagger.hilt.android.plugin")
+    id (Plugins.ANDROID_APPLICATION)
+    id (Plugins.JETBRAINS_KOTLIN_ANDROID)
+    id(Plugins.KOTLIN_ANDROID)
+    id(Plugins.KOTLIN_KAPT)
+    id(Plugins.KOTLIN_NAVIGATION_SAFE_ARGS)
+    id(Plugins.DAGGER_HILT)
 }
 
 
 android {
+
     compileSdk = ConfigData.compileSdkVersion
+
+    signingConfigs {
+        create("release") {
+            keyAlias = KeyHelper.getValue(KeyHelper.KEY_ALIAS)
+            keyPassword = KeyHelper.getValue(KeyHelper.KEY_PASS)
+            storeFile = file(KeyHelper.getValue(KeyHelper.KEY_STORE_FILE))
+            storePassword = KeyHelper.getValue(KeyHelper.KEY_STORE_PASS)
+        }
+    }
 
     defaultConfig {
         applicationId = ConfigData.appId
@@ -28,6 +38,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfig = signingConfigs.getByName("release")
         }
         getByName("debug") {
             isMinifyEnabled = false
@@ -37,12 +48,14 @@ android {
     flavorDimensions.add(ConfigData.dimension)
     productFlavors {
         create("staging") {
-            applicationIdSuffix = ".staging"
             dimension = ConfigData.dimension
+            applicationIdSuffix = ".staging"
+            versionNameSuffix = ".staging"
         }
 
         create("production") {
             dimension = ConfigData.dimension
+            versionNameSuffix = ""
         }
     }
 
@@ -66,6 +79,18 @@ android {
     lint {
         abortOnError = false
         checkReleaseBuilds = false
+    }
+
+    applicationVariants.all {
+        val appBaseUrl = when (flavorName) {
+            "staging" -> "helpadmin.espylabs.com/public/api/"
+            "production" -> "helpadmin.espylabs.com/public/api/"
+            else -> null
+        }
+
+        appBaseUrl?.let {
+            buildConfigField("String", "BASE_URL", "\"https://$appBaseUrl\"")
+        }
     }
 }
 

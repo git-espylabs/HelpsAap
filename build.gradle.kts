@@ -2,16 +2,16 @@
 
 buildscript {
     dependencies {
-        classpath("androidx.navigation:navigation-safe-args-gradle-plugin:2.4.2")
-        classpath("com.google.dagger:hilt-android-gradle-plugin:2.38.1")
+        classpath(Plugins.CLASS_PATH_NAVIGATION_SAFE_ARGS)
+        classpath(Plugins.CLASS_PATH_DAGGER_HILT)
     }
 }
 
 plugins {
-    id ("com.android.application") version "7.1.2" apply false
-    id ("com.android.library") version "7.1.2" apply false
-    id ("org.jetbrains.kotlin.android") version "1.6.20" apply false
-    id("org.jetbrains.kotlin.plugin.serialization") version "1.6.20" apply false
+    id (Plugins.ANDROID_APPLICATION) version Versions.gradlePlugin apply false
+    id (Plugins.ANDROID_LIBRARY) version Versions.gradlePlugin apply false
+    id (Plugins.JETBRAINS_KOTLIN_ANDROID) version Versions.kotlin apply false
+    id(Plugins.JETBRAINS_KOTLIN_SERIALIZATION) version Versions.kotlin apply false
 }
 
 tasks.register("clean", Delete::class) {

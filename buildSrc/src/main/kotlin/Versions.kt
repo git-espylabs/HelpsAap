@@ -1,6 +1,6 @@
 object Versions {
 
-    const val gradlePlugin = "4.2.1"
+    const val gradlePlugin = "7.1.2"
     const val kotlin = "1.6.20"
     const val ktx = "1.7.0"
     const val appCompat = "1.4.1"
@@ -35,4 +35,6 @@ object Versions {
     const val multiDexVers = "2.0.1"
     const val hilt = "2.38.1"
     const val androidxHiltCompiler = "1.0.0"
+    const val moshi = "1.13.0"
+    const val moshi_converter = "2.9.0"
 }

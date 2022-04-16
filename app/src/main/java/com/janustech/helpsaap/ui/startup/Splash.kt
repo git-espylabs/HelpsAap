@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.widget.Toast
 import com.janustech.helpsaap.R
 import com.janustech.helpsaap.extension.launchActivity
 import com.janustech.helpsaap.preference.AppPreferences
@@ -11,7 +12,7 @@ import com.janustech.helpsaap.ui.profile.LoginActivity
 
 class Splash : AppCompatActivity() {
 
-    private val DELAY = 3000L
+    private val DELAY = 1500L
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -19,7 +20,6 @@ class Splash : AppCompatActivity() {
 
         Handler(Looper.getMainLooper()).postDelayed({
             if (AppPreferences.userId.isNotEmpty()) {
-
                 finish()
             } else {
                 this.launchActivity<LoginActivity>()

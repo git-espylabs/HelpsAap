@@ -22,13 +22,16 @@ import com.janustech.helpsaap.extension.negativeButton
 import com.janustech.helpsaap.extension.positiveButton
 import com.janustech.helpsaap.extension.showAppDialog
 import com.janustech.helpsaap.R
+import dagger.hilt.android.AndroidEntryPoint
 
 
 abstract class BaseActivity<VB : ViewDataBinding>(
-    @LayoutRes private val layoutResID: Int,
-    private val showHomeAsUp: Boolean = false,
-    @StringRes private val titleRes: Int? = null
 ) : AppCompatActivity() {
+
+
+    @LayoutRes private var layoutResID: Int? = null
+    private var showHomeAsUp: Boolean = false
+    @StringRes private var titleRes: Int? = null
 
     private var _binding: VB? = null
     val binding: VB? get() = _binding
@@ -41,7 +44,16 @@ abstract class BaseActivity<VB : ViewDataBinding>(
     override fun onCreate(savedInstanceState: Bundle?) {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         super.onCreate(savedInstanceState)
-        _binding = DataBindingUtil.setContentView(this, layoutResID)
+    }
+
+    fun  setLayoutBinding(layoutId: Int){
+        layoutResID = layoutId
+        _binding = layoutResID?.let { DataBindingUtil.setContentView(this, it) }
+    }
+
+    fun  setToolbarProperties(showHomeAsUp: Boolean, titleRes: Int?){
+        this.showHomeAsUp = showHomeAsUp
+        this.titleRes = titleRes
 
         initToolbar()
     }

@@ -3,7 +3,14 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <data/>
+    <data >
+        <variable
+            name="viewModel"
+            type="com.janustech.helpsaap.ui.profile.ProfileViewModel"/>
+        <variable
+            name="loginRequest"
+            type="com.janustech.helpsaap.network.requests.LoginRequest"/>
+    </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -43,7 +50,8 @@
                 android:background="@drawable/rounded_rect_grey_filled"
                 android:hint="@string/text_hint_username"
                 android:imeOptions="actionNext"
-                android:inputType="text"/>
+                android:inputType="text"
+                android:text="@={viewModel.userName}"/>
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -68,7 +76,8 @@
                 android:layout_height="@dimen/custom_dimen_48"
                 android:background="@drawable/rounded_rect_grey_filled"
                 android:hint="@string/text_hint_password"
-                android:inputType="textPassword"/>
+                android:inputType="textPassword"
+                android:text="@={viewModel.password}"/>
         </com.google.android.material.textfield.TextInputLayout>
 
         <Button
@@ -80,7 +89,8 @@
             android:text="@string/text_login"
             android:textAllCaps="false"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/custom_dimen_56"/>
+            android:layout_height="@dimen/custom_dimen_56"
+            android:onClick="@{() -> viewModel.processLogin()}"/>
 
         <TextView
             android:id="@+id/tvPromptSignup"

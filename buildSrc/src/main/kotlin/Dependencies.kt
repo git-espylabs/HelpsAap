@@ -34,7 +34,9 @@ object Libs {
         "io.coil-kt:coil:${Versions.coil}",
         "com.github.bumptech.glide:glide:${Versions.glide}",
         "androidx.multidex:multidex:${Versions.multiDexVers}",
-        "com.google.dagger:hilt-android:${Versions.hilt}"
+        "com.google.dagger:hilt-android:${Versions.hilt}",
+        "com.squareup.moshi:moshi:${Versions.moshi}",
+        "com.squareup.retrofit2:converter-moshi:${Versions.moshi_converter}"
     )
 
     val testImplementations = listOf(
@@ -49,15 +51,14 @@ object Libs {
     val kaptDependencyNotions = listOf(
         "androidx.room:room-compiler:${Versions.room}",
         "com.google.dagger:hilt-android-compiler:${Versions.hilt}",
-        "androidx.hilt:hilt-compiler:${Versions.androidxHiltCompiler}"
+        "androidx.hilt:hilt-compiler:${Versions.androidxHiltCompiler}",
+        "com.squareup.moshi:moshi-kotlin-codegen:${Versions.moshi}",
+
     )
 }
 
 object Plugins {
-    const val KOTLIN_GRADLE_PLUGIN = "org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.kotlin}"
-    const val ANDROID_GRADLE_PLUGIN = "com.android.tools.build:gradle:${Versions.gradlePlugin}"
     const val GOOGLE_SERVICE = "com.google.gms:google-services:${Versions.googleServices}"
-    const val GRADLE_VERSIONS = "com.github.ben-manes:gradle-versions-plugin:${Versions.manesGradleVersion}"
     const val NAVIGATION_SFE_ARGS = "androidx.navigation:navigation-safe-args-gradle-plugin:${Versions.navigation}"
     const val KOTLIN_SERIALIZATION_PLUGIN = "org.jetbrains.kotlin:kotlin-serialization:${Versions.kotlin}"
 
@@ -66,9 +67,19 @@ object Plugins {
     const val ANDROID_LIBRARY = "com.android.library"
     const val ANDROID_EXTENSIONS = "android.extensions"
     const val KOTLIN_ANDROID = "kotlin-android"
-    const val KOTLIN_KAPT = "kapt"
+    const val KOTLIN_KAPT = "kotlin-kapt"
     const val KOTLIN_PARCELIZE = "kotlin-parcelize"
     const val KOTLIN_SERIALIZATION = "kotlinx-serialization"
+    const val KOTLIN_NAVIGATION_SAFE_ARGS = "androidx.navigation.safeargs.kotlin"
+    const val JETBRAINS_KOTLIN_ANDROID = "org.jetbrains.kotlin.android"
+    const val JETBRAINS_KOTLIN_SERIALIZATION = "org.jetbrains.kotlin.plugin.serialization"
+    const val DAGGER_HILT = "dagger.hilt.android.plugin"
+
+    const val CLASS_PATH_ANDROID_GRADLE_PLUGIN = "com.android.tools.build:gradle:${Versions.gradlePlugin}"
+    const val CLASS_PATH_KOTLIN = "org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.kotlin}"
+    const val CLASS_PATH_NAVIGATION_SAFE_ARGS = "androidx.navigation:navigation-safe-args-gradle-plugin:${Versions.navigation}"
+    const val CLASS_PATH_DAGGER_HILT = "com.google.dagger:hilt-android-gradle-plugin:${Versions.hilt}"
+
 }
 
 

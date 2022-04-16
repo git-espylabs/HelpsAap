@@ -27,6 +27,10 @@ abstract class BaseFragment : Fragment {
         baseActivity?.showAlertDialog(messageId)
     }
 
+    fun showAlertDialog(message: String) {
+        baseActivity?.showAlertDialog(message)
+    }
+
     fun showToast(@StringRes messageId: Int) {
         showToast(getString(messageId))
     }
