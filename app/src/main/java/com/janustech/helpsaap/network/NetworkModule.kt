@@ -4,6 +4,9 @@ import android.content.Context
 import com.google.gson.GsonBuilder
 import com.janustech.helpsaap.BuildConfig
 import com.janustech.helpsaap.app.App
+import com.janustech.helpsaap.network.requests.GeneralApis
+import com.janustech.helpsaap.repositories.AppIntroRepository
+import com.janustech.helpsaap.repositories.AppIntroRepositoryImpl
 import com.janustech.helpsaap.repositories.ProfileRepository
 import com.janustech.helpsaap.repositories.ProfileRepositoryImpl
 import dagger.Module
@@ -96,8 +99,20 @@ class NetworkModule {
 
     @Provides
     @Singleton
+    fun provideGeneralApi(retrofit: Retrofit): GeneralApis {
+        return retrofit.create(GeneralApis::class.java)
+    }
+
+    @Provides
+    @Singleton
     fun provideProfileRepository(profileApis: ProfileApis): ProfileRepository {
         return ProfileRepositoryImpl(apiService = profileApis)
+    }
+
+    @Provides
+    @Singleton
+    fun provideAppIntroRepository(generalApis: GeneralApis): AppIntroRepository {
+        return AppIntroRepositoryImpl(apiService = generalApis)
     }
 
 

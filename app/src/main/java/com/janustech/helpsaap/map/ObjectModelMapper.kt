@@ -1,6 +1,8 @@
 package com.janustech.helpsaap.map
 
+import com.janustech.helpsaap.model.LanguageDataModel
 import com.janustech.helpsaap.model.UserData
+import com.janustech.helpsaap.network.response.LanguageListResponseData
 import com.janustech.helpsaap.network.response.LoginResponseData
 
 internal fun LoginResponseData.toUserData() = UserData(
@@ -14,3 +16,10 @@ internal fun LoginResponseData.toUserData() = UserData(
     photo  = photo?:"",
     otp  = otp?:"",
 )
+
+internal fun LanguageListResponseData.toLanguageDataModel() = LanguageDataModel(
+    id = id,
+    langImage = lang_image,
+    lang = lang
+)
+

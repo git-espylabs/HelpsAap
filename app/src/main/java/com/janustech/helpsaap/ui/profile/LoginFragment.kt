@@ -1,6 +1,5 @@
 package com.janustech.helpsaap.ui.profile
 
-import android.content.Intent
 import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
@@ -11,8 +10,6 @@ import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.view.View
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import com.google.gson.Gson
 import com.janustech.helpsaap.BuildConfig
 import com.janustech.helpsaap.R
@@ -29,10 +26,6 @@ import dagger.hilt.android.AndroidEntryPoint
 class LoginFragment : BaseFragmentWithBinding<FragmentLayoutLoginBinding>(R.layout.fragment_layout_login) {
 
     private val profileViewModel: ProfileViewModel by activityViewModels()
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -53,17 +46,17 @@ class LoginFragment : BaseFragmentWithBinding<FragmentLayoutLoginBinding>(R.layo
 
     private fun setObserver(){
         profileViewModel.loginResponseReceiver.observe(viewLifecycleOwner){
-            when(it.first){
+            when(it.status){
                 Status.SUCCESS -> {
                     (activity as LoginActivity).hideProgress()
-                    handleLoginResponse(it.second as LoginResponseData?)
+                    handleLoginResponse(it.data?.data)
                 }
                 Status.LOADING -> {
                     (activity as LoginActivity).showProgress()
                 }
                 else ->{
                     (activity as LoginActivity).hideProgress()
-                    (activity as LoginActivity).showAlertDialog(it.second as String)
+                    (activity as LoginActivity).showAlertDialog(it.message?:"Invalid Server Response")
                 }
             }
         }

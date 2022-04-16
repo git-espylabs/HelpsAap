@@ -5,8 +5,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.janustech.helpsaap.BuildConfig
+import com.janustech.helpsaap.network.Resource
 import com.janustech.helpsaap.network.Status
 import com.janustech.helpsaap.network.requests.LoginRequest
+import com.janustech.helpsaap.network.response.ApiResponse
 import com.janustech.helpsaap.network.response.LoginResponseData
 import com.janustech.helpsaap.usecase.ProfileUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -21,8 +23,8 @@ class ProfileViewModel @Inject constructor(private val profileUseCase: ProfileUs
     var userName = ""
     var password = ""
 
-    private val _loginResponseReceiver = MutableLiveData<Pair<Status, Any?>>()
-    val loginResponseReceiver: MutableLiveData<Pair<Status, Any?>>
+    private val _loginResponseReceiver = MutableLiveData<Resource<ApiResponse<LoginResponseData>>>()
+    val loginResponseReceiver: LiveData<Resource<ApiResponse<LoginResponseData>>>
             get() = _loginResponseReceiver
 
     init {
@@ -39,26 +41,14 @@ class ProfileViewModel @Inject constructor(private val profileUseCase: ProfileUs
     private fun loginApp(loginRequest: LoginRequest){
         viewModelScope.launch {
             profileUseCase.login(loginRequest).onStart {
-                _loginResponseReceiver.value = Pair(Status.LOADING, null)
-            }.collect { loginResponse ->
-                loginResponse.let {
-                    when(it.status){
-                        Status.SUCCESS ->{
-                            it.data?.let { responseData ->
-                                if (responseData.isResponseSuccess()){
-                                    _loginResponseReceiver.value = Pair(Status.SUCCESS, responseData.data)
-                                }else{
-                                    _loginResponseReceiver.value = Pair(Status.SUCCESS, responseData.message)
-                                }
-                            }?: run {
-                                _loginResponseReceiver.value = Pair(Status.SUCCESS, "Invalid server response!")
-                            }
-                        }
-                        else ->{
-                            _loginResponseReceiver.value = Pair(it.status, it.message)
-                        }
+                _loginResponseReceiver.value = Resource.loading()
+            }.collect { apiResponse ->
+                apiResponse.let {
+                    it.data?.let {
+                        _loginResponseReceiver.value = apiResponse
+                    }?: run {
+                        _loginResponseReceiver.value = Resource.dataError("Invalid server response!")
                     }
-
                 }
 
             }

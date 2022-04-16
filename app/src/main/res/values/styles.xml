@@ -47,4 +47,21 @@
 
     </style>
 
+    <style name="EspyAutoCompleteStyle" parent="Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu">
+        <item name="android:textSize">@dimen/text_size_custom_18</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="EspyDropdownStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
+        <item name="android:textSize">@dimen/text_size_custom_18</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+
+    <style name="EspyEditTextStyle" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorControlNormal">@color/bg_grey_a</item>
+        <item name="colorControlActivated">@color/app_accent_color</item>
+        <item name="colorControlHighlight">@color/app_accent_color</item>
+    </style>
+
 </resources>

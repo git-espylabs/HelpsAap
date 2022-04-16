@@ -26,6 +26,10 @@ data class Resource<out T>(
             return Resource(Status.GENERIC_ERROR, data, msg)
         }
 
+        fun <T> dataError(msg: String): Resource<T> {
+            return Resource(Status.DATA_ERROR, null, msg)
+        }
+
         fun <T> loading(data: T? = null): Resource<T> {
             return Resource(Status.LOADING, data, null)
         }
