@@ -1,15 +1,18 @@
 package com.janustech.helpsaap.ui.profile
 
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.janustech.helpsaap.BuildConfig
+import com.janustech.helpsaap.network.MultiPartRequestHelper
 import com.janustech.helpsaap.network.Resource
 import com.janustech.helpsaap.network.Status
 import com.janustech.helpsaap.network.requests.LoginRequest
 import com.janustech.helpsaap.network.response.ApiResponse
 import com.janustech.helpsaap.network.response.LoginResponseData
+import com.janustech.helpsaap.network.response.MultipartApiResponse
 import com.janustech.helpsaap.usecase.ProfileUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collect
@@ -40,7 +43,11 @@ class ProfileViewModel @Inject constructor(private val profileUseCase: ProfileUs
 
     private val _loginResponseReceiver = MutableLiveData<Resource<ApiResponse<LoginResponseData>>>()
     val loginResponseReceiver: LiveData<Resource<ApiResponse<LoginResponseData>>>
-            get() = _loginResponseReceiver
+        get() = _loginResponseReceiver
+
+    private val _registerResponseReceiver = MutableLiveData<Resource<MultipartApiResponse>>()
+    val registerResponseReceiver: LiveData<Resource<MultipartApiResponse>>
+            get() = _registerResponseReceiver
 
     init {
         if (BuildConfig.DEBUG){
@@ -67,6 +74,49 @@ class ProfileViewModel @Inject constructor(private val profileUseCase: ProfileUs
                 }
 
             }
+        }
+    }
+
+    fun registerApp(context: Context){
+        viewModelScope.launch {
+            val partPhone = MultiPartRequestHelper.createRequestBody("phonenumber", regMob)
+            val partPassword = MultiPartRequestHelper.createRequestBody("password", regPass)
+            val partCusname = MultiPartRequestHelper.createRequestBody("cusname", regName)
+            val partEmail = MultiPartRequestHelper.createRequestBody("email", regEmail)
+            val partLocationPinut = MultiPartRequestHelper.createRequestBody("locationpinut", regPin)
+            val partBusinessNname= MultiPartRequestHelper.createRequestBody("businessname", regCmpny)
+            val partWhatsapp = MultiPartRequestHelper.createRequestBody("whatsapp", regWhatsapNo)
+            val partWebsite = MultiPartRequestHelper.createRequestBody("website", regWeb)
+            val partCategoryid = MultiPartRequestHelper.createRequestBody("categoryid", regCategoryId)
+            val partTransactionId = MultiPartRequestHelper.createRequestBody("transaction_id", ((100000..1000000).random()).toString())
+            val partAmount = MultiPartRequestHelper.createRequestBody("amount", "99")
+            val partFile = MultiPartRequestHelper.createFileRequestBody(regImage, "image", context)
+
+            profileUseCase.register(
+                partPhone,
+                partPassword,
+                partCusname,
+                partEmail,
+                partLocationPinut,
+                partBusinessNname,
+                partWhatsapp,
+                partWebsite,
+                partCategoryid,
+                partTransactionId,
+                partAmount,
+                partFile
+            )
+                .onStart { _registerResponseReceiver.value = Resource.loading() }
+                .collect {  apiResponse ->
+                    apiResponse.let {
+                        it.data?.let {
+                            _registerResponseReceiver.value = apiResponse
+                        }?: run {
+                            _registerResponseReceiver.value = Resource.dataError("Invalid server response!")
+                        }
+                    }
+                }
+
         }
     }
 }

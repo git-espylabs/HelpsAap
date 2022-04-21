@@ -13,6 +13,7 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.janustech.helpsaap.R
 import com.janustech.helpsaap.app.AppPermission
@@ -21,7 +22,6 @@ import com.janustech.helpsaap.extension.*
 import com.janustech.helpsaap.location.GpsListener
 import com.janustech.helpsaap.location.GpsManager
 import com.janustech.helpsaap.ui.base.BaseFragmentWithBinding
-import com.janustech.helpsaap.ui.startup.FragmentSelectLocationAndLanguageDirections
 import com.janustech.helpsaap.ui.startup.SignupActivity
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.IOException
@@ -38,6 +38,7 @@ class SignupFragmentFirst : BaseFragmentWithBinding<FragmentRegisterBinding>(R.l
     private var onCameraIdleListener: GoogleMap.OnCameraIdleListener? = null
     var lattitude = "0.0"
     var longitude = "0.0"
+    var locationMarker: Marker? = null
 
     @SuppressLint("MissingPermission")
     private val requestPermissionLauncher =
@@ -95,6 +96,13 @@ class SignupFragmentFirst : BaseFragmentWithBinding<FragmentRegisterBinding>(R.l
                     requestPermission(requestPermissionLauncher, AppPermission.PERMISSION_LOCATION)
                 }
             )
+
+            setOnMapClickListener {
+                locationMarker?.apply {  ->
+                    remove()
+                }
+                locationMarker = addMarker(MarkerOptions().position(LatLng(it.latitude, it.longitude)).title("Your location"))
+            }
         }
     }
 
@@ -119,7 +127,10 @@ class SignupFragmentFirst : BaseFragmentWithBinding<FragmentRegisterBinding>(R.l
 
             mMap?.apply {
                 moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(it.latitude, it.longitude), 0f))
-                addMarker(MarkerOptions().position(LatLng(it.latitude, it.longitude)).title("Your location"))
+                locationMarker?.apply {  ->
+                    remove()
+                }
+                locationMarker = addMarker(MarkerOptions().position(LatLng(it.latitude, it.longitude)).title("Your location"))
                 setOnCameraIdleListener(onCameraIdleListener)
             }
         }

@@ -15,7 +15,9 @@ import androidx.fragment.app.activityViewModels
 import com.janustech.helpsaap.R
 import com.janustech.helpsaap.databinding.FragmentRegisterBinding
 import com.janustech.helpsaap.databinding.FragmentRegisterSecondBinding
+import com.janustech.helpsaap.network.Status
 import com.janustech.helpsaap.ui.base.BaseFragmentWithBinding
+import com.janustech.helpsaap.ui.startup.SignupActivity
 import com.janustech.helpsaap.utils.CommonUtils
 import com.janustech.helpsaap.utils.PhotoOptionListener
 import dagger.hilt.android.AndroidEntryPoint
@@ -54,9 +56,17 @@ class SignupFragmentSecond : BaseFragmentWithBinding<FragmentRegisterSecondBindi
             viewModel = profileViewModel
 
             btnFinish.setOnClickListener {
+                activity?.let {
+                    profileViewModel.registerApp(it)
+                }
+            }
+
+            promptFileSelect.setOnClickListener {
                 showPhotoPickOption()
             }
         }
+
+        setObserver()
     }
 
     override fun onTakePhotoSelected() {
@@ -65,6 +75,26 @@ class SignupFragmentSecond : BaseFragmentWithBinding<FragmentRegisterSecondBindi
 
     override fun onChoosePhotoSelected() {
         dispatchPickPhotoIntent()
+    }
+
+    private fun setObserver(){
+        profileViewModel.registerResponseReceiver.observe(viewLifecycleOwner){
+            when(it.status){
+                Status.SUCCESS -> {
+                    (activity as SignupActivity).hideProgress()
+                    it.data?.data
+                    showToast("Registration Success")
+                    activity?.finish()
+                }
+                Status.LOADING -> {
+                    (activity as SignupActivity).showProgress()
+                }
+                else ->{
+                    (activity as SignupActivity).hideProgress()
+                    (activity as SignupActivity).showAlertDialog(it.message?:"Invalid Server Response")
+                }
+            }
+        }
     }
 
     private fun showPhotoPickOption() {

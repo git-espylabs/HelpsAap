@@ -52,6 +52,11 @@ class AppIntroHomeFragment: BaseFragmentWithBinding<FragmentAppIntroHomeBinding>
         appIntroViewModel.getDealsOfTheDay()
     }
 
+    override fun onStop() {
+        super.onStop()
+        (activity as AppIntroActivity).hideProgress()
+    }
+
     private fun setObserver(){
         appIntroViewModel.dealsOfDay.observe(viewLifecycleOwner){
             when(it.status){
