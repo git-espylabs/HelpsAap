@@ -27,6 +27,21 @@
         android:theme="@style/Theme.HelpsAap"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".ui.startup.SignupActivity"
+            android:exported="false" />
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="${MAPS_API_KEY}" />
+
+        <activity
+            android:name=".ui.startup.MapsActivity"
+            android:exported="false"
+            android:label="@string/title_activity_maps" />
+        <activity
+            android:name=".ui.startup.AppIntroActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.profile.LoginActivity"
             android:exported="false" />
         <activity

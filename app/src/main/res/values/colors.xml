@@ -17,5 +17,6 @@
     <color name="fab_badge_bg">#E91E63</color>
     <color name="icon_tint_base">#d94b00</color>
     <color name="bg_grey_a">#F4F4F4</color>
+    <color name="light_green">#E3F1E8</color>
 
 </resources>

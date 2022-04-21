@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/signup_nav_graph"
+    app:startDestination="@id/signupFragmentFirst">
+
+    <activity
+        android:id="@+id/signupActivity"
+        android:name="com.janustech.helpsaap.ui.startup.SignupActivity"
+        android:label="Register"
+        tools:layout="@layout/activity_signup" />
+
+    <fragment
+        android:id="@+id/signupFragmentFirst"
+        android:name="com.janustech.helpsaap.ui.profile.SignupFragmentFirst"
+        tools:layout="@layout/fragment_register">
+
+        <action
+            android:id="@+id/action_signupFragmentFirst_to_signupFragmentSecond"
+            app:destination="@id/signupFragmentSecond">
+        </action>
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/signupFragmentSecond"
+        android:name="com.janustech.helpsaap.ui.profile.SignupFragmentSecond"
+        tools:layout="@layout/fragment_register_second">
+
+    </fragment>
+
+
+</navigation>

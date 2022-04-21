@@ -11,13 +11,17 @@ import com.janustech.helpsaap.databinding.ItLanguageBinding
 import com.janustech.helpsaap.model.LanguageDataModel
 
 
-class LanguageListAdapter internal constructor(private val context: Context, private val mData: List<LanguageDataModel>): RecyclerView.Adapter<LanguageListAdapter.ViewHolder>() {
+class LanguageListAdapter internal constructor(private val mData: List<LanguageDataModel>, val languageSelectListener: (model: LanguageDataModel) -> Unit): RecyclerView.Adapter<LanguageListAdapter.ViewHolder>() {
 
     inner class ViewHolder(itLanguageBinding: ItLanguageBinding) : RecyclerView.ViewHolder(itLanguageBinding.root) {
         private var itLanguageBinding: ItLanguageBinding? = null
-        fun bind(obj: Any?) {
+        fun bind(obj: Any?, languageSelectListener: (model: LanguageDataModel) -> Unit) {
             itLanguageBinding?.setVariable(BR.model, obj)
             itLanguageBinding?.executePendingBindings()
+
+            itLanguageBinding?.root?.setOnClickListener {
+                languageSelectListener(obj as LanguageDataModel)
+            }
         }
 
         init {
@@ -35,7 +39,7 @@ class LanguageListAdapter internal constructor(private val context: Context, pri
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(mData[position])
+        holder.bind(mData[position], languageSelectListener)
     }
 
     override fun getItemCount(): Int {

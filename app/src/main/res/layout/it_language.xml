@@ -14,13 +14,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <ImageView
+        <com.janustech.helpsaap.utils.CustomShapebleImageview
             android:id="@+id/ivLang"
-            android:src="@drawable/lang_bg"
-            android:layout_marginTop="7dp"
+            app:shapeAppearanceOverlay="@style/roundedCornersImageView"
+            android:layout_marginVertical="16dp"
+            android:layout_marginHorizontal="16dp"
             app:layout_constraintTop_toTopOf="parent"
+            app:url="@{model.langImage}"
+            android:scaleType="fitXY"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="128dp"/>
 
         <TextView
             android:id="@+id/tvLang"

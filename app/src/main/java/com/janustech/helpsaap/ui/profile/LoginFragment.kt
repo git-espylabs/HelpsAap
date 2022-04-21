@@ -14,11 +14,13 @@ import com.google.gson.Gson
 import com.janustech.helpsaap.BuildConfig
 import com.janustech.helpsaap.R
 import com.janustech.helpsaap.databinding.FragmentLayoutLoginBinding
+import com.janustech.helpsaap.extension.launchActivity
 import com.janustech.helpsaap.map.toUserData
 import com.janustech.helpsaap.network.Status
 import com.janustech.helpsaap.network.response.LoginResponseData
 import com.janustech.helpsaap.preference.AppPreferences
 import com.janustech.helpsaap.ui.base.BaseFragmentWithBinding
+import com.janustech.helpsaap.ui.startup.AppIntroActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -87,6 +89,9 @@ class LoginFragment : BaseFragmentWithBinding<FragmentLayoutLoginBinding>(R.layo
         loginResponseData?.apply {
             AppPreferences.userId = id
             AppPreferences.userData = Gson().toJson(loginResponseData.toUserData())
+
+            activity?.launchActivity<AppIntroActivity>()
+            activity?.finish()
         }?: run {
             showAlertDialog("Invalid Server Response")
         }

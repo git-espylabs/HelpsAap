@@ -23,6 +23,21 @@ class ProfileViewModel @Inject constructor(private val profileUseCase: ProfileUs
     var userName = ""
     var password = ""
 
+    var regName = ""
+    var regMob = ""
+    var regPass = ""
+    var regPin = ""
+    var regCmpny = ""
+    var regWhatsapNo = ""
+    var regEmail = ""
+    var regWeb = ""
+    var regCategoryId = ""
+    var regTxId = ""
+    var regAmount = ""
+    var regImage = ""
+    var regLatitude = "0.0"
+    var regLongitude = "0.0"
+
     private val _loginResponseReceiver = MutableLiveData<Resource<ApiResponse<LoginResponseData>>>()
     val loginResponseReceiver: LiveData<Resource<ApiResponse<LoginResponseData>>>
             get() = _loginResponseReceiver

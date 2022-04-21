@@ -5,6 +5,7 @@ plugins {
     id(Plugins.KOTLIN_KAPT)
     id(Plugins.KOTLIN_NAVIGATION_SAFE_ARGS)
     id(Plugins.DAGGER_HILT)
+    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
 }
 
 
@@ -80,6 +81,9 @@ android {
         abortOnError = false
         checkReleaseBuilds = false
     }
+    buildFeatures {
+        viewBinding = true
+    }
 
     applicationVariants.all {
         val appBaseUrl = when (flavorName) {
@@ -95,7 +99,9 @@ android {
 }
 
 dependencies {
+    implementation("com.google.android.gms:play-services-maps:18.0.2")
     Libs.implementations.forEach(::implementation)
+    implementation("androidx.cardview:cardview:1.0.0")
     Libs.kaptDependencyNotions.forEach(::kapt)
     Libs.testImplementations.forEach(::testImplementation)
     Libs.androidTestImplementations.forEach(::androidTestImplementation)

@@ -9,10 +9,7 @@ import android.graphics.drawable.GradientDrawable
 import android.os.Build
 import android.util.Log
 import android.view.View
-import android.widget.EditText
-import android.widget.ImageButton
-import android.widget.ImageView
-import android.widget.TextView
+import android.widget.*
 import androidx.annotation.ColorInt
 import androidx.core.content.ContextCompat
 import com.google.android.material.textfield.TextInputLayout
@@ -105,4 +102,14 @@ internal fun TextView.setDrawableTint(color: Int){
 internal fun ImageView.setImageTint(color: Int){
     imageTintList =
         (ColorStateList.valueOf(ContextCompat.getColor(context, color)))
+}
+
+
+internal fun EditText.setCompoundDrawableStartIcon(drawableID: Int) {
+    setCompoundDrawablesRelativeWithIntrinsicBounds(drawableID, 0, 0 , 0)
+}
+
+
+internal fun EditText.setCompoundDrawableEndIcon(drawableID: Int) {
+    setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, drawableID , 0)
 }

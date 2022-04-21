@@ -19,10 +19,11 @@ class Splash : AppCompatActivity() {
         setContentView(R.layout.activity_splash)
 
         Handler(Looper.getMainLooper()).postDelayed({
-            if (AppPreferences.userId.isNotEmpty()) {
+            if (AppPreferences.userId.isEmpty()) {
+                this.launchActivity<LoginActivity>()
                 finish()
             } else {
-                this.launchActivity<LoginActivity>()
+                this.launchActivity<AppIntroActivity>()
                 finish()
             }
         }, DELAY)
