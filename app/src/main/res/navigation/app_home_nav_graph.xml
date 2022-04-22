@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/app_home_graph"
+    app:startDestination="@id/appHomeFragment">
+
+    <activity
+        android:id="@+id/homeActivity"
+        android:name="com.janustech.helpsaap.ui.home.AppHomeActivity"
+        android:label="Home"
+        tools:layout="@layout/activity_app_home" />
+
+    <fragment
+        android:id="@+id/appHomeFragment"
+        android:name="com.janustech.helpsaap.ui.home.AppHomeFragment"
+        tools:layout="@layout/fragment_app_home">
+        <action
+            android:id="@+id/action_appHomeFragment_to_dealOfDayFragment"
+            app:destination="@id/dealOfDayFragment">
+        </action>
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/dealOfDayFragment"
+        android:name="com.janustech.helpsaap.ui.home.FragmentDealOfDay"
+        tools:layout="@layout/fragment_deal_of_day">
+
+    </fragment>
+
+
+</navigation>

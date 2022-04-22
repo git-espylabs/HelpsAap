@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data >
+        <variable
+            name="viewModel"
+            type="com.janustech.helpsaap.ui.home.AppHomeViewModel"/>
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:background="@color/white"
+        android:layout_marginHorizontal="12dp"
+        android:layout_marginVertical="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/tvWelcome"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_size_custom_18"
+            android:fontFamily="@font/segoui"
+            android:textStyle="bold"
+            android:text="@{`Welcome ` + viewModel.userName}"
+            android:textFontWeight="700"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+
+        <com.google.android.material.imageview.ShapeableImageView
+            app:shapeAppearanceOverlay="@style/roundedCornersImageView"
+            android:id="@+id/ivProfileBg"
+            android:src="@drawable/bg_profile_home_title"
+            app:layout_constraintTop_toBottomOf="@+id/tvWelcome"
+            android:layout_marginTop="28dp"
+            android:layout_width="match_parent"
+            android:scaleType="fitXY"
+            android:layout_height="89dp"/>
+
+        <TextView
+            android:id="@+id/tvProfilePrompt"
+            app:layout_constraintStart_toStartOf="@+id/ivProfileBg"
+            app:layout_constraintTop_toTopOf="@+id/ivProfileBg"
+            app:layout_constraintBottom_toBottomOf="@+id/ivProfileBg"
+            android:text="My Helps App Profile"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:fontFamily="@font/segoui"
+            android:textFontWeight="700"
+            android:textStyle="bold"
+            app:layout_constraintVertical_bias="0.8"
+            android:layout_marginLeft="16dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <View
+            android:id="@+id/layDoD"
+            android:layout_marginTop="28dp"
+            app:layout_constraintTop_toBottomOf="@+id/ivProfileBg"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/sep"
+            android:background="@drawable/rounded_rect_green_filled"
+            android:layout_width="0dp"
+            android:layout_height="150dp"/>
+
+        <View
+            android:id="@+id/sep"
+            app:layout_constraintTop_toBottomOf="@+id/ivProfileBg"
+            app:layout_constraintStart_toEndOf="@+id/layDoD"
+            app:layout_constraintEnd_toStartOf="@+id/layAds"
+            app:layout_constraintTop_toTopOf="@+id/layDoD"
+            android:layout_width="24dp"
+            android:layout_height="48dp"/>
+
+        <View
+            android:id="@+id/layAds"
+            android:layout_marginTop="28dp"
+            android:background="@drawable/rounded_rect_plain_filled_green_stroke"
+            app:layout_constraintTop_toBottomOf="@+id/ivProfileBg"
+            app:layout_constraintStart_toEndOf="@+id/sep"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="0dp"
+            android:layout_height="150dp"/>
+
+        <TextView
+            android:id="@+id/tvDod"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:fontFamily="@font/segoui"
+            android:textFontWeight="700"
+            app:layout_constraintTop_toTopOf="@+id/layDoD"
+            app:layout_constraintBottom_toBottomOf="@+id/layDoD"
+            app:layout_constraintStart_toStartOf="@+id/layDoD"
+            android:textStyle="bold"
+            app:layout_constraintVertical_bias="0.65"
+            android:layout_marginLeft="16dp"
+            android:text="Deals for the Day"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            app:layout_constraintTop_toBottomOf="@+id/tvDod"
+            app:layout_constraintStart_toStartOf="@+id/tvDod"
+            android:layout_marginTop="5dp"
+            android:textSize="14sp"
+            android:textColor="@color/app_accent_color"
+            android:fontFamily="@font/segoui"
+            android:textFontWeight="400"
+            android:textStyle="bold"
+            android:text="Free"
+            android:background="@drawable/rounded_rect_white_filled"
+            android:paddingVertical="2dp"
+            android:paddingHorizontal="12dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:id="@+id/tvAds"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:fontFamily="@font/segoui"
+            android:textFontWeight="700"
+            app:layout_constraintTop_toTopOf="@+id/layAds"
+            app:layout_constraintBottom_toBottomOf="@+id/layAds"
+            app:layout_constraintStart_toStartOf="@+id/layAds"
+            android:textStyle="bold"
+            app:layout_constraintVertical_bias="0.65"
+            android:layout_marginLeft="16dp"
+            android:text="Advertisement"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            app:layout_constraintTop_toBottomOf="@+id/tvAds"
+            app:layout_constraintStart_toStartOf="@+id/tvAds"
+            android:layout_marginTop="5dp"
+            android:textSize="14sp"
+            android:textColor="@color/white"
+            android:fontFamily="@font/segoui"
+            android:textFontWeight="400"
+            android:textStyle="bold"
+            android:text="Paid"
+            android:background="@drawable/rounded_rect_green_filled"
+            android:paddingVertical="2dp"
+            android:paddingHorizontal="12dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

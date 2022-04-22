@@ -1,5 +1,6 @@
 package com.janustech.helpsaap.ui.profile
 
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
@@ -20,6 +21,7 @@ import com.janustech.helpsaap.network.Status
 import com.janustech.helpsaap.network.response.LoginResponseData
 import com.janustech.helpsaap.preference.AppPreferences
 import com.janustech.helpsaap.ui.base.BaseFragmentWithBinding
+import com.janustech.helpsaap.ui.home.AppHomeActivity
 import com.janustech.helpsaap.ui.startup.AppIntroActivity
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -90,7 +92,9 @@ class LoginFragment : BaseFragmentWithBinding<FragmentLayoutLoginBinding>(R.layo
             AppPreferences.userId = id
             AppPreferences.userData = Gson().toJson(loginResponseData.toUserData())
 
-            activity?.launchActivity<AppIntroActivity>()
+            activity?.launchActivity<AppHomeActivity>{
+                addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            }
             activity?.finish()
         }?: run {
             showAlertDialog("Invalid Server Response")

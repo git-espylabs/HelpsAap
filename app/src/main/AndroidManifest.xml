@@ -16,7 +16,6 @@
             <action android:name="android.intent.action.PICK" />
         </intent>
     </queries>
-
     <queries>
         <package android:name="com.whatsapp" />
     </queries>
@@ -30,6 +29,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.HelpsAap"
         android:usesCleartextTraffic="true">
+        <activity
+            android:name=".ui.home.AppHomeActivity"
+            android:exported="false" />
         <activity
             android:name=".ui.startup.SignupActivity"
             android:exported="false" />

@@ -76,8 +76,14 @@ class ProfileViewModel @Inject constructor(
                 _loginResponseReceiver.value = Resource.loading()
             }.collect { apiResponse ->
                 apiResponse.let {
-                    it.data?.let {
-                        _loginResponseReceiver.value = apiResponse
+                    it.data?.let { resp ->
+                        if (resp.isResponseSuccess() && resp.data != null) {
+                            _loginResponseReceiver.value = apiResponse
+                        } else if (resp.isResponseSuccess().not()) {
+                            _loginResponseReceiver.value = Resource.dataError(resp.message)
+                        }else{
+                            _loginResponseReceiver.value = Resource.dataError("Failed to Login! Try again.")
+                        }
                     }?: run {
                         _loginResponseReceiver.value = Resource.dataError("Invalid server response!")
                     }
@@ -119,8 +125,14 @@ class ProfileViewModel @Inject constructor(
                 .onStart { _registerResponseReceiver.value = Resource.loading() }
                 .collect {  apiResponse ->
                     apiResponse.let {
-                        it.data?.let {
-                            _registerResponseReceiver.value = apiResponse
+                        it.data?.let { resp ->
+                            if (resp.isResponseSuccess() && resp.data != null && resp.data.isNotEmpty()) {
+                                _registerResponseReceiver.value = apiResponse
+                            }else if (resp.isResponseSuccess().not()){
+                                _registerResponseReceiver.value = Resource.dataError(resp.message)
+                            }else{
+                                _registerResponseReceiver.value = Resource.dataError("Failed to register! Try again.")
+                            }
                         }?: run {
                             _registerResponseReceiver.value = Resource.dataError("Invalid server response!")
                         }

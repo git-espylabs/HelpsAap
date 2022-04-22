@@ -20,5 +20,6 @@
     <string name="text_hint_web">Website</string>
     <string name="title_activity_maps">MapsActivity</string>
     <string name="no_apps_found">No apps found to perform this action.</string>
+    <string name="exit_tap_alert">Click BACK again to exit</string>
 
 </resources>

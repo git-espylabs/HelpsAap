@@ -133,6 +133,7 @@ class FragmentSelectLocationAndLanguage: BaseFragmentWithBinding<FragmentSelectL
                             userLocationId = locId
                         }
                     }
+                    (activity as AppIntroActivity).hideKeyboard()
 
                     if (appIntroViewModel.userLanguageId.isNotEmpty()) {
                         findNavController().navigate(FragmentSelectLocationAndLanguageDirections.actionSelectLocationFragmentToAppIntroHome())

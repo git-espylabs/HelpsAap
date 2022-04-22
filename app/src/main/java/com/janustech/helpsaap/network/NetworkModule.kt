@@ -5,10 +5,7 @@ import com.google.gson.GsonBuilder
 import com.janustech.helpsaap.BuildConfig
 import com.janustech.helpsaap.app.App
 import com.janustech.helpsaap.network.requests.GeneralApis
-import com.janustech.helpsaap.repositories.AppIntroRepository
-import com.janustech.helpsaap.repositories.AppIntroRepositoryImpl
-import com.janustech.helpsaap.repositories.ProfileRepository
-import com.janustech.helpsaap.repositories.ProfileRepositoryImpl
+import com.janustech.helpsaap.repositories.*
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -113,6 +110,18 @@ class NetworkModule {
     @Singleton
     fun provideAppIntroRepository(generalApis: GeneralApis): AppIntroRepository {
         return AppIntroRepositoryImpl(apiService = generalApis)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGeneralHelpsAapApi(retrofit: Retrofit): HelpsAapApis {
+        return retrofit.create(HelpsAapApis::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideHomeRepository(helpsAapApis: HelpsAapApis): HomeRepository {
+        return HomeRepositoryImpl(apiService = helpsAapApis)
     }
 
 

@@ -22,10 +22,12 @@ import androidx.fragment.app.activityViewModels
 import com.janustech.helpsaap.R
 import com.janustech.helpsaap.databinding.FragmentRegisterBinding
 import com.janustech.helpsaap.databinding.FragmentRegisterSecondBinding
+import com.janustech.helpsaap.extension.launchActivity
 import com.janustech.helpsaap.map.toCategoryDataModel
 import com.janustech.helpsaap.model.CategoryDataModel
 import com.janustech.helpsaap.network.Status
 import com.janustech.helpsaap.ui.base.BaseFragmentWithBinding
+import com.janustech.helpsaap.ui.home.AppHomeActivity
 import com.janustech.helpsaap.ui.startup.AppIntroActivity
 import com.janustech.helpsaap.ui.startup.SignupActivity
 import com.janustech.helpsaap.utils.CommonUtils
@@ -85,6 +87,7 @@ class SignupFragmentSecond : BaseFragmentWithBinding<FragmentRegisterSecondBindi
         }
 
         setObserver()
+        setSearchList()
     }
 
     override fun onTakePhotoSelected() {
@@ -102,6 +105,9 @@ class SignupFragmentSecond : BaseFragmentWithBinding<FragmentRegisterSecondBindi
                     (activity as SignupActivity).hideProgress()
                     it.data?.data
                     showToast("Registration Success")
+                    activity?.launchActivity<AppHomeActivity>{
+                        addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                    }
                     activity?.finish()
                 }
                 Status.LOADING -> {
@@ -117,7 +123,7 @@ class SignupFragmentSecond : BaseFragmentWithBinding<FragmentRegisterSecondBindi
         profileViewModel.categoriesReceiver.observe(viewLifecycleOwner){
             when(it.status){
                 Status.SUCCESS ->{
-                    (activity as AppIntroActivity).hideProgress()
+                    (activity as SignupActivity).hideProgress()
                     val dataList = it.data?.data
                     categoriesSuggestionList = dataList?.map { dat -> dat.toCategoryDataModel() } ?: listOf()
                     categoriesListAdapter = ArrayAdapter(
@@ -128,11 +134,11 @@ class SignupFragmentSecond : BaseFragmentWithBinding<FragmentRegisterSecondBindi
                     binding.categorySpinner.setAdapter(categoriesListAdapter)
                 }
                 Status.LOADING -> {
-                    (activity as AppIntroActivity).showProgress()
+                    (activity as SignupActivity).showProgress()
                 }
                 else ->{
-                    (activity as AppIntroActivity).hideProgress()
-                    (activity as AppIntroActivity).showAlertDialog(it.message?:"Invalid Server Response")
+                    (activity as SignupActivity).hideProgress()
+                    (activity as SignupActivity).showAlertDialog(it.message?:"Invalid Server Response")
                 }
             }
         }
@@ -266,7 +272,7 @@ class SignupFragmentSecond : BaseFragmentWithBinding<FragmentRegisterSecondBindi
                     catData.let {
                         selectedCategory = it.id
                         profileViewModel.regCategoryId = it.id
-                        (activity as AppIntroActivity).hideKeyboard()
+                        (activity as SignupActivity).hideKeyboard()
                     }
                 }
 

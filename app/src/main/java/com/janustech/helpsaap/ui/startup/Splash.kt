@@ -1,14 +1,13 @@
 package com.janustech.helpsaap.ui.startup
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.janustech.helpsaap.R
 import com.janustech.helpsaap.extension.launchActivity
 import com.janustech.helpsaap.preference.AppPreferences
-import com.janustech.helpsaap.ui.profile.LoginActivity
+import com.janustech.helpsaap.ui.home.AppHomeActivity
 
 class Splash : AppCompatActivity() {
 
@@ -23,7 +22,7 @@ class Splash : AppCompatActivity() {
                 this.launchActivity<AppIntroActivity>()
                 finish()
             } else {
-                this.launchActivity<AppIntroActivity>()
+                this.launchActivity<AppHomeActivity>()
                 finish()
             }
         }, DELAY)
