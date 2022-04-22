@@ -1,9 +1,7 @@
 package com.janustech.helpsaap.usecase
 
 import com.janustech.helpsaap.network.Resource
-import com.janustech.helpsaap.network.requests.AdsListRequest
-import com.janustech.helpsaap.network.requests.DealOfDayRequest
-import com.janustech.helpsaap.network.requests.LocationListRequest
+import com.janustech.helpsaap.network.requests.*
 import com.janustech.helpsaap.network.response.*
 import com.janustech.helpsaap.repositories.AppIntroRepository
 import kotlinx.coroutines.Dispatchers
@@ -49,9 +47,17 @@ class AppIntroUseCase @Inject constructor(
         }.flowOn(Dispatchers.IO)
     }
 
-    suspend fun getCategories(): Flow<Resource<ApiResponse<List<CategoryResponseData>>>> {
+    suspend fun getCategories(categoriesListRequest: CategoriesListRequest): Flow<Resource<ApiResponse<List<CategoryResponseData>>>> {
         return flow {
-            appIntroRepository.getCategories().collect {
+            appIntroRepository.getCategories(categoriesListRequest).collect {
+                emit(it)
+            }
+        }.flowOn(Dispatchers.IO)
+    }
+
+    suspend fun getCompanyList(companyListRequest: CompanyListRequest): Flow<Resource<ApiResponse<List<CompanyResponseData>>>> {
+        return flow {
+            appIntroRepository.getCompanyList(companyListRequest).collect {
                 emit(it)
             }
         }.flowOn(Dispatchers.IO)

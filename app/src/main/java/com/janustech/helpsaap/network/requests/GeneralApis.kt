@@ -25,6 +25,13 @@ interface GeneralApis {
         @Body adsListRequest: AdsListRequest
     ): ApiResponse<List<AdsResponseData>>
 
-    @GET("categorylist")
-    suspend fun getCategories(): ApiResponse<List<CategoryResponseData>>
+    @POST("categorysearch")
+    suspend fun getCategories(
+        @Body categoriesListRequest: CategoriesListRequest
+    ): ApiResponse<List<CategoryResponseData>>
+
+    @POST("companylist")
+    suspend fun getCompanyList(
+        @Body companyListRequest: CompanyListRequest
+    ): ApiResponse<List<CompanyResponseData>>
 }

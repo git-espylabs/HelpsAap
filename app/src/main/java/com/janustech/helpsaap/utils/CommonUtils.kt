@@ -1,6 +1,10 @@
 package com.janustech.helpsaap.utils
 
+import android.R
+import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
 import android.net.ConnectivityManager
@@ -9,21 +13,26 @@ import android.net.Uri
 import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
+import android.view.Gravity
 import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.startActivity
 import com.janustech.helpsaap.app.AppSettings
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
+import java.net.URLEncoder
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.min
 import kotlin.math.roundToInt
 
+
 object CommonUtils {
     private const val serverTimeFormat = "yyyy-MM-dd'T'HH:mm:ss"
     private const val serverTimeFormat2 = "yyyy-MM-dd"
 
+    @SuppressLint("MissingPermission")
     @Suppress("DEPRECATION")
     fun isConnectedToInternet(context: Context): Boolean {
         val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
@@ -102,4 +111,39 @@ object CommonUtils {
         SimpleDateFormat(serverTimeFormat2, Locale.US).parse(dateString)?.let {
             SimpleDateFormat("dd-MM-yyyy", Locale.US).format(it)
         } ?: ""
+
+
+    fun isAppInstalled(ctx: Context, packageName: String): Boolean {
+        val pm = ctx.packageManager
+        val app_installed: Boolean = try {
+            pm.getPackageInfo(packageName, PackageManager.GET_ACTIVITIES)
+            true
+        } catch (e: PackageManager.NameNotFoundException) {
+            false
+        }
+        return app_installed
+    }
+
+    fun contactWhatsap(ctx: Context, phone:String){
+        val pm: PackageManager = ctx.packageManager
+        pm.getPackageInfo("com.whatsapp", PackageManager.GET_ACTIVITIES)
+        val i = Intent(Intent.ACTION_VIEW)
+        i.data = Uri.parse("https://api.whatsapp.com/send?phone=$phone:")
+        ctx.startActivity(i)
+    }
+
+    fun openWhatsApp(ctx: Context, phone: String, packageWhatsap: String) {
+        try {
+            val packageManager: PackageManager = ctx.packageManager
+            val i = Intent(Intent.ACTION_VIEW)
+            val url = "https://api.whatsapp.com/send?phone=$phone"
+            i.setPackage(packageWhatsap)
+            i.data = Uri.parse(url)
+            if (i.resolveActivity(packageManager) != null) {
+                startActivity(ctx, i, null)
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
 }

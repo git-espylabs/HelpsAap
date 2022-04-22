@@ -25,6 +25,17 @@
         android:id="@+id/appIntroHome"
         android:name="com.janustech.helpsaap.ui.startup.AppIntroHomeFragment"
         tools:layout="@layout/fragment_app_intro_home">
+        <action
+            android:id="@+id/action_appIntroHome_to_appIntroSearchList"
+            app:destination="@id/appIntroSearchList">
+        </action>
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/appIntroSearchList"
+        android:name="com.janustech.helpsaap.ui.startup.AppIntroSearchListFragment"
+        tools:layout="@layout/fragment_app_intro_search_list">
 
     </fragment>
 

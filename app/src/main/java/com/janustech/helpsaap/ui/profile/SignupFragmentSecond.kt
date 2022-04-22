@@ -6,8 +6,15 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.provider.MediaStore
+import android.text.Editable
+import android.text.TextUtils
+import android.text.TextWatcher
 import android.view.View
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.ImageView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.FileProvider
@@ -15,8 +22,11 @@ import androidx.fragment.app.activityViewModels
 import com.janustech.helpsaap.R
 import com.janustech.helpsaap.databinding.FragmentRegisterBinding
 import com.janustech.helpsaap.databinding.FragmentRegisterSecondBinding
+import com.janustech.helpsaap.map.toCategoryDataModel
+import com.janustech.helpsaap.model.CategoryDataModel
 import com.janustech.helpsaap.network.Status
 import com.janustech.helpsaap.ui.base.BaseFragmentWithBinding
+import com.janustech.helpsaap.ui.startup.AppIntroActivity
 import com.janustech.helpsaap.ui.startup.SignupActivity
 import com.janustech.helpsaap.utils.CommonUtils
 import com.janustech.helpsaap.utils.PhotoOptionListener
@@ -32,6 +42,14 @@ class SignupFragmentSecond : BaseFragmentWithBinding<FragmentRegisterSecondBindi
     private lateinit var currentPhotoPath: String
     private var photoFile: File? = null
     private var actualPath = ""
+
+    lateinit var categoriesListAdapter: ArrayAdapter<Any>
+    private var categoriesSuggestionList = listOf<CategoryDataModel>()
+    private var autoCompleteTextHandler: Handler? = null
+
+    private val TRIGGER_AUTO_COMPLETE = 100
+    private val AUTO_COMPLETE_DELAY: Long = 300
+    private var selectedCategory = ""
 
 
     private var cameraLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -92,6 +110,29 @@ class SignupFragmentSecond : BaseFragmentWithBinding<FragmentRegisterSecondBindi
                 else ->{
                     (activity as SignupActivity).hideProgress()
                     (activity as SignupActivity).showAlertDialog(it.message?:"Invalid Server Response")
+                }
+            }
+        }
+
+        profileViewModel.categoriesReceiver.observe(viewLifecycleOwner){
+            when(it.status){
+                Status.SUCCESS ->{
+                    (activity as AppIntroActivity).hideProgress()
+                    val dataList = it.data?.data
+                    categoriesSuggestionList = dataList?.map { dat -> dat.toCategoryDataModel() } ?: listOf()
+                    categoriesListAdapter = ArrayAdapter(
+                        requireContext(),
+                        android.R.layout.simple_spinner_dropdown_item,
+                        categoriesSuggestionList
+                    )
+                    binding.categorySpinner.setAdapter(categoriesListAdapter)
+                }
+                Status.LOADING -> {
+                    (activity as AppIntroActivity).showProgress()
+                }
+                else ->{
+                    (activity as AppIntroActivity).hideProgress()
+                    (activity as AppIntroActivity).showAlertDialog(it.message?:"Invalid Server Response")
                 }
             }
         }
@@ -186,5 +227,57 @@ class SignupFragmentSecond : BaseFragmentWithBinding<FragmentRegisterSecondBindi
         } catch (_: Exception) {
         }
         photoFile = null
+    }
+
+    private fun setSearchList(){
+
+        categoriesListAdapter = ArrayAdapter(
+            requireContext(),
+            android.R.layout.simple_spinner_dropdown_item,
+            categoriesSuggestionList
+        )
+        binding.categorySpinner.apply {
+            threshold = 1
+
+            setAdapter(categoriesListAdapter)
+
+            addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(
+                    s: CharSequence,
+                    start: Int,
+                    count: Int,
+                    after: Int
+                ) {
+                }
+
+                override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+                }
+
+                override fun afterTextChanged(s: Editable) {
+                    autoCompleteTextHandler?.removeMessages(TRIGGER_AUTO_COMPLETE)
+                    autoCompleteTextHandler?.sendEmptyMessageDelayed(TRIGGER_AUTO_COMPLETE, AUTO_COMPLETE_DELAY)
+                }
+            })
+
+            onItemClickListener =
+                AdapterView.OnItemClickListener { _, _, pos, _ ->
+                    val catData = (categoriesListAdapter.getItem(pos) as CategoryDataModel)
+
+                    catData.let {
+                        selectedCategory = it.id
+                        profileViewModel.regCategoryId = it.id
+                        (activity as AppIntroActivity).hideKeyboard()
+                    }
+                }
+
+            autoCompleteTextHandler = Handler(Looper.getMainLooper()) { msg ->
+                if (msg.what == TRIGGER_AUTO_COMPLETE) {
+                    if (!TextUtils.isEmpty(text)) {
+                        profileViewModel.getCategories(text.toString())
+                    }
+                }
+                false
+            }
+        }
     }
 }

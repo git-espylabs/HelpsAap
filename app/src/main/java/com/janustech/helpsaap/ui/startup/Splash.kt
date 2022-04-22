@@ -20,7 +20,7 @@ class Splash : AppCompatActivity() {
 
         Handler(Looper.getMainLooper()).postDelayed({
             if (AppPreferences.userId.isEmpty()) {
-                this.launchActivity<LoginActivity>()
+                this.launchActivity<AppIntroActivity>()
                 finish()
             } else {
                 this.launchActivity<AppIntroActivity>()

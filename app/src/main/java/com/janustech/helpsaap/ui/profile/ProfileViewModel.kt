@@ -9,10 +9,13 @@ import com.janustech.helpsaap.BuildConfig
 import com.janustech.helpsaap.network.MultiPartRequestHelper
 import com.janustech.helpsaap.network.Resource
 import com.janustech.helpsaap.network.Status
+import com.janustech.helpsaap.network.requests.CategoriesListRequest
 import com.janustech.helpsaap.network.requests.LoginRequest
 import com.janustech.helpsaap.network.response.ApiResponse
+import com.janustech.helpsaap.network.response.CategoryResponseData
 import com.janustech.helpsaap.network.response.LoginResponseData
 import com.janustech.helpsaap.network.response.MultipartApiResponse
+import com.janustech.helpsaap.usecase.AppIntroUseCase
 import com.janustech.helpsaap.usecase.ProfileUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collect
@@ -21,7 +24,10 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ProfileViewModel @Inject constructor(private val profileUseCase: ProfileUseCase): ViewModel() {
+class ProfileViewModel @Inject constructor(
+    private val profileUseCase: ProfileUseCase,
+    private val appIntroUseCase: AppIntroUseCase
+): ViewModel() {
 
     var userName = ""
     var password = ""
@@ -48,6 +54,10 @@ class ProfileViewModel @Inject constructor(private val profileUseCase: ProfileUs
     private val _registerResponseReceiver = MutableLiveData<Resource<MultipartApiResponse>>()
     val registerResponseReceiver: LiveData<Resource<MultipartApiResponse>>
             get() = _registerResponseReceiver
+
+    private val _categoriesReceiver = MutableLiveData<Resource<ApiResponse<List<CategoryResponseData>>>>()
+    val categoriesReceiver: LiveData<Resource<ApiResponse<List<CategoryResponseData>>>>
+        get() = _categoriesReceiver
 
     init {
         if (BuildConfig.DEBUG){
@@ -117,6 +127,22 @@ class ProfileViewModel @Inject constructor(private val profileUseCase: ProfileUs
                     }
                 }
 
+        }
+    }
+
+    fun getCategories(param: String){
+        viewModelScope.launch {
+            appIntroUseCase.getCategories(CategoriesListRequest(param))
+                .onStart { _categoriesReceiver.value = Resource.loading() }
+                .collect { apiResponse ->
+                    apiResponse.let{
+                        it.data?.let{
+                            _categoriesReceiver.value = apiResponse
+                        }?: run {
+                            _categoriesReceiver.value = Resource.dataError("Invalid server response!")
+                        }
+                    }
+                }
         }
     }
 }

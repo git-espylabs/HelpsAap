@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data >
+        <variable
+            name="viewModel"
+            type="com.janustech.helpsaap.ui.startup.AppIntroViewModel"/>
+
+        <variable
+            name="cmpnyAdapter"
+            type="com.janustech.helpsaap.ui.startup.CompanyListAdapter" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:background="@color/white"
+        android:layout_marginHorizontal="12dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/tvLocation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textColor="@color/black"
+            android:text="@={viewModel.userLocationName}"
+            android:textFontWeight="200"
+            android:fontFamily="@font/segoui"
+            android:drawableStart="@drawable/ic_location"
+            android:drawablePadding="7dp"
+            app:layout_constraintHorizontal_chainStyle="spread_inside"
+            app:layout_constraintEnd_toStartOf="@+id/btnLogin"
+            app:layout_constraintTop_toTopOf="@+id/btnLogin"
+            app:layout_constraintBottom_toBottomOf="@+id/btnLogin"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <Button
+            android:layout_marginTop="8dp"
+            android:id="@+id/btnLogin"
+            app:layout_constraintStart_toEndOf="@+id/tvLocation"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            style="@style/HelpAapButtonStyle"
+            android:text="@string/text_login"
+            android:textSize="16sp"
+            android:textAllCaps="false"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:id="@+id/tvPromptCompnyList"
+            app:layout_constraintTop_toBottomOf="@+id/btnLogin"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="24dp"
+            android:text="@={viewModel.userSelectedCategoryName}"
+            android:textStyle="bold"
+            android:textSize="@dimen/text_size_custom_18"
+            android:textFontWeight="700"
+            android:fontFamily="@font/segoui"
+            android:textColor="@color/black"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvCompanies"
+            android:layout_marginTop="16dp"
+            app:layout_constraintTop_toBottomOf="@+id/tvPromptCompnyList"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/item_company_list"
+            android:adapter="@{cmpnyAdapter}"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

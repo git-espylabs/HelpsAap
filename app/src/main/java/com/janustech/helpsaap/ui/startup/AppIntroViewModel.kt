@@ -5,9 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.janustech.helpsaap.network.Resource
-import com.janustech.helpsaap.network.requests.AdsListRequest
-import com.janustech.helpsaap.network.requests.DealOfDayRequest
-import com.janustech.helpsaap.network.requests.LocationListRequest
+import com.janustech.helpsaap.network.requests.*
 import com.janustech.helpsaap.network.response.*
 import com.janustech.helpsaap.preference.AppPreferences
 import com.janustech.helpsaap.usecase.AppIntroUseCase
@@ -22,13 +20,12 @@ class AppIntroViewModel
 @Inject constructor(
     private val appIntroUseCase: AppIntroUseCase): ViewModel() {
 
-    val ACTION_NAVIGATE_TO_LOGIN = 1024
-    val ACTION_NAVIGATE_TO_REGISTER = 1025
-
     var userLocationName = ""
     var userLocationId = ""
     var userLanguage = ""
     var userLanguageId = ""
+    var userSelectedCategory = ""
+    var userSelectedCategoryName = ""
 
     private val _languageListReceiver = MutableLiveData<Resource<ApiResponse<List<LanguageListResponseData>>>>()
     val languageListReceiver: LiveData<Resource<ApiResponse<List<LanguageListResponseData>>>>
@@ -50,9 +47,9 @@ class AppIntroViewModel
     val categoriesReceiver: LiveData<Resource<ApiResponse<List<CategoryResponseData>>>>
         get() = _categoriesReceiver
 
-    private val _loginResponseReceiver = MutableLiveData<Resource<ApiResponse<LoginResponseData>>>()
-    val loginResponseReceiver: LiveData<Resource<ApiResponse<LoginResponseData>>>
-        get() = _loginResponseReceiver
+    private val _companyListReceiver = MutableLiveData<Resource<ApiResponse<List<CompanyResponseData>>>>()
+    val companyListReceiver: LiveData<Resource<ApiResponse<List<CompanyResponseData>>>>
+        get() = _companyListReceiver
 
     init {
         userLocationName = AppPreferences.userLocation
@@ -94,9 +91,9 @@ class AppIntroViewModel
         }
     }
 
-    fun getDealsOfTheDay(){
+    fun getDealsOfTheDay(catId: String){
         viewModelScope.launch {
-            appIntroUseCase.getDealsOfDay(DealOfDayRequest(userLocationId))
+            appIntroUseCase.getDealsOfDay(DealOfDayRequest(userLocationId, catId))
                 .onStart { _dealsOfDay.value = Resource.loading() }
                 .collect { apiResponse ->
                     apiResponse.let{
@@ -110,9 +107,9 @@ class AppIntroViewModel
         }
     }
 
-    fun getAdsList(){
+    fun getAdsList(catId: String){
         viewModelScope.launch {
-            appIntroUseCase.getAdsList(AdsListRequest(userLocationId))
+            appIntroUseCase.getAdsList(AdsListRequest(userLocationId, catId))
                 .onStart { _adsListReceiver.value = Resource.loading() }
                 .collect { apiResponse ->
                     apiResponse.let{
@@ -126,9 +123,9 @@ class AppIntroViewModel
         }
     }
 
-    fun getCategories(){
+    fun getCategories(param: String){
         viewModelScope.launch {
-            appIntroUseCase.getCategories()
+            appIntroUseCase.getCategories(CategoriesListRequest(param))
                 .onStart { _categoriesReceiver.value = Resource.loading() }
                 .collect { apiResponse ->
                     apiResponse.let{
@@ -136,6 +133,22 @@ class AppIntroViewModel
                             _categoriesReceiver.value = apiResponse
                         }?: run {
                             _categoriesReceiver.value = Resource.dataError("Invalid server response!")
+                        }
+                    }
+                }
+        }
+    }
+
+    fun getCompanies(){
+        viewModelScope.launch {
+            appIntroUseCase.getCompanyList(CompanyListRequest(userSelectedCategory))
+                .onStart { _companyListReceiver.value = Resource.loading() }
+                .collect { apiResponse ->
+                    apiResponse.let{
+                        it.data?.let{
+                            _companyListReceiver.value = apiResponse
+                        }?: run {
+                            _companyListReceiver.value = Resource.dataError("Invalid server response!")
                         }
                     }
                 }

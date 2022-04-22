@@ -34,6 +34,10 @@ class AppIntroHomeFragment: BaseFragmentWithBinding<FragmentAppIntroHomeBinding>
 
     lateinit var categoriesListAdapter: ArrayAdapter<Any>
     private var categoriesSuggestionList = listOf<CategoryDataModel>()
+    private var autoCompleteTextHandler: Handler? = null
+
+    private val TRIGGER_AUTO_COMPLETE = 100
+    private val AUTO_COMPLETE_DELAY: Long = 300
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -48,8 +52,13 @@ class AppIntroHomeFragment: BaseFragmentWithBinding<FragmentAppIntroHomeBinding>
 
         setObserver()
         setSearchList()
-        appIntroViewModel.getCategories()
-        appIntroViewModel.getDealsOfTheDay()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (appIntroViewModel.userSelectedCategory.isNotEmpty()){
+            appIntroViewModel.getDealsOfTheDay(appIntroViewModel.userSelectedCategory)
+        }
     }
 
     override fun onStop() {
@@ -71,10 +80,11 @@ class AppIntroHomeFragment: BaseFragmentWithBinding<FragmentAppIntroHomeBinding>
                 else ->{
                     (activity as AppIntroActivity).hideProgress()
                     (activity as AppIntroActivity).showAlertDialog(it.message?:"Invalid Server Response")
+                    setDealsOfDay(listOf())
                 }
             }
 
-            appIntroViewModel.getAdsList()
+            appIntroViewModel.getAdsList(appIntroViewModel.userSelectedCategory)
         }
 
         appIntroViewModel.adsListReceiver.observe(viewLifecycleOwner){
@@ -90,6 +100,7 @@ class AppIntroHomeFragment: BaseFragmentWithBinding<FragmentAppIntroHomeBinding>
                 else ->{
                     (activity as AppIntroActivity).hideProgress()
                     (activity as AppIntroActivity).showAlertDialog(it.message?:"Invalid Server Response")
+                    setAdsList(listOf())
                 }
             }
         }
@@ -131,33 +142,74 @@ class AppIntroHomeFragment: BaseFragmentWithBinding<FragmentAppIntroHomeBinding>
 
             setAdapter(categoriesListAdapter)
 
+            addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(
+                    s: CharSequence,
+                    start: Int,
+                    count: Int,
+                    after: Int
+                ) {
+                }
+
+                override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+                }
+
+                override fun afterTextChanged(s: Editable) {
+                    autoCompleteTextHandler?.removeMessages(TRIGGER_AUTO_COMPLETE)
+                    autoCompleteTextHandler?.sendEmptyMessageDelayed(TRIGGER_AUTO_COMPLETE, AUTO_COMPLETE_DELAY)
+                }
+            })
+
             onItemClickListener =
                 OnItemClickListener { _, _, pos, _ ->
                     val catData = (categoriesListAdapter.getItem(pos) as CategoryDataModel)
 
                     catData.let {
-                        val locName = it.category
-                        val locId = it.id
+                        appIntroViewModel.userSelectedCategory = it.id
+                        appIntroViewModel.userSelectedCategoryName = it.category
+                        (activity as AppIntroActivity).hideKeyboard()
+                        findNavController().navigate(AppIntroHomeFragmentDirections.actionAppIntroHomeToAppIntroSearchList())
                     }
                 }
+
+            autoCompleteTextHandler = Handler(Looper.getMainLooper()) { msg ->
+                if (msg.what == TRIGGER_AUTO_COMPLETE) {
+                    if (!TextUtils.isEmpty(text)) {
+                        appIntroViewModel.getCategories(text.toString())
+                    }
+                }
+                false
+            }
         }
     }
 
     private fun setDealsOfDay(dOdList: List<DealOfDayDataModel>?){
         if (dOdList != null && dOdList.isNotEmpty()){
-            binding.tvPromptDeals.visibility = View.VISIBLE
-            binding.dOdAdapter = DealOfDayAdapter(requireContext(), dOdList)
+            binding.apply {
+                tvPromptDeals.visibility = View.VISIBLE
+                rvDealOfDay.visibility = View.VISIBLE
+                dOdAdapter = DealOfDayAdapter(requireContext(), dOdList)
+            }
         }else{
-            binding.tvPromptDeals.visibility = View.GONE
+            binding.apply {
+                tvPromptDeals.visibility = View.GONE
+                rvDealOfDay.visibility = View.GONE
+            }
         }
     }
 
     private fun setAdsList(adsList: List<AdsDataModel>?){
         if (adsList != null && adsList.isNotEmpty()){
-            binding.tvPromptAds.visibility = View.VISIBLE
-            binding.adsListAdapter = AdsListAdapter(requireContext(), adsList)
+            binding.apply {
+                tvPromptAds.visibility = View.VISIBLE
+                rvAds.visibility = View.VISIBLE
+                adsListAdapter = AdsListAdapter(requireContext(), adsList)
+            }
         }else{
-            binding.tvPromptAds.visibility = View.GONE
+            binding.apply {
+                tvPromptAds.visibility = View.GONE
+                rvAds.visibility = View.GONE
+            }
         }
     }
 

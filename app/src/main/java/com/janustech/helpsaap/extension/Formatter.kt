@@ -1,6 +1,7 @@
 package com.janustech.helpsaap.extension
 
 import java.util.*
+import java.util.regex.Pattern
 
 fun Double.formatMiles(): String {
     if (0 >= this) return ">999 MI"
@@ -21,3 +22,10 @@ fun Int.toScoreItemValue() = if (this < 0) null else this
 
 fun <E> java.util.ArrayList<E>.nullIfEmpty(): java.util.ArrayList<E>? =
     if (this.isEmpty()) null else this
+
+internal fun String.isValidPhoneNumber(): Boolean{
+    if(!Pattern.matches("[a-zA-Z]+", this)) {
+        return this.length in 7..13;
+    }
+    return false;
+}

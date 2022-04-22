@@ -1,10 +1,7 @@
 package com.janustech.helpsaap.repositories
 
 import com.janustech.helpsaap.network.Resource
-import com.janustech.helpsaap.network.requests.AdsListRequest
-import com.janustech.helpsaap.network.requests.DealOfDayRequest
-import com.janustech.helpsaap.network.requests.LocationListRequest
-import com.janustech.helpsaap.network.requests.LoginRequest
+import com.janustech.helpsaap.network.requests.*
 import com.janustech.helpsaap.network.response.*
 import kotlinx.coroutines.flow.Flow
 
@@ -18,5 +15,7 @@ interface AppIntroRepository {
 
     fun getAdsList(adsListRequest: AdsListRequest): Flow<Resource<ApiResponse<List<AdsResponseData>>>>
 
-    fun getCategories(): Flow<Resource<ApiResponse<List<CategoryResponseData>>>>
+    fun getCategories(categoriesListRequest: CategoriesListRequest): Flow<Resource<ApiResponse<List<CategoryResponseData>>>>
+
+    fun getCompanyList(companyListRequest: CompanyListRequest): Flow<Resource<ApiResponse<List<CompanyResponseData>>>>
 }

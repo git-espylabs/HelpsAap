@@ -1,10 +1,7 @@
 package com.janustech.helpsaap.repositories
 
 import com.janustech.helpsaap.network.Resource
-import com.janustech.helpsaap.network.requests.AdsListRequest
-import com.janustech.helpsaap.network.requests.DealOfDayRequest
-import com.janustech.helpsaap.network.requests.GeneralApis
-import com.janustech.helpsaap.network.requests.LocationListRequest
+import com.janustech.helpsaap.network.requests.*
 import com.janustech.helpsaap.network.response.*
 import com.janustech.helpsaap.network.safeApiCall
 import kotlinx.coroutines.Dispatchers
@@ -38,9 +35,15 @@ class AppIntroRepositoryImpl(private val apiService: GeneralApis): AppIntroRepos
         }.flowOn(Dispatchers.IO)
     }
 
-    override fun getCategories(): Flow<Resource<ApiResponse<List<CategoryResponseData>>>> {
+    override fun getCategories(categoriesListRequest: CategoriesListRequest): Flow<Resource<ApiResponse<List<CategoryResponseData>>>> {
         return flow {
-            emit(safeApiCall { apiService.getCategories() })
+            emit(safeApiCall { apiService.getCategories(categoriesListRequest) })
+        }.flowOn(Dispatchers.IO)
+    }
+
+    override fun getCompanyList(companyListRequest: CompanyListRequest): Flow<Resource<ApiResponse<List<CompanyResponseData>>>> {
+        return flow {
+            emit(safeApiCall { apiService.getCompanyList(companyListRequest) })
         }.flowOn(Dispatchers.IO)
     }
 }
