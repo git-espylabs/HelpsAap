@@ -11,8 +11,8 @@ plugins {
     id (Plugins.ANDROID_APPLICATION) version Versions.gradlePlugin apply false
     id (Plugins.ANDROID_LIBRARY) version Versions.gradlePlugin apply false
     id (Plugins.JETBRAINS_KOTLIN_ANDROID) version Versions.kotlin apply false
-    id(Plugins.JETBRAINS_KOTLIN_SERIALIZATION) version Versions.kotlin apply false
-    id ("com.google.android.libraries.mapsplatform.secrets-gradle-plugin") version "2.0.1" apply false
+    id (Plugins.JETBRAINS_KOTLIN_SERIALIZATION) version Versions.kotlin apply false
+    id (Plugins.GOOGLE_MAPS) version Versions.google_maps apply false
 }
 
 tasks.register("clean", Delete::class) {

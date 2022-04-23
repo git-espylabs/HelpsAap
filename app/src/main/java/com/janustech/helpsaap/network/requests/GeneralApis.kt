@@ -1,5 +1,6 @@
 package com.janustech.helpsaap.network.requests
 
+import com.janustech.helpsaap.network.HttpEndPoints
 import com.janustech.helpsaap.network.response.*
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -7,30 +8,30 @@ import retrofit2.http.POST
 
 interface GeneralApis {
 
-    @GET("langlist")
+    @GET(HttpEndPoints.LANGUAGES)
     suspend fun getLanguagesList(): ApiResponse<List<LanguageListResponseData>>
 
-    @POST("searchplace")
+    @POST(HttpEndPoints.SEARCH_PLACES)
     suspend fun getLocationList(
         @Body locationListRequest: LocationListRequest
     ): ApiResponse<List<LocationListResponseData>>
 
-    @POST("dealsoftheday")
+    @POST(HttpEndPoints.DEALS_OF_DAY)
     suspend fun getDealsOfDay(
         @Body dealOfDayRequest: DealOfDayRequest
     ): ApiResponse<List<DealsOfDayResponseData>>
 
-    @POST("adslist")
+    @POST(HttpEndPoints.ADS_LIST)
     suspend fun getAdsList(
         @Body adsListRequest: AdsListRequest
     ): ApiResponse<List<AdsResponseData>>
 
-    @POST("categorysearch")
+    @POST(HttpEndPoints.CATEGORY_SEARCH)
     suspend fun getCategories(
         @Body categoriesListRequest: CategoriesListRequest
     ): ApiResponse<List<CategoryResponseData>>
 
-    @POST("companylist")
+    @POST(HttpEndPoints.COMPANIES)
     suspend fun getCompanyList(
         @Body companyListRequest: CompanyListRequest
     ): ApiResponse<List<CompanyResponseData>>

@@ -12,13 +12,13 @@ import retrofit2.http.Part
 
 interface ProfileApis {
 
-    @POST("login")
+    @POST(HttpEndPoints.LOGIN)
     suspend fun login(
         @Body loginRequest: LoginRequest,
     ): ApiResponse<LoginResponseData>
 
     @Multipart
-    @POST("register")
+    @POST(HttpEndPoints.REGISTER)
     suspend fun register(
         @Part phonenumber: MultipartBody.Part,
         @Part password: MultipartBody.Part,

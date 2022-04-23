@@ -81,9 +81,6 @@ android {
         abortOnError = false
         checkReleaseBuilds = false
     }
-    /*buildFeatures {
-        viewBinding = true
-    }*/
 
     applicationVariants.all {
         val appBaseUrl = when (flavorName) {
@@ -91,18 +88,24 @@ android {
             "production" -> "helpadmin.espylabs.com/public/api/"
             else -> null
         }
+        val imageUrl = when (flavorName) {
+            "staging" -> "helpadmin.espylabs.com/public/img/"
+            "production" -> "helpadmin.espylabs.com/public/img/"
+            else -> null
+        }
 
         appBaseUrl?.let {
-            buildConfigField("String", "BASE_URL", "\"https://$appBaseUrl\"")
+            buildConfigField("String", "BASE_URL", "\"https://$it\"")
+        }
+
+        imageUrl?.let {
+            buildConfigField("String", "IMAGE_URL", "\"https://$it\"")
         }
     }
 }
 
 dependencies {
-    implementation("com.google.android.gms:play-services-maps:18.0.2")
     Libs.implementations.forEach(::implementation)
-    implementation("androidx.cardview:cardview:1.0.0")
-    implementation ("de.hdodenhof:circleimageview:3.1.0")
     Libs.kaptDependencyNotions.forEach(::kapt)
     Libs.testImplementations.forEach(::testImplementation)
     Libs.androidTestImplementations.forEach(::androidTestImplementation)

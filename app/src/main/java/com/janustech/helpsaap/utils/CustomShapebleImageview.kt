@@ -5,6 +5,7 @@ import android.util.AttributeSet
 import android.widget.ImageView
 import com.bumptech.glide.Glide
 import com.google.android.material.imageview.ShapeableImageView
+import com.janustech.helpsaap.BuildConfig
 import com.janustech.helpsaap.R
 
 class CustomShapebleImageview: ShapeableImageView {
@@ -12,7 +13,7 @@ class CustomShapebleImageview: ShapeableImageView {
     var url: String = ""
         set(value){
             field = value
-            Glide.with(this).load("https://helpadmin.espylabs.com/public/img/$value").into(this)
+            Glide.with(this).load(BuildConfig.IMAGE_URL + value).into(this)
         }
 
     constructor(context: Context) : super(context)

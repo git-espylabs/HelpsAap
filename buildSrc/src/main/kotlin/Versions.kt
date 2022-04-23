@@ -37,4 +37,8 @@ object Versions {
     const val androidxHiltCompiler = "1.0.0"
     const val moshi = "1.13.0"
     const val moshi_converter = "2.9.0"
+    const val google_maps = "2.0.1"
+    const val play_services_maps = "18.0.2"
+    const val cardView = "1.0.0"
+    const val hdodenhof = "3.1.0"
 }

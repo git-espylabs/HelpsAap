@@ -36,7 +36,10 @@ object Libs {
         "androidx.multidex:multidex:${Versions.multiDexVers}",
         "com.google.dagger:hilt-android:${Versions.hilt}",
         "com.squareup.moshi:moshi:${Versions.moshi}",
-        "com.squareup.retrofit2:converter-moshi:${Versions.moshi_converter}"
+        "com.squareup.retrofit2:converter-moshi:${Versions.moshi_converter}",
+        "com.google.android.gms:play-services-maps:${Versions.play_services_maps}",
+        "androidx.cardview:cardview:${Versions.cardView}",
+        "de.hdodenhof:circleimageview:${Versions.hdodenhof}"
     )
 
     val testImplementations = listOf(
@@ -74,6 +77,7 @@ object Plugins {
     const val JETBRAINS_KOTLIN_ANDROID = "org.jetbrains.kotlin.android"
     const val JETBRAINS_KOTLIN_SERIALIZATION = "org.jetbrains.kotlin.plugin.serialization"
     const val DAGGER_HILT = "dagger.hilt.android.plugin"
+    const val GOOGLE_MAPS = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin"
 
     const val CLASS_PATH_ANDROID_GRADLE_PLUGIN = "com.android.tools.build:gradle:${Versions.gradlePlugin}"
     const val CLASS_PATH_KOTLIN = "org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.kotlin}"

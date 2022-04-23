@@ -10,7 +10,7 @@ import retrofit2.http.*
 interface HelpsAapApis {
 
     @Multipart
-    @POST("dealoftheday")
+    @POST(HttpEndPoints.DEAL_OF_DAY)
     suspend fun postDeal(
         @Part cus_id: MultipartBody.Part,
         @Part start_date: MultipartBody.Part,
@@ -19,13 +19,13 @@ interface HelpsAapApis {
         @Part image: MultipartBody.Part
     ): MultipartApiResponse
 
-    @POST("editprofile")
+    @POST(HttpEndPoints.EDIT_PROFILE)
     suspend fun submitEditProfile(
         @Body editProfileRequest: EditProfileRequest
     ): ApiResponse<String>
 
     @Multipart
-    @POST("addads")
+    @POST(HttpEndPoints.ADD_ADS)
     suspend fun postAds(
         @Part cus_id: MultipartBody.Part,
         @Part start_date: MultipartBody.Part,
@@ -38,7 +38,7 @@ interface HelpsAapApis {
         @Part image: MultipartBody.Part
     ): MultipartApiResponse
 
-    @GET("notifications")
+    @GET(HttpEndPoints.NOTIFICATIONS)
     suspend fun getNotifications(): ApiResponse<List<NotificationResponseData>>
 
 
