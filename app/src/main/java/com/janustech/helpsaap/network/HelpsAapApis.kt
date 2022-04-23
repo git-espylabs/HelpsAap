@@ -1,7 +1,10 @@
 package com.janustech.helpsaap.network
 
+import com.janustech.helpsaap.network.requests.EditProfileRequest
+import com.janustech.helpsaap.network.response.ApiResponse
 import com.janustech.helpsaap.network.response.MultipartApiResponse
 import okhttp3.MultipartBody
+import retrofit2.http.Body
 import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.Part
@@ -17,4 +20,11 @@ interface HelpsAapApis {
         @Part locations: MultipartBody.Part,
         @Part image: MultipartBody.Part
     ): MultipartApiResponse
+
+    @POST("editprofile")
+    suspend fun submitEditProfile(
+        @Body editProfileRequest: EditProfileRequest
+    ): ApiResponse<String>
+
+
 }

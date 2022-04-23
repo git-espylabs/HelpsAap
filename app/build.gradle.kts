@@ -102,6 +102,7 @@ dependencies {
     implementation("com.google.android.gms:play-services-maps:18.0.2")
     Libs.implementations.forEach(::implementation)
     implementation("androidx.cardview:cardview:1.0.0")
+    implementation ("de.hdodenhof:circleimageview:3.1.0")
     Libs.kaptDependencyNotions.forEach(::kapt)
     Libs.testImplementations.forEach(::testImplementation)
     Libs.androidTestImplementations.forEach(::androidTestImplementation)

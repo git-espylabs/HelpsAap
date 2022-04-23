@@ -7,27 +7,16 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.provider.MediaStore
-import android.text.Editable
-import android.text.TextUtils
-import android.text.TextWatcher
 import android.view.View
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
 import android.widget.ImageView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.FileProvider
 import androidx.fragment.app.activityViewModels
 import com.janustech.helpsaap.R
-import com.janustech.helpsaap.databinding.FragmentDealOfDayBindingImpl
-import com.janustech.helpsaap.map.toLocationDataModel
-import com.janustech.helpsaap.model.LocationDataModel
-import com.janustech.helpsaap.network.Status
+import com.janustech.helpsaap.databinding.FragmentAdvertisementBindingImpl
 import com.janustech.helpsaap.ui.base.BaseFragmentWithBinding
 import com.janustech.helpsaap.ui.profile.PhotoOptionBottomSheetDialogFragment
-import com.janustech.helpsaap.ui.startup.AppIntroActivity
 import com.janustech.helpsaap.utils.CommonUtils
 import com.janustech.helpsaap.utils.PhotoOptionListener
 import dagger.hilt.android.AndroidEntryPoint
@@ -37,26 +26,18 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 @AndroidEntryPoint
-class FragmentDealOfDay: BaseFragmentWithBinding<FragmentDealOfDayBindingImpl>(R.layout.fragment_deal_of_day),View.OnClickListener, PhotoOptionListener {
+class FragmentAdvertisement: BaseFragmentWithBinding<FragmentAdvertisementBindingImpl>(R.layout.fragment_advertisement),
+    View.OnClickListener, PhotoOptionListener {
 
     private val appHomeViewModel: AppHomeViewModel by activityViewModels()
     private lateinit var currentPhotoPath: String
     private var photoFile: File? = null
     private var actualPath = ""
-
-    lateinit var locationsListAdapter: ArrayAdapter<Any>
-    private var locationSuggestionList = listOf<LocationDataModel>()
-    private var autoCompleteTextHandler: Handler? = null
-
-    private val TRIGGER_AUTO_COMPLETE = 100
-    private val AUTO_COMPLETE_DELAY: Long = 300
     val DATE_FORMAT = "dd MMM yyyy"
     val DATE_FORMAT_REGULAR = "dd-MM-yyyy"
     val DATE_FORMAT_SERVER = "yyyy-MM-dd"
     var selectedDateFrom = "";
     var selectedDateTo = "";
-
-    var locationsList = arrayListOf<LocationDataModel>()
 
 
     private var cameraLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -80,16 +61,12 @@ class FragmentDealOfDay: BaseFragmentWithBinding<FragmentDealOfDayBindingImpl>(R
 
         binding.apply {
             viewModel = appHomeViewModel
-            viewParent = this@FragmentDealOfDay
+            viewParent = this@FragmentAdvertisement
         }
-
-        setObserver()
-        setLocationDropdown()
-        setSelectedLocationListView()
     }
 
-    override fun onClick(v: View?) {
-        when(v?.id){
+    override fun onClick(p0: View?) {
+        when(p0?.id){
 
             R.id.tvStartDate -> {
                 showDatePickerDialog(1)
@@ -101,7 +78,7 @@ class FragmentDealOfDay: BaseFragmentWithBinding<FragmentDealOfDayBindingImpl>(R
                 showPhotoPickOption()
             }
             R.id.btnPost -> {
-                appHomeViewModel.postDeal(requireContext())
+
             }
 
         }
@@ -115,103 +92,14 @@ class FragmentDealOfDay: BaseFragmentWithBinding<FragmentDealOfDayBindingImpl>(R
         dispatchPickPhotoIntent()
     }
 
-    private fun setObserver(){
-        appHomeViewModel.locationListReceiver.observe(viewLifecycleOwner){
-            when(it.status){
-                Status.SUCCESS ->{
-                    val locationList = it.data?.data
-                    locationSuggestionList = locationList?.map { locData -> locData.toLocationDataModel() } ?: listOf()
-                    locationsListAdapter = ArrayAdapter(
-                        requireContext(),
-                        android.R.layout.simple_spinner_dropdown_item,
-                        locationSuggestionList
-                    )
-                    binding.actLocation.setAdapter(locationsListAdapter)
-                }
-                Status.LOADING -> {
-                }
-                else ->{
-                    (activity as AppHomeActivity).showAlertDialog(it.message?:"Invalid Server Response")
-                }
+
+    private fun setPublishLocations(){
+        /*binding.apply {
+            lPubLocState.run{
+                tvLocTitle.setText("State")
+                btnPrice1.setBackgroundDrawableWithColorScheme(color, 16)
             }
-        }
-
-        appHomeViewModel.postDealResponseReceiver.observe(viewLifecycleOwner){
-            when(it.status){
-                Status.SUCCESS ->{
-                    (activity as AppHomeActivity).hideProgress()
-                    showToast("Deal posted successfully")
-                }
-                Status.LOADING -> {
-                    (activity as AppHomeActivity).showProgress()
-                }
-                else ->{
-                    (activity as AppHomeActivity).hideProgress()
-                    (activity as AppHomeActivity).showAlertDialog(it.message?:"Invalid Server Response")
-                }
-            }
-        }
-
-    }
-
-    private fun setLocationDropdown(){
-        locationsListAdapter = ArrayAdapter(
-            requireContext(),
-            android.R.layout.simple_spinner_dropdown_item,
-            locationSuggestionList
-        )
-        binding.actLocation.apply {
-            threshold = 1
-
-            setAdapter(locationsListAdapter)
-            addTextChangedListener(object : TextWatcher {
-                override fun beforeTextChanged(
-                    s: CharSequence,
-                    start: Int,
-                    count: Int,
-                    after: Int
-                ) {
-                }
-
-                override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                }
-
-                override fun afterTextChanged(s: Editable) {
-                    autoCompleteTextHandler?.removeMessages(TRIGGER_AUTO_COMPLETE)
-                    autoCompleteTextHandler?.sendEmptyMessageDelayed(TRIGGER_AUTO_COMPLETE, AUTO_COMPLETE_DELAY)
-                }
-            })
-
-            onItemClickListener =
-                AdapterView.OnItemClickListener { _, _, pos, _ ->
-                    val locationData = (locationsListAdapter.getItem(pos) as LocationDataModel)
-
-                    locationData.let {
-                        val locName = it.toString()
-                        val locId = it.id
-                        locationsList.add(it)
-                        appHomeViewModel.selectedDealLocations.add(it.id)
-                        binding.locListAdapter?.notifyItemInserted(locationsList.size - 1)
-                    }
-                    (activity as AppHomeActivity).hideKeyboard()
-
-                }
-
-            autoCompleteTextHandler = Handler(Looper.getMainLooper()) { msg ->
-                if (msg.what == TRIGGER_AUTO_COMPLETE) {
-                    if (!TextUtils.isEmpty(text)) {
-                        appHomeViewModel.getLocationSuggestions(text.toString())
-                    }
-                }
-                false
-            }
-        }
-    }
-
-    private fun setSelectedLocationListView(){
-        binding.apply {
-            locListAdapter = LocationListAdapter(locationsList)
-        }
+        }*/
     }
 
     private fun showDatePickerDialog(dateType: Int){
@@ -237,9 +125,8 @@ class FragmentDealOfDay: BaseFragmentWithBinding<FragmentDealOfDayBindingImpl>(R
         }, year, month, day).show()
     }
 
-
     private fun showPhotoPickOption() {
-        PhotoOptionBottomSheetDialogFragment(this@FragmentDealOfDay).show(
+        PhotoOptionBottomSheetDialogFragment(this@FragmentAdvertisement).show(
             childFragmentManager,
             "ChoosePhotoFragment"
         )

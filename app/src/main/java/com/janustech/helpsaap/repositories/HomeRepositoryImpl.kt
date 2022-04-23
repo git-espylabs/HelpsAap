@@ -2,6 +2,8 @@ package com.janustech.helpsaap.repositories
 
 import com.janustech.helpsaap.network.HelpsAapApis
 import com.janustech.helpsaap.network.Resource
+import com.janustech.helpsaap.network.requests.EditProfileRequest
+import com.janustech.helpsaap.network.response.ApiResponse
 import com.janustech.helpsaap.network.response.MultipartApiResponse
 import com.janustech.helpsaap.network.safeApiCall
 import kotlinx.coroutines.Dispatchers
@@ -26,6 +28,14 @@ class HomeRepositoryImpl(private val apiService: HelpsAapApis): HomeRepository {
                 enddate,
                 locations,
                 image
+            ) })
+        }.flowOn(Dispatchers.IO)
+    }
+
+    override fun submitEditProfile(editProfileRequest: EditProfileRequest): Flow<Resource<ApiResponse<String>>> {
+        return flow {
+            emit(safeApiCall { apiService.submitEditProfile(
+                editProfileRequest
             ) })
         }.flowOn(Dispatchers.IO)
     }

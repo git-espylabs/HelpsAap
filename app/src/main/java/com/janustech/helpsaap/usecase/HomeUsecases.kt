@@ -1,6 +1,8 @@
 package com.janustech.helpsaap.usecase
 
 import com.janustech.helpsaap.network.Resource
+import com.janustech.helpsaap.network.requests.EditProfileRequest
+import com.janustech.helpsaap.network.response.ApiResponse
 import com.janustech.helpsaap.network.response.MultipartApiResponse
 import com.janustech.helpsaap.repositories.HomeRepository
 import com.janustech.helpsaap.repositories.ProfileRepository
@@ -33,6 +35,12 @@ class HomeUsecases@Inject constructor(
             ).collect {
                 emit(it)
             }
+        }.flowOn(Dispatchers.IO)
+    }
+
+    suspend fun submitEditProfile(editProfileRequest: EditProfileRequest):Flow<Resource<ApiResponse<String>>>{
+        return flow {
+            homeRepository.submitEditProfile(editProfileRequest).collect { emit(it) }
         }.flowOn(Dispatchers.IO)
     }
 }

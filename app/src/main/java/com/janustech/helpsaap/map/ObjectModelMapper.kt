@@ -1,6 +1,7 @@
 package com.janustech.helpsaap.map
 
 import com.janustech.helpsaap.model.*
+import com.janustech.helpsaap.network.requests.ProfileCategorySubmitRequest
 import com.janustech.helpsaap.network.response.*
 
 internal fun LoginResponseData.toUserData() = UserData(
@@ -74,5 +75,9 @@ internal fun CompanyResponseData.toCompanyDataModel() = CompanyDataModel(
     }else{
         "--"
     }
+)
+
+internal fun String.toProfileCategoryModel() = ProfileCategorySubmitRequest(
+     categoryid = this
 )
 

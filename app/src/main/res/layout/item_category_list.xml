@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="model"
+            type="com.janustech.helpsaap.model.CategoryDataModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <TextView
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:fontFamily="@font/segoui"
+            android:textFontWeight="700"
+            android:textStyle="bold"
+            android:text="@{model.category}"
+            android:layout_marginVertical="5dp"
+            android:layout_marginHorizontal="7dp"
+            android:background="@drawable/rounded_rect_green_filled_less_radii"
+            android:paddingVertical="5dp"
+            android:paddingHorizontal="16dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

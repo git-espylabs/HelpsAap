@@ -3,6 +3,7 @@ package com.janustech.helpsaap.ui.home
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import com.janustech.helpsaap.R
 import com.janustech.helpsaap.databinding.FragmentAppHomeBinding
 import com.janustech.helpsaap.ui.base.BaseFragmentWithBinding
@@ -33,10 +34,10 @@ class AppHomeFragment : BaseFragmentWithBinding<FragmentAppHomeBinding>(R.layout
     override fun onClick(p0: View?) {
         when(p0?.id){
             R.id.ivProfileBg -> {
-
+                findNavController().navigate(AppHomeFragmentDirections.actionAppHomeFragmentToEditProfileFragment())
             }
             R.id.layDoD -> {
-
+                findNavController().navigate(AppHomeFragmentDirections.actionAppHomeFragmentToDealOfDayFragment())
             }
             R.id.layAds -> {
 

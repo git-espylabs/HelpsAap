@@ -106,9 +106,9 @@ class AppHomeActivity : BaseActivity<ActivityAppHomeBinding>(), View.OnClickList
                     navigate(R.id.dealOfDayFragment, null, getNavOptions())
                 }
             }
-            R.id.l3 ->{
+            R.id.l5 ->{
                 findNavController(R.id.fragmentContainerView).apply {
-//                    navigate(R.id.shopFragment, null, getNavOptions())
+                    navigate(R.id.editProfileFragment, null, getNavOptions())
                 }
             }
         }
@@ -136,6 +136,15 @@ class AppHomeActivity : BaseActivity<ActivityAppHomeBinding>(), View.OnClickList
                     btnAds.setImageTint(R.color.grey_disabled)
                     btnNotification.setImageTint(R.color.grey_disabled)
                     btnProfile.setImageTint(R.color.grey_disabled)
+                }
+            }
+            R.id.editProfileFragment ->{
+                binding?.apply {
+                    btnHome.setImageTint(R.color.grey_disabled)
+                    btnDeal.setImageTint(R.color.grey_disabled)
+                    btnAds.setImageTint(R.color.grey_disabled)
+                    btnNotification.setImageTint(R.color.grey_disabled)
+                    btnProfile.setImageTint(R.color.app_accent_color)
                 }
             }
         }

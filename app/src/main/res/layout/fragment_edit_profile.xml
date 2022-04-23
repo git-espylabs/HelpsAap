@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:map="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data >
+        <variable
+            name="viewModel"
+            type="com.janustech.helpsaap.ui.home.AppHomeViewModel"/>
+
+        <variable
+            name="catListAdapter"
+            type="com.janustech.helpsaap.ui.home.CategoryListAdapter" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:focusableInTouchMode="true"
+        android:focusable="true"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/tvEditPrompt"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_size_custom_18"
+            android:layout_marginStart="24dp"
+            android:fontFamily="@font/segoui"
+            android:textStyle="bold"
+            android:text="Edit Profile"
+            android:textFontWeight="700"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <com.janustech.helpsaap.utils.CustomCircleImageview
+            android:id="@+id/ivLogo"
+            app:layout_constraintTop_toBottomOf="@+id/tvEditPrompt"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:src="@drawable/avatar"
+            app:url="@{viewModel.editProfImg}"
+            app:layout_constraintVertical_bias="0.05"
+            android:layout_width="128dp"
+            android:layout_height="128dp"/>
+
+
+
+        <ScrollView
+            app:layout_constraintTop_toBottomOf="@+id/ivLogo"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:focusableInTouchMode="true"
+            android:focusable="true"
+            android:layout_marginBottom="12dp"
+            android:layout_width="match_parent"
+            android:layout_height="0dp">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:focusableInTouchMode="true"
+                android:focusable="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/etUserNameLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:boxBackgroundMode="none"
+                    android:layout_marginHorizontal="24dp"
+                    android:layout_marginTop="32dp"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:hintAnimationEnabled="false"
+                    app:hintEnabled="false">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etUserName"
+                        android:layout_width="match_parent"
+                        android:padding="1dp"
+                        android:fontFamily="@font/segoui"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/text_size_custom_18"
+                        android:layout_height="@dimen/custom_dimen_48"
+                        android:background="@drawable/rounded_rect_grey_filled"
+                        android:hint="Username"
+                        android:imeOptions="actionNext"
+                        android:text="@={viewModel.editUsername}"
+                        android:inputType="text"/>
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/etEmailLay"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:boxBackgroundMode="none"
+                    app:layout_constraintTop_toBottomOf="@+id/etUserNameLayout"
+                    android:layout_marginHorizontal="24dp"
+                    android:layout_marginTop="16dp"
+                    app:hintAnimationEnabled="false"
+                    app:hintEnabled="false">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etEmail"
+                        android:layout_width="match_parent"
+                        android:padding="1dp"
+                        android:fontFamily="@font/segoui"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/text_size_custom_18"
+                        android:layout_height="@dimen/custom_dimen_48"
+                        android:background="@drawable/rounded_rect_grey_filled"
+                        android:hint="@string/text_hint_email"
+                        android:inputType="textEmailAddress"
+                        android:text="@={viewModel.editEmail}"/>
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/etMobLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:boxBackgroundMode="none"
+                    android:layout_marginHorizontal="24dp"
+                    android:layout_marginTop="32dp"
+                    app:layout_constraintTop_toBottomOf="@+id/etEmailLay"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:hintAnimationEnabled="false"
+                    app:hintEnabled="false">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etMobNo"
+                        android:layout_width="match_parent"
+                        android:padding="1dp"
+                        android:fontFamily="@font/segoui"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/text_size_custom_18"
+                        android:layout_height="@dimen/custom_dimen_48"
+                        android:background="@drawable/rounded_rect_grey_filled"
+                        android:hint="@string/text_hint_mob"
+                        android:imeOptions="actionNext"
+                        android:inputType="textPhonetic"
+                        android:text="@={viewModel.editEditMob}"/>
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/etPasswordLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:boxBackgroundMode="none"
+                    app:layout_constraintTop_toBottomOf="@+id/etMobLayout"
+                    android:layout_marginHorizontal="24dp"
+                    android:layout_marginTop="16dp"
+                    app:hintAnimationEnabled="false"
+                    app:passwordToggleEnabled="true"
+                    app:hintEnabled="false">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etPassword"
+                        android:layout_width="match_parent"
+                        android:padding="1dp"
+                        android:fontFamily="@font/segoui"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/text_size_custom_18"
+                        android:layout_height="@dimen/custom_dimen_48"
+                        android:background="@drawable/rounded_rect_grey_filled"
+                        android:hint="@string/text_hint_password"
+                        android:inputType="textPassword"
+                        android:text="@={viewModel.editPassword}"/>
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <AutoCompleteTextView
+                    android:paddingHorizontal="8dp"
+                    android:id="@+id/actCategory"
+                    android:layout_marginHorizontal="24dp"
+                    app:layout_constraintTop_toBottomOf="@+id/etPasswordLayout"
+                    android:background="@drawable/rounded_rect_grey_filled"
+                    android:drawableEnd="@drawable/ic_search"
+                    android:layout_marginTop="16dp"
+                    android:hint="Search Category"
+                    android:layout_width="match_parent"
+                    android:layout_height="52dp"/>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvLocation"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginHorizontal="24dp"
+                    app:layout_constraintTop_toBottomOf="@+id/actCategory"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    android:adapter="@{catListAdapter}"
+                    tools:listitem="@layout/item_category_list"
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+                <Button
+                    android:id="@+id/btnContinue"
+                    style="@style/HelpAapButtonStyle"
+                    app:layout_constraintTop_toBottomOf="@+id/rvLocation"
+                    android:layout_marginTop="24dp"
+                    android:layout_marginHorizontal="24dp"
+                    android:text="Save"
+                    android:paddingHorizontal="24dp"
+                    android:textAllCaps="false"
+                    android:onClick="@{() -> viewModel.submitProfileEdit()}"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/custom_dimen_56"
+                    android:layout_marginBottom="24dp"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </ScrollView>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>
