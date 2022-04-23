@@ -106,6 +106,16 @@ class AppHomeActivity : BaseActivity<ActivityAppHomeBinding>(), View.OnClickList
                     navigate(R.id.dealOfDayFragment, null, getNavOptions())
                 }
             }
+            R.id.l3 ->{
+                findNavController(R.id.fragmentContainerView).apply {
+                    navigate(R.id.advertiseFragment, null, getNavOptions())
+                }
+            }
+            R.id.l4 ->{
+                findNavController(R.id.fragmentContainerView).apply {
+                    navigate(R.id.notificationsFragment, null, getNavOptions())
+                }
+            }
             R.id.l5 ->{
                 findNavController(R.id.fragmentContainerView).apply {
                     navigate(R.id.editProfileFragment, null, getNavOptions())
@@ -138,6 +148,15 @@ class AppHomeActivity : BaseActivity<ActivityAppHomeBinding>(), View.OnClickList
                     btnProfile.setImageTint(R.color.grey_disabled)
                 }
             }
+            R.id.advertiseFragment ->{
+                binding?.apply {
+                    btnHome.setImageTint(R.color.grey_disabled)
+                    btnDeal.setImageTint(R.color.grey_disabled)
+                    btnAds.setImageTint(R.color.app_accent_color)
+                    btnNotification.setImageTint(R.color.grey_disabled)
+                    btnProfile.setImageTint(R.color.grey_disabled)
+                }
+            }
             R.id.editProfileFragment ->{
                 binding?.apply {
                     btnHome.setImageTint(R.color.grey_disabled)
@@ -145,6 +164,15 @@ class AppHomeActivity : BaseActivity<ActivityAppHomeBinding>(), View.OnClickList
                     btnAds.setImageTint(R.color.grey_disabled)
                     btnNotification.setImageTint(R.color.grey_disabled)
                     btnProfile.setImageTint(R.color.app_accent_color)
+                }
+            }
+            R.id.notificationsFragment ->{
+                binding?.apply {
+                    btnHome.setImageTint(R.color.grey_disabled)
+                    btnDeal.setImageTint(R.color.grey_disabled)
+                    btnAds.setImageTint(R.color.grey_disabled)
+                    btnNotification.setImageTint(R.color.app_accent_color)
+                    btnProfile.setImageTint(R.color.grey_disabled)
                 }
             }
         }

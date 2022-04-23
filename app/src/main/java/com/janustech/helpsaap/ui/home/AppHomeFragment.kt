@@ -40,7 +40,7 @@ class AppHomeFragment : BaseFragmentWithBinding<FragmentAppHomeBinding>(R.layout
                 findNavController().navigate(AppHomeFragmentDirections.actionAppHomeFragmentToDealOfDayFragment())
             }
             R.id.layAds -> {
-
+                findNavController().navigate(AppHomeFragmentDirections.actionAppHomeFragmentToAdvertiseFragment())
             }
         }
     }

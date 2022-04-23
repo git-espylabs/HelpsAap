@@ -81,3 +81,8 @@ internal fun String.toProfileCategoryModel() = ProfileCategorySubmitRequest(
      categoryid = this
 )
 
+internal fun NotificationResponseData.toNotificationDataModel() = NotificationDataModel(
+    id = id,
+    description = description?:""
+)
+

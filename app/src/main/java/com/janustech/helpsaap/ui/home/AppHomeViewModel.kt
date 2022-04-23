@@ -14,10 +14,7 @@ import com.janustech.helpsaap.network.Resource
 import com.janustech.helpsaap.network.requests.CategoriesListRequest
 import com.janustech.helpsaap.network.requests.EditProfileRequest
 import com.janustech.helpsaap.network.requests.LocationListRequest
-import com.janustech.helpsaap.network.response.ApiResponse
-import com.janustech.helpsaap.network.response.CategoryResponseData
-import com.janustech.helpsaap.network.response.LocationListResponseData
-import com.janustech.helpsaap.network.response.MultipartApiResponse
+import com.janustech.helpsaap.network.response.*
 import com.janustech.helpsaap.preference.AppPreferences
 import com.janustech.helpsaap.usecase.AppIntroUseCase
 import com.janustech.helpsaap.usecase.HomeUsecases
@@ -50,6 +47,13 @@ class AppHomeViewModel @Inject constructor(private val appIntroUseCase: AppIntro
     var editProfImg = ""
     var addedCategories = arrayListOf<String>()
 
+    var selectedFromAdsDate = ""
+    var selectedToAdsDate = ""
+    var adsImage = ""
+    var selectedPublicLocationId = ""
+    var selectedPublicLocationType = ""
+    var selectedAMount = ""
+
 
 
     private val _locationListReceiver = MutableLiveData<Resource<ApiResponse<List<LocationListResponseData>>>>()
@@ -67,6 +71,14 @@ class AppHomeViewModel @Inject constructor(private val appIntroUseCase: AppIntro
     private val _editSubmitStatusReceiver = MutableLiveData<Resource<ApiResponse<String>>>()
     val editSubmitStatusReceiver: LiveData<Resource<ApiResponse<String>>>
         get() = _editSubmitStatusReceiver
+
+    private val _publishAdsResponseReceiver = MutableLiveData<Resource<MultipartApiResponse>>()
+    val publishAdsResponseReceiver: LiveData<Resource<MultipartApiResponse>>
+        get() = _publishAdsResponseReceiver
+
+    private val _notificationsListReceiver = MutableLiveData<Resource<ApiResponse<List<NotificationResponseData>>>>()
+    val notificationsListReceiver: LiveData<Resource<ApiResponse<List<NotificationResponseData>>>>
+        get() = _notificationsListReceiver
 
     init {
         userLocationName = AppPreferences.userLocation
@@ -178,6 +190,64 @@ class AppHomeViewModel @Inject constructor(private val appIntroUseCase: AppIntro
                             _editSubmitStatusReceiver.value = Resource.dataError("Invalid server response!")
                         }
                     } }
+        }
+    }
+
+    fun postAds(context: Context){
+        viewModelScope.launch {
+            val partCusId = MultiPartRequestHelper.createRequestBody("cus_id", userData?.userId?:"")
+            val partStartDate = MultiPartRequestHelper.createRequestBody("start_date", selectedFromAdsDate)
+            val partEndDate = MultiPartRequestHelper.createRequestBody("end_date", selectedToAdsDate)
+            val partTxId = MultiPartRequestHelper.createRequestBody("transaction_id", ((100000..1000000).random()).toString())
+            val partAmount = MultiPartRequestHelper.createRequestBody("amount", selectedAMount)
+            val partAdsName = MultiPartRequestHelper.createRequestBody("ads_name", "")
+            val partLocationType = MultiPartRequestHelper.createRequestBody("locationtype", selectedPublicLocationType)
+            val partPublishLocId = MultiPartRequestHelper.createRequestBody("publish_loc", selectedPublicLocationType)
+            val partFile = MultiPartRequestHelper.createFileRequestBody(adsImage, "image", context)
+
+            homeUseCases.postAds(
+                partCusId,
+                partStartDate,
+                partEndDate,
+                partTxId,
+                partAmount,
+                partAdsName,
+                partLocationType,
+                partPublishLocId,
+                partFile
+            )
+                .onStart { _publishAdsResponseReceiver.value = Resource.loading() }
+                .collect {  apiResponse ->
+                    apiResponse.let {
+                        it.data?.let { resp ->
+                            if (resp.isResponseSuccess() && resp.data != null && resp.data.isNotEmpty()) {
+                                _publishAdsResponseReceiver.value = apiResponse
+                            }else if (resp.isResponseSuccess().not()){
+                                _publishAdsResponseReceiver.value = Resource.dataError(resp.message)
+                            }else{
+                                _publishAdsResponseReceiver.value = Resource.dataError("Failed to post deal! Try again.")
+                            }
+                        }?: run {
+                            _publishAdsResponseReceiver.value = Resource.dataError("Invalid server response!")
+                        }
+                    } }
+        }
+    }
+
+
+    fun getNotification(){
+        viewModelScope.launch {
+            homeUseCases.getNotifications()
+                .onStart { _notificationsListReceiver.value = Resource.loading() }
+                .collect { apiResponse ->
+                    apiResponse.let{
+                        it.data?.let{
+                            _notificationsListReceiver.value = apiResponse
+                        }?: run {
+                            _notificationsListReceiver.value = Resource.dataError("Invalid server response!")
+                        }
+                    }
+                }
         }
     }
 

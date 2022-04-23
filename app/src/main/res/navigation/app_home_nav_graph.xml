@@ -23,6 +23,10 @@
             android:id="@+id/action_appHomeFragment_to_editProfileFragment"
             app:destination="@id/editProfileFragment">
         </action>
+        <action
+            android:id="@+id/action_appHomeFragment_to_advertiseFragment"
+            app:destination="@id/advertiseFragment">
+        </action>
 
     </fragment>
 
@@ -37,6 +41,20 @@
         android:id="@+id/editProfileFragment"
         android:name="com.janustech.helpsaap.ui.home.FragmentEditProfile"
         tools:layout="@layout/fragment_edit_profile">
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/advertiseFragment"
+        android:name="com.janustech.helpsaap.ui.home.FragmentAdvertisement"
+        tools:layout="@layout/fragment_advertisement">
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/notificationsFragment"
+        android:name="com.janustech.helpsaap.ui.home.NotificationListFragment"
+        tools:layout="@layout/fragment_notification">
 
     </fragment>
 

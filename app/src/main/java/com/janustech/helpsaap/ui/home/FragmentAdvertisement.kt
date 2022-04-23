@@ -9,12 +9,17 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.View
+import android.widget.ArrayAdapter
 import android.widget.ImageView
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.fragment.app.activityViewModels
 import com.janustech.helpsaap.R
+import com.janustech.helpsaap.databinding.FragmentAdvertisementBinding
 import com.janustech.helpsaap.databinding.FragmentAdvertisementBindingImpl
+import com.janustech.helpsaap.model.PublishTypeModel
+import com.janustech.helpsaap.network.Status
 import com.janustech.helpsaap.ui.base.BaseFragmentWithBinding
 import com.janustech.helpsaap.ui.profile.PhotoOptionBottomSheetDialogFragment
 import com.janustech.helpsaap.utils.CommonUtils
@@ -26,7 +31,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 @AndroidEntryPoint
-class FragmentAdvertisement: BaseFragmentWithBinding<FragmentAdvertisementBindingImpl>(R.layout.fragment_advertisement),
+class FragmentAdvertisement: BaseFragmentWithBinding<FragmentAdvertisementBinding>(R.layout.fragment_advertisement),
     View.OnClickListener, PhotoOptionListener {
 
     private val appHomeViewModel: AppHomeViewModel by activityViewModels()
@@ -38,6 +43,7 @@ class FragmentAdvertisement: BaseFragmentWithBinding<FragmentAdvertisementBindin
     val DATE_FORMAT_SERVER = "yyyy-MM-dd"
     var selectedDateFrom = "";
     var selectedDateTo = "";
+    private lateinit var publishListAdapter: ArrayAdapter<PublishTypeModel>
 
 
     private var cameraLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -62,7 +68,12 @@ class FragmentAdvertisement: BaseFragmentWithBinding<FragmentAdvertisementBindin
         binding.apply {
             viewModel = appHomeViewModel
             viewParent = this@FragmentAdvertisement
+
         }
+
+        setPublishLocations()
+        setObserver()
+
     }
 
     override fun onClick(p0: View?) {
@@ -78,7 +89,7 @@ class FragmentAdvertisement: BaseFragmentWithBinding<FragmentAdvertisementBindin
                 showPhotoPickOption()
             }
             R.id.btnPost -> {
-
+                appHomeViewModel.postAds(requireContext())
             }
 
         }
@@ -92,14 +103,103 @@ class FragmentAdvertisement: BaseFragmentWithBinding<FragmentAdvertisementBindin
         dispatchPickPhotoIntent()
     }
 
+    private fun setObserver(){
+        appHomeViewModel.publishAdsResponseReceiver.observe(viewLifecycleOwner){
+            when(it.status){
+                Status.SUCCESS ->{
+                    (activity as AppHomeActivity).hideProgress()
+                    showToast("Ad posted successfully")
+                }
+                Status.LOADING -> {
+                    (activity as AppHomeActivity).showProgress()
+                }
+                else ->{
+                    (activity as AppHomeActivity).hideProgress()
+                    (activity as AppHomeActivity).showAlertDialog(it.message?:"Invalid Server Response")
+                }
+            }
+        }
+    }
+
 
     private fun setPublishLocations(){
-        /*binding.apply {
-            lPubLocState.run{
-                tvLocTitle.setText("State")
-                btnPrice1.setBackgroundDrawableWithColorScheme(color, 16)
+
+        binding.tvDropdownClub.setText("State")
+        val publishList = arrayListOf<PublishTypeModel>()
+        publishList.add(PublishTypeModel("4", "State"))
+        publishList.add(PublishTypeModel("5", "District"))
+        publishList.add(PublishTypeModel("1", "Panchayth"))
+        publishList.add(PublishTypeModel("2", "Municipality"))
+        publishList.add(PublishTypeModel("3", "Corporation"))
+
+        publishListAdapter = ArrayAdapter(
+            requireContext(),
+            android.R.layout.simple_spinner_dropdown_item,
+            publishList
+        )
+        binding.tvDropdownClub.setAdapter(publishListAdapter)
+
+        setPriceLayout(publishList[0])
+
+        binding.tvDropdownClub.setOnItemClickListener { _, _, position, _ ->
+            appHomeViewModel.selectedPublicLocationId = publishList[position].publishTypeId
+            appHomeViewModel.selectedPublicLocationType = publishList[position].publishTypeId
+            setPriceLayout(publishList[position])
+        }
+    }
+
+    private fun setPriceLayout(publishTypeModel: PublishTypeModel){
+
+        binding.apply {
+            lPubLoc.run{
+                tvLocTitle.text = publishTypeModel.publishTypeIdName
+                btnPrice1.text = "₹ 79/\nMonth"
+                btnPrice2.text = "₹ 139/\n2 Month"
+                btnPrice3.text = "₹ 189/\n3 Month"
+                btnPrice1.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
+                btnPrice1.setBackgroundResource(R.drawable.rounded_rect_green_filled)
+                appHomeViewModel.selectedAMount = "79"
+
+                btnPrice1.setOnClickListener {
+                    appHomeViewModel.selectedAMount = "79"
+
+                    btnPrice1.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
+                    btnPrice1.setBackgroundResource(R.drawable.rounded_rect_green_filled)
+
+                    btnPrice2.setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
+                    btnPrice2.setBackgroundResource(R.drawable.rounded_rect_grey_filled)
+
+                    btnPrice3.setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
+                    btnPrice3.setBackgroundResource(R.drawable.rounded_rect_grey_filled)
+                }
+
+                btnPrice2.setOnClickListener {
+                    appHomeViewModel.selectedAMount = "139"
+
+                    btnPrice1.setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
+                    btnPrice1.setBackgroundResource(R.drawable.rounded_rect_grey_filled)
+
+                    btnPrice2.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
+                    btnPrice2.setBackgroundResource(R.drawable.rounded_rect_green_filled)
+
+                    btnPrice3.setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
+                    btnPrice3.setBackgroundResource(R.drawable.rounded_rect_grey_filled)
+                }
+
+                btnPrice3.setOnClickListener {
+                    appHomeViewModel.selectedAMount = "189"
+
+                    btnPrice1.setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
+                    btnPrice1.setBackgroundResource(R.drawable.rounded_rect_grey_filled)
+
+                    btnPrice2.setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
+                    btnPrice2.setBackgroundResource(R.drawable.rounded_rect_grey_filled)
+
+                    btnPrice3.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
+                    btnPrice3.setBackgroundResource(R.drawable.rounded_rect_green_filled)
+                }
             }
-        }*/
+        }
     }
 
     private fun showDatePickerDialog(dateType: Int){
@@ -116,11 +216,11 @@ class FragmentAdvertisement: BaseFragmentWithBinding<FragmentAdvertisementBindin
             if (dateType == 1) {
                 binding.tvStartDate.text = SimpleDateFormat(DATE_FORMAT, Locale.US).format(c.time)
                 selectedDateFrom = SimpleDateFormat(DATE_FORMAT_SERVER, Locale.US).format(c.time)
-                appHomeViewModel.selectedFromDealDate = SimpleDateFormat(DATE_FORMAT_SERVER, Locale.US).format(c.time)
+                appHomeViewModel.selectedFromAdsDate = SimpleDateFormat(DATE_FORMAT_SERVER, Locale.US).format(c.time)
             } else {
                 binding.tvEndDate.text = SimpleDateFormat(DATE_FORMAT, Locale.US).format(c.time)
                 selectedDateTo = SimpleDateFormat(DATE_FORMAT_SERVER, Locale.US).format(c.time)
-                appHomeViewModel.selectedToDealDate = SimpleDateFormat(DATE_FORMAT_SERVER, Locale.US).format(c.time)
+                appHomeViewModel.selectedToAdsDate = SimpleDateFormat(DATE_FORMAT_SERVER, Locale.US).format(c.time)
             }
         }, year, month, day).show()
     }
@@ -191,7 +291,7 @@ class FragmentAdvertisement: BaseFragmentWithBinding<FragmentAdvertisementBindin
         with(CommonUtils.scaleDownImage(image)) {
             CommonUtils.compressAndSaveImage(requireContext(), this, "USER").also {
                 actualPath = it.absolutePath
-                appHomeViewModel.dealOfDayImage = actualPath
+                appHomeViewModel.adsImage = actualPath
                 setImage(it.absolutePath)
             }
         }

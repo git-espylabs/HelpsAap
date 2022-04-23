@@ -21,6 +21,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.FileProvider
 import androidx.fragment.app.activityViewModels
 import com.janustech.helpsaap.R
+import com.janustech.helpsaap.databinding.FragmentDealOfDayBinding
 import com.janustech.helpsaap.databinding.FragmentDealOfDayBindingImpl
 import com.janustech.helpsaap.map.toLocationDataModel
 import com.janustech.helpsaap.model.LocationDataModel
@@ -37,7 +38,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 @AndroidEntryPoint
-class FragmentDealOfDay: BaseFragmentWithBinding<FragmentDealOfDayBindingImpl>(R.layout.fragment_deal_of_day),View.OnClickListener, PhotoOptionListener {
+class FragmentDealOfDay: BaseFragmentWithBinding<FragmentDealOfDayBinding>(R.layout.fragment_deal_of_day),View.OnClickListener, PhotoOptionListener {
 
     private val appHomeViewModel: AppHomeViewModel by activityViewModels()
     private lateinit var currentPhotoPath: String

@@ -81,9 +81,9 @@ android {
         abortOnError = false
         checkReleaseBuilds = false
     }
-    buildFeatures {
+    /*buildFeatures {
         viewBinding = true
-    }
+    }*/
 
     applicationVariants.all {
         val appBaseUrl = when (flavorName) {

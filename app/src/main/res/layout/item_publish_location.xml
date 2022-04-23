@@ -48,7 +48,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/tvLocTitle"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/btnPrice2"
-                    android:background="@drawable/rounded_rect_grey_filled"
+                    android:background="@drawable/rounded_rect_green_filled"
                     android:paddingVertical="5dp"
                     android:paddingHorizontal="24dp"
                     android:gravity="center"

@@ -4,6 +4,7 @@ import com.janustech.helpsaap.network.Resource
 import com.janustech.helpsaap.network.requests.EditProfileRequest
 import com.janustech.helpsaap.network.response.ApiResponse
 import com.janustech.helpsaap.network.response.MultipartApiResponse
+import com.janustech.helpsaap.network.response.NotificationResponseData
 import com.janustech.helpsaap.repositories.HomeRepository
 import com.janustech.helpsaap.repositories.ProfileRepository
 import kotlinx.coroutines.Dispatchers
@@ -41,6 +42,40 @@ class HomeUsecases@Inject constructor(
     suspend fun submitEditProfile(editProfileRequest: EditProfileRequest):Flow<Resource<ApiResponse<String>>>{
         return flow {
             homeRepository.submitEditProfile(editProfileRequest).collect { emit(it) }
+        }.flowOn(Dispatchers.IO)
+    }
+
+    suspend fun postAds(
+        cus_id: MultipartBody.Part,
+        start_date: MultipartBody.Part,
+        end_date: MultipartBody.Part,
+        transaction_id: MultipartBody.Part,
+        amount: MultipartBody.Part,
+        ads_name: MultipartBody.Part,
+        locationtype: MultipartBody.Part,
+        publish_loc: MultipartBody.Part,
+        image: MultipartBody.Part
+    ): Flow<Resource<MultipartApiResponse>>{
+        return flow {
+            homeRepository.postAds(
+                cus_id,
+                start_date,
+                end_date,
+                transaction_id,
+                amount,
+                ads_name,
+                locationtype,
+                publish_loc,
+                image
+            ).collect {
+                emit(it)
+            }
+        }.flowOn(Dispatchers.IO)
+    }
+
+    suspend fun getNotifications():Flow<Resource<ApiResponse<List<NotificationResponseData>>>>{
+        return flow {
+            homeRepository.getNotifications().collect { emit(it) }
         }.flowOn(Dispatchers.IO)
     }
 }
