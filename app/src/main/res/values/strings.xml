@@ -13,8 +13,8 @@
     <string name="text_signup_prompt">Haven’t registered yet? Register Now</string>
     <string name="text_continue">Continue</string>
     <string name="text_hint_mob">Mobile Number</string>
-    <string name="text_hint_pin">Your Location Pin Out</string>
-    <string name="text_hint_cmpny">Business/Shop/Company</string>
+    <string name="text_hint_pin">Panchayath/Municipality</string>
+    <string name="text_hint_cmpny">Business/Shop/Company/Name</string>
     <string name="text_hint_wt_no">Whatsapp Number</string>
     <string name="text_hint_email">Email Address</string>
     <string name="text_hint_web">Website</string>

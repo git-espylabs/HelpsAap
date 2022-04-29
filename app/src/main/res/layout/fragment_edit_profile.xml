@@ -20,36 +20,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/tvEditPrompt"
-            android:textColor="@color/black"
-            android:textSize="@dimen/text_size_custom_18"
-            android:layout_marginStart="24dp"
-            android:fontFamily="@font/segoui"
-            android:textStyle="bold"
-            android:text="Edit Profile"
-            android:textFontWeight="700"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-        <com.janustech.helpsaap.utils.CustomCircleImageview
-            android:id="@+id/ivLogo"
-            app:layout_constraintTop_toBottomOf="@+id/tvEditPrompt"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:src="@drawable/avatar"
-            app:url="@{viewModel.editProfImg}"
-            app:layout_constraintVertical_bias="0.05"
-            android:layout_width="128dp"
-            android:layout_height="128dp"/>
-
-
-
         <ScrollView
-            app:layout_constraintTop_toBottomOf="@+id/ivLogo"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             android:focusableInTouchMode="true"
             android:focusable="true"
@@ -63,6 +35,32 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
+                <TextView
+                    android:id="@+id/tvEditPrompt"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_custom_18"
+                    android:layout_marginStart="24dp"
+                    android:fontFamily="@font/segoui"
+                    android:textStyle="bold"
+                    android:text="Edit Profile"
+                    android:textFontWeight="700"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <com.janustech.helpsaap.utils.CustomCircleImageview
+                    android:id="@+id/ivLogo"
+                    app:layout_constraintTop_toBottomOf="@+id/tvEditPrompt"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:src="@drawable/avatar"
+                    app:url="@{viewModel.editProfImg}"
+                    app:layout_constraintVertical_bias="0.05"
+                    android:layout_width="128dp"
+                    android:layout_height="128dp"/>
+
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/etUserNameLayout"
                     android:layout_width="match_parent"
@@ -70,7 +68,7 @@
                     app:boxBackgroundMode="none"
                     android:layout_marginHorizontal="24dp"
                     android:layout_marginTop="32dp"
-                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/ivLogo"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:hintAnimationEnabled="false"
@@ -176,11 +174,23 @@
                     android:layout_marginHorizontal="24dp"
                     app:layout_constraintTop_toBottomOf="@+id/etPasswordLayout"
                     android:background="@drawable/rounded_rect_grey_filled"
-                    android:drawableEnd="@drawable/ic_search"
+                    android:drawableStart="@drawable/ic_search"
+                    android:drawablePadding="7dp"
                     android:layout_marginTop="16dp"
                     android:hint="Search Category"
                     android:layout_width="match_parent"
                     android:layout_height="52dp"/>
+
+                <ImageView
+                    android:id="@+id/ivClearSearch"
+                    app:layout_constraintTop_toTopOf="@+id/actCategory"
+                    app:layout_constraintBottom_toBottomOf="@+id/actCategory"
+                    app:layout_constraintEnd_toEndOf="@+id/actCategory"
+                    android:layout_marginRight="5dp"
+                    android:src="@drawable/ic_close_24"
+                    android:visibility="gone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rvLocation"

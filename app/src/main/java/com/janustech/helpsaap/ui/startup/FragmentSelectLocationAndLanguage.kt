@@ -68,7 +68,6 @@ class FragmentSelectLocationAndLanguage: BaseFragmentWithBinding<FragmentSelectL
         appIntroViewModel.locationListReceiver.observe(viewLifecycleOwner){
             when(it.status){
                 Status.SUCCESS ->{
-                    (activity as AppIntroActivity).hideProgress()
                     val locationList = it.data?.data
                     locationSuggestionList = locationList?.map { locData -> locData.toLocationDataModel() } ?: listOf()
                     locationsListAdapter = ArrayAdapter(
@@ -79,10 +78,8 @@ class FragmentSelectLocationAndLanguage: BaseFragmentWithBinding<FragmentSelectL
                     binding.tvDropdownLocation.setAdapter(locationsListAdapter)
                 }
                 Status.LOADING -> {
-                    (activity as AppIntroActivity).showProgress()
                 }
                 else ->{
-                    (activity as AppIntroActivity).hideProgress()
                     (activity as AppIntroActivity).showAlertDialog(it.message?:"Invalid Server Response")
                 }
             }
@@ -95,6 +92,11 @@ class FragmentSelectLocationAndLanguage: BaseFragmentWithBinding<FragmentSelectL
             android.R.layout.simple_spinner_dropdown_item,
             locationSuggestionList
         )
+
+        binding.ivClearSearch.setOnClickListener {
+            binding.tvDropdownLocation.setText("")
+        }
+
         binding.tvDropdownLocation.apply {
             threshold = 1
 
@@ -112,6 +114,13 @@ class FragmentSelectLocationAndLanguage: BaseFragmentWithBinding<FragmentSelectL
                 }
 
                 override fun afterTextChanged(s: Editable) {
+                    binding.apply {
+                        if (s.toString().isNotEmpty()){
+                            binding.ivClearSearch.visibility = View.VISIBLE
+                        }else{
+                            binding.ivClearSearch.visibility = View.GONE
+                        }
+                    }
                     autoCompleteTextHandler?.removeMessages(TRIGGER_AUTO_COMPLETE)
                     autoCompleteTextHandler?.sendEmptyMessageDelayed(TRIGGER_AUTO_COMPLETE, AUTO_COMPLETE_DELAY)
                 }

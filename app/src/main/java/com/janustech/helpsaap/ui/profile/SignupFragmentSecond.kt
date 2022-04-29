@@ -242,6 +242,11 @@ class SignupFragmentSecond : BaseFragmentWithBinding<FragmentRegisterSecondBindi
             android.R.layout.simple_spinner_dropdown_item,
             categoriesSuggestionList
         )
+
+        binding.ivClearSearch.setOnClickListener {
+            binding.categorySpinner.setText("")
+        }
+
         binding.categorySpinner.apply {
             threshold = 1
 
@@ -260,6 +265,13 @@ class SignupFragmentSecond : BaseFragmentWithBinding<FragmentRegisterSecondBindi
                 }
 
                 override fun afterTextChanged(s: Editable) {
+                    binding.apply {
+                        if (s.toString().isNotEmpty()){
+                            binding.ivClearSearch.visibility = View.VISIBLE
+                        }else{
+                            binding.ivClearSearch.visibility = View.GONE
+                        }
+                    }
                     autoCompleteTextHandler?.removeMessages(TRIGGER_AUTO_COMPLETE)
                     autoCompleteTextHandler?.sendEmptyMessageDelayed(TRIGGER_AUTO_COMPLETE, AUTO_COMPLETE_DELAY)
                 }

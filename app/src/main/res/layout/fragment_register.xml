@@ -60,7 +60,8 @@
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etUserName"
                         android:layout_width="match_parent"
-                        android:padding="1dp"
+                        android:paddingVertical="2dp"
+                        android:paddingHorizontal="8dp"
                         android:fontFamily="@font/segoui"
                         android:textColor="@color/black"
                         android:textSize="@dimen/text_size_custom_18"
@@ -88,7 +89,8 @@
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etMobNo"
                         android:layout_width="match_parent"
-                        android:padding="1dp"
+                        android:paddingVertical="2dp"
+                        android:paddingHorizontal="8dp"
                         android:fontFamily="@font/segoui"
                         android:textColor="@color/black"
                         android:textSize="@dimen/text_size_custom_18"
@@ -109,12 +111,14 @@
                     android:layout_marginHorizontal="24dp"
                     android:layout_marginTop="16dp"
                     app:hintAnimationEnabled="false"
+                    app:passwordToggleEnabled="true"
                     app:hintEnabled="false">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etPassword"
                         android:layout_width="match_parent"
-                        android:padding="1dp"
+                        android:paddingVertical="2dp"
+                        android:paddingHorizontal="8dp"
                         android:fontFamily="@font/segoui"
                         android:textColor="@color/black"
                         android:textSize="@dimen/text_size_custom_18"
@@ -125,7 +129,36 @@
                         android:text="@={viewModel.regPass}"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
+                <AutoCompleteTextView
+                    android:id="@+id/actLocation"
+                    app:layout_constraintTop_toBottomOf="@+id/etPasswordLayout"
+                    android:layout_marginHorizontal="24dp"
+                    android:layout_marginTop="16dp"
+                    android:background="@drawable/rounded_rect_grey_filled"
+                    android:drawableStart="@drawable/ic_search"
+                    android:drawablePadding="7dp"
+                    android:fontFamily="@font/segoui"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_custom_18"
+                    android:hint="@string/text_hint_pin"
+                    android:layout_width="match_parent"
+                    android:paddingVertical="2dp"
+                    android:paddingHorizontal="8dp"
+                    android:layout_height="48dp"/>
+
+                <ImageView
+                    android:id="@+id/ivClearSearch"
+                    app:layout_constraintTop_toTopOf="@+id/actLocation"
+                    app:layout_constraintBottom_toBottomOf="@+id/actLocation"
+                    app:layout_constraintEnd_toEndOf="@+id/actLocation"
+                    android:layout_marginRight="5dp"
+                    android:src="@drawable/ic_close_24"
+                    android:visibility="gone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
                 <com.google.android.material.textfield.TextInputLayout
+                    android:visibility="gone"
                     android:id="@+id/etPinLay"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -155,7 +188,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:boxBackgroundMode="none"
-                    app:layout_constraintTop_toBottomOf="@+id/etPinLay"
+                    app:layout_constraintTop_toBottomOf="@+id/actLocation"
                     android:layout_marginHorizontal="24dp"
                     android:layout_marginTop="16dp"
                     app:hintAnimationEnabled="false"
@@ -164,7 +197,8 @@
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etCmpny"
                         android:layout_width="match_parent"
-                        android:padding="1dp"
+                        android:paddingVertical="2dp"
+                        android:paddingHorizontal="8dp"
                         android:fontFamily="@font/segoui"
                         android:textColor="@color/black"
                         android:textSize="@dimen/text_size_custom_18"
@@ -189,7 +223,8 @@
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etWtNo"
                         android:layout_width="match_parent"
-                        android:padding="1dp"
+                        android:paddingVertical="2dp"
+                        android:paddingHorizontal="8dp"
                         android:fontFamily="@font/segoui"
                         android:textColor="@color/black"
                         android:textSize="@dimen/text_size_custom_18"
@@ -214,7 +249,8 @@
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etEmail"
                         android:layout_width="match_parent"
-                        android:padding="1dp"
+                        android:paddingVertical="2dp"
+                        android:paddingHorizontal="8dp"
                         android:fontFamily="@font/segoui"
                         android:textColor="@color/black"
                         android:textSize="@dimen/text_size_custom_18"
@@ -239,7 +275,8 @@
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etWebsite"
                         android:layout_width="match_parent"
-                        android:padding="1dp"
+                        android:paddingVertical="2dp"
+                        android:paddingHorizontal="8dp"
                         android:fontFamily="@font/segoui"
                         android:textColor="@color/black"
                         android:textSize="@dimen/text_size_custom_18"

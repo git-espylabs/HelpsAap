@@ -4,8 +4,11 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.view.Menu
+import android.view.MenuInflater
 import android.view.View
 import androidx.activity.viewModels
+import androidx.appcompat.widget.PopupMenu
 import androidx.appcompat.widget.Toolbar
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
@@ -14,12 +17,17 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import com.janustech.helpsaap.R
 import com.janustech.helpsaap.databinding.ActivityAppHomeBinding
+import com.janustech.helpsaap.extension.launchActivity
 import com.janustech.helpsaap.extension.setImageTint
+import com.janustech.helpsaap.model.LocationDataModel
+import com.janustech.helpsaap.preference.AppPreferences
 import com.janustech.helpsaap.ui.base.BaseActivity
+import com.janustech.helpsaap.ui.startup.AppIntroActivity
+import com.janustech.helpsaap.utils.EditLocationListener
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class AppHomeActivity : BaseActivity<ActivityAppHomeBinding>(), View.OnClickListener, NavController.OnDestinationChangedListener {
+class AppHomeActivity : BaseActivity<ActivityAppHomeBinding>(), View.OnClickListener, NavController.OnDestinationChangedListener, EditLocationListener {
 
 
     private val appHomeViewModel: AppHomeViewModel by viewModels()
@@ -121,6 +129,18 @@ class AppHomeActivity : BaseActivity<ActivityAppHomeBinding>(), View.OnClickList
                     navigate(R.id.editProfileFragment, null, getNavOptions())
                 }
             }
+            R.id.tvLocation ->{
+                EditLocationBottomSheetDialogFragment(appHomeViewModel, this).show(
+                    supportFragmentManager,
+                    "EditLocationFragment"
+                )
+            }
+
+            R.id.btnProfileIco ->{
+                binding?.btnProfileIco?.apply {
+                    showPopup(this)
+                }
+            }
         }
     }
 
@@ -176,6 +196,35 @@ class AppHomeActivity : BaseActivity<ActivityAppHomeBinding>(), View.OnClickList
                 }
             }
         }
+    }
+
+    override fun onLocationSelected(location: LocationDataModel) {
+        location.let {
+            appHomeViewModel.userLocationName = it.toString()
+            appHomeViewModel.userLocationId = it.id
+            binding?.apply {
+                tvLocation.text = it.toString()
+            }
+        }
+    }
+
+    private fun showPopup(v : View){
+        val popup = PopupMenu(this, v)
+        val inflater: MenuInflater = popup.menuInflater
+        inflater.inflate(R.menu.menu_home, popup.menu)
+        popup.setOnMenuItemClickListener { menuItem ->
+            when(menuItem.itemId){
+                R.id.actionLogout-> {
+                    AppPreferences.clearAll()
+                    launchActivity<AppIntroActivity>{
+                        addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                    }
+                    this.finish()
+                }
+            }
+            true
+        }
+        popup.show()
     }
 
     private fun getNavOptions(): NavOptions {

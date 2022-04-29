@@ -38,15 +38,21 @@
             app:layout_constraintBottom_toBottomOf="@+id/btnLogin"
             app:layout_constraintStart_toStartOf="parent"/>
 
-        <Button
+        <TextView
             android:layout_marginTop="8dp"
             android:id="@+id/btnLogin"
             app:layout_constraintStart_toEndOf="@+id/tvLocation"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            style="@style/HelpAapButtonStyle"
             android:text="@string/text_login"
             android:textSize="16sp"
+            android:textColor="@color/app_accent_color"
+            android:fontFamily="@font/segoui"
+            android:textStyle="bold"
+            android:textFontWeight="700"
+            android:drawablePadding="7dp"
+            android:drawableEnd="@drawable/ic_login_24"
+            android:paddingVertical="6dp"
             android:textAllCaps="false"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>

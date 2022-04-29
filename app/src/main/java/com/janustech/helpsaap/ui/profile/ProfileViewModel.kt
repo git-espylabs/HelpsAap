@@ -10,11 +10,9 @@ import com.janustech.helpsaap.network.MultiPartRequestHelper
 import com.janustech.helpsaap.network.Resource
 import com.janustech.helpsaap.network.Status
 import com.janustech.helpsaap.network.requests.CategoriesListRequest
+import com.janustech.helpsaap.network.requests.LocationListRequest
 import com.janustech.helpsaap.network.requests.LoginRequest
-import com.janustech.helpsaap.network.response.ApiResponse
-import com.janustech.helpsaap.network.response.CategoryResponseData
-import com.janustech.helpsaap.network.response.LoginResponseData
-import com.janustech.helpsaap.network.response.MultipartApiResponse
+import com.janustech.helpsaap.network.response.*
 import com.janustech.helpsaap.usecase.AppIntroUseCase
 import com.janustech.helpsaap.usecase.ProfileUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -59,10 +57,14 @@ class ProfileViewModel @Inject constructor(
     val categoriesReceiver: LiveData<Resource<ApiResponse<List<CategoryResponseData>>>>
         get() = _categoriesReceiver
 
+    private val _locationListReceiver = MutableLiveData<Resource<ApiResponse<List<LocationListResponseData>>>>()
+    val locationListReceiver: LiveData<Resource<ApiResponse<List<LocationListResponseData>>>>
+        get() = _locationListReceiver
+
     init {
         if (BuildConfig.DEBUG){
-            userName = "gopikaespylabs@gmail.com"
-            password = "gopika@123"
+            userName = "tesjo@gmail.com"
+            password = "qwerty"
         }
     }
 
@@ -152,6 +154,22 @@ class ProfileViewModel @Inject constructor(
                             _categoriesReceiver.value = apiResponse
                         }?: run {
                             _categoriesReceiver.value = Resource.dataError("Invalid server response!")
+                        }
+                    }
+                }
+        }
+    }
+
+    fun getLocationSuggestions(param: String){
+        viewModelScope.launch {
+            appIntroUseCase.getLocationList(LocationListRequest(param))
+                .onStart { _locationListReceiver.value = Resource.loading() }
+                .collect { apiResponse ->
+                    apiResponse.let{
+                        it.data?.let{
+                            _locationListReceiver.value = apiResponse
+                        }?: run {
+                            _locationListReceiver.value = Resource.dataError("Invalid server response!")
                         }
                     }
                 }

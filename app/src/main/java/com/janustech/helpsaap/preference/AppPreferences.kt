@@ -16,4 +16,13 @@ object AppPreferences {
     var userLocation: String by PreferenceProvider(USER_LOCATION, "")
     var userLanguageId: String by PreferenceProvider(USER_LANGUAGE_ID, "")
     var userLanguage: String by PreferenceProvider(USER_LANGUAGE, "")
+
+    fun clearAll(){
+        userId = ""
+        userData = ""
+        userLocationId = ""
+        userLocation = ""
+        userLanguageId = ""
+        userLanguage = ""
+    }
 }

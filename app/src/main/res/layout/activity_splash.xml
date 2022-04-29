@@ -9,12 +9,26 @@
     tools:context=".ui.startup.Splash">
 
     <ImageView
+        android:id="@+id/ivlogo"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:src="@drawable/app_logo"
         android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <TextView
+        app:layout_constraintTop_toBottomOf="@+id/ivlogo"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintVertical_bias="0.65"
+        android:textSize="24sp"
+        android:textColor="@color/black"
+        android:fontFamily="@font/segoui"
+        android:gravity="center_horizontal"
+        android:textFontWeight="700"
+        android:text="Quick Solution For\nAll Your Need"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

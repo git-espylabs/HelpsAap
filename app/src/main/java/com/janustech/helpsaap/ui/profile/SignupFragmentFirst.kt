@@ -4,7 +4,14 @@ import android.annotation.SuppressLint
 import android.location.Geocoder
 import android.location.Location
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.text.Editable
+import android.text.TextUtils
+import android.text.TextWatcher
 import android.view.View
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -21,7 +28,13 @@ import com.janustech.helpsaap.databinding.FragmentRegisterBinding
 import com.janustech.helpsaap.extension.*
 import com.janustech.helpsaap.location.GpsListener
 import com.janustech.helpsaap.location.GpsManager
+import com.janustech.helpsaap.map.toLocationDataModel
+import com.janustech.helpsaap.model.LocationDataModel
+import com.janustech.helpsaap.network.Status
+import com.janustech.helpsaap.preference.AppPreferences
 import com.janustech.helpsaap.ui.base.BaseFragmentWithBinding
+import com.janustech.helpsaap.ui.startup.AppIntroActivity
+import com.janustech.helpsaap.ui.startup.FragmentSelectLocationAndLanguageDirections
 import com.janustech.helpsaap.ui.startup.SignupActivity
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.IOException
@@ -39,6 +52,13 @@ class SignupFragmentFirst : BaseFragmentWithBinding<FragmentRegisterBinding>(R.l
     var lattitude = "0.0"
     var longitude = "0.0"
     var locationMarker: Marker? = null
+
+    lateinit var locationsListAdapter: ArrayAdapter<Any>
+    private var locationSuggestionList = listOf<LocationDataModel>()
+    private var autoCompleteTextHandler: Handler? = null
+
+    private val TRIGGER_AUTO_COMPLETE = 100
+    private val AUTO_COMPLETE_DELAY: Long = 300
 
     @SuppressLint("MissingPermission")
     private val requestPermissionLauncher =
@@ -70,6 +90,8 @@ class SignupFragmentFirst : BaseFragmentWithBinding<FragmentRegisterBinding>(R.l
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
         configureCameraIdle()
+        setObserver()
+        setLocationDropdown()
     }
 
     @SuppressLint("MissingPermission")
@@ -178,6 +200,97 @@ class SignupFragmentFirst : BaseFragmentWithBinding<FragmentRegisterBinding>(R.l
             }
             negativeButton {
 
+            }
+        }
+    }
+
+    private fun setObserver(){
+        profileViewModel.locationListReceiver.observe(viewLifecycleOwner){
+            when(it.status){
+                Status.SUCCESS ->{
+                    val locationList = it.data?.data
+                    locationSuggestionList = locationList?.map { locData -> locData.toLocationDataModel() } ?: listOf()
+                    locationsListAdapter = ArrayAdapter(
+                        requireContext(),
+                        android.R.layout.simple_spinner_dropdown_item,
+                        locationSuggestionList
+                    )
+                    binding.actLocation.setAdapter(locationsListAdapter)
+                }
+                Status.LOADING -> {
+                }
+                else ->{
+                    (activity as AppIntroActivity).showAlertDialog(it.message?:"Invalid Server Response")
+                }
+            }
+        }
+    }
+
+    private fun setLocationDropdown(){
+        locationsListAdapter = ArrayAdapter(
+            requireContext(),
+            android.R.layout.simple_spinner_dropdown_item,
+            locationSuggestionList
+        )
+
+        binding.ivClearSearch.setOnClickListener {
+            binding.actLocation.setText("")
+        }
+
+        binding.actLocation.apply {
+            threshold = 1
+
+            setAdapter(locationsListAdapter)
+            addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(
+                    s: CharSequence,
+                    start: Int,
+                    count: Int,
+                    after: Int
+                ) {
+                }
+
+                override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+                }
+
+                override fun afterTextChanged(s: Editable) {
+                    binding.apply {
+                        if (s.toString().isNotEmpty()){
+                            binding.ivClearSearch.visibility = View.VISIBLE
+                        }else{
+                            binding.ivClearSearch.visibility = View.GONE
+                        }
+                    }
+                    autoCompleteTextHandler?.removeMessages(TRIGGER_AUTO_COMPLETE)
+                    autoCompleteTextHandler?.sendEmptyMessageDelayed(TRIGGER_AUTO_COMPLETE, AUTO_COMPLETE_DELAY)
+                }
+            })
+
+            onItemClickListener =
+                AdapterView.OnItemClickListener { _, _, pos, _ ->
+                    val locationData = (locationsListAdapter.getItem(pos) as LocationDataModel)
+
+                    locationData.let {
+                        val locName = it.toString()
+                        val locId = it.id
+                        profileViewModel.apply {
+                            regPin = locName
+                        }
+                        AppPreferences.apply {
+                            userLocation = locName
+                            userLocationId = locId
+                        }
+                    }
+                    (activity as SignupActivity).hideKeyboard()
+                }
+
+            autoCompleteTextHandler = Handler(Looper.getMainLooper()) { msg ->
+                if (msg.what == TRIGGER_AUTO_COMPLETE) {
+                    if (!TextUtils.isEmpty(text)) {
+                        profileViewModel.getLocationSuggestions(text.toString())
+                    }
+                }
+                false
             }
         }
     }

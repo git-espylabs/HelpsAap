@@ -161,6 +161,11 @@ class FragmentDealOfDay: BaseFragmentWithBinding<FragmentDealOfDayBinding>(R.lay
             android.R.layout.simple_spinner_dropdown_item,
             locationSuggestionList
         )
+
+        binding.ivClearSearch.setOnClickListener {
+            binding.actLocation.setText("")
+        }
+
         binding.actLocation.apply {
             threshold = 1
 
@@ -178,6 +183,13 @@ class FragmentDealOfDay: BaseFragmentWithBinding<FragmentDealOfDayBinding>(R.lay
                 }
 
                 override fun afterTextChanged(s: Editable) {
+                    binding.apply {
+                        if (s.toString().isNotEmpty()){
+                            binding.ivClearSearch.visibility = View.VISIBLE
+                        }else{
+                            binding.ivClearSearch.visibility = View.GONE
+                        }
+                    }
                     autoCompleteTextHandler?.removeMessages(TRIGGER_AUTO_COMPLETE)
                     autoCompleteTextHandler?.sendEmptyMessageDelayed(TRIGGER_AUTO_COMPLETE, AUTO_COMPLETE_DELAY)
                 }

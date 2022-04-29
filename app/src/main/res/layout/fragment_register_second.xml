@@ -110,11 +110,23 @@
                     app:layout_constraintTop_toBottomOf="@+id/borderV"
                     android:layout_marginHorizontal="16dp"
                     android:background="@drawable/rounded_rect_grey_filled"
-                    android:drawableEnd="@drawable/ic_search"
+                    android:drawableStart="@drawable/ic_search"
+                    android:drawablePadding="7dp"
                     android:layout_marginTop="28dp"
                     android:hint="Search Category"
                     android:layout_width="match_parent"
                     android:layout_height="52dp"/>
+
+                <ImageView
+                    android:id="@+id/ivClearSearch"
+                    app:layout_constraintTop_toTopOf="@+id/categorySpinner"
+                    app:layout_constraintBottom_toBottomOf="@+id/categorySpinner"
+                    app:layout_constraintEnd_toEndOf="@+id/categorySpinner"
+                    android:layout_marginRight="5dp"
+                    android:src="@drawable/ic_close_24"
+                    android:visibility="gone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
 
                 <TextView
                     android:visibility="gone"

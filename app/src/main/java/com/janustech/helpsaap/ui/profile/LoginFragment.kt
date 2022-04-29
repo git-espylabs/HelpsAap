@@ -23,6 +23,7 @@ import com.janustech.helpsaap.preference.AppPreferences
 import com.janustech.helpsaap.ui.base.BaseFragmentWithBinding
 import com.janustech.helpsaap.ui.home.AppHomeActivity
 import com.janustech.helpsaap.ui.startup.AppIntroActivity
+import com.janustech.helpsaap.ui.startup.SignupActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -70,7 +71,10 @@ class LoginFragment : BaseFragmentWithBinding<FragmentLayoutLoginBinding>(R.layo
         val ss = SpannableString(getString(R.string.text_signup_prompt))
         val clickableSpan: ClickableSpan = object : ClickableSpan() {
             override fun onClick(textView: View) {
-                showToast("Signup")
+                activity?.run {
+                    launchActivity<SignupActivity>()
+                    finish()
+                }
             }
 
             override fun updateDrawState(ds: TextPaint) {

@@ -24,11 +24,13 @@ import com.janustech.helpsaap.model.LocationDataModel
 import com.janustech.helpsaap.network.Status
 import com.janustech.helpsaap.preference.AppPreferences
 import com.janustech.helpsaap.ui.base.BaseFragmentWithBinding
+import com.janustech.helpsaap.ui.home.EditLocationBottomSheetDialogFragment
 import com.janustech.helpsaap.ui.profile.LoginActivity
+import com.janustech.helpsaap.utils.EditLocationListener
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class AppIntroHomeFragment: BaseFragmentWithBinding<FragmentAppIntroHomeBinding>(R.layout.fragment_app_intro_home) {
+class AppIntroHomeFragment: BaseFragmentWithBinding<FragmentAppIntroHomeBinding>(R.layout.fragment_app_intro_home), EditLocationListener {
 
     private val appIntroViewModel: AppIntroViewModel by activityViewModels()
 
@@ -48,6 +50,12 @@ class AppIntroHomeFragment: BaseFragmentWithBinding<FragmentAppIntroHomeBinding>
                 (activity as AppIntroActivity).showProgress()
                 activity?.launchActivity<SignupActivity>()
             }
+            tvLocation.setOnClickListener {
+                EditLocationBottomSheetDialogFragment(appIntroViewModel, this@AppIntroHomeFragment).show(
+                    childFragmentManager,
+                    "EditLocationFragment"
+                )
+            }
         }
 
         setObserver()
@@ -64,6 +72,14 @@ class AppIntroHomeFragment: BaseFragmentWithBinding<FragmentAppIntroHomeBinding>
     override fun onStop() {
         super.onStop()
         (activity as AppIntroActivity).hideProgress()
+    }
+
+    override fun onLocationSelected(location: LocationDataModel) {
+        location.let {
+            appIntroViewModel.userLocationName = it.toString()
+            appIntroViewModel.userLocationId = it.id
+            binding.tvLocation.text = it.toString()
+        }
     }
 
     private fun setObserver(){
@@ -108,7 +124,6 @@ class AppIntroHomeFragment: BaseFragmentWithBinding<FragmentAppIntroHomeBinding>
         appIntroViewModel.categoriesReceiver.observe(viewLifecycleOwner){
             when(it.status){
                 Status.SUCCESS ->{
-                    (activity as AppIntroActivity).hideProgress()
                     val dataList = it.data?.data
                     categoriesSuggestionList = dataList?.map { dat -> dat.toCategoryDataModel() } ?: listOf()
                     categoriesListAdapter = ArrayAdapter(
@@ -119,10 +134,8 @@ class AppIntroHomeFragment: BaseFragmentWithBinding<FragmentAppIntroHomeBinding>
                     binding.actSearch.setAdapter(categoriesListAdapter)
                 }
                 Status.LOADING -> {
-                    (activity as AppIntroActivity).showProgress()
                 }
                 else ->{
-                    (activity as AppIntroActivity).hideProgress()
                     (activity as AppIntroActivity).showAlertDialog(it.message?:"Invalid Server Response")
                 }
             }
@@ -137,6 +150,11 @@ class AppIntroHomeFragment: BaseFragmentWithBinding<FragmentAppIntroHomeBinding>
             android.R.layout.simple_spinner_dropdown_item,
             categoriesSuggestionList
         )
+
+        binding.ivClearSearch.setOnClickListener {
+            binding.actSearch.setText("")
+        }
+
         binding.actSearch.apply {
             threshold = 1
 
@@ -155,6 +173,13 @@ class AppIntroHomeFragment: BaseFragmentWithBinding<FragmentAppIntroHomeBinding>
                 }
 
                 override fun afterTextChanged(s: Editable) {
+                    binding.apply {
+                        if (s.toString().isNotEmpty()){
+                            binding.ivClearSearch.visibility = View.VISIBLE
+                        }else{
+                            binding.ivClearSearch.visibility = View.GONE
+                        }
+                    }
                     autoCompleteTextHandler?.removeMessages(TRIGGER_AUTO_COMPLETE)
                     autoCompleteTextHandler?.sendEmptyMessageDelayed(TRIGGER_AUTO_COMPLETE, AUTO_COMPLETE_DELAY)
                 }
