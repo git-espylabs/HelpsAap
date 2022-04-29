@@ -19,13 +19,17 @@ import android.widget.ImageView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.FileProvider
 import androidx.fragment.app.activityViewModels
+import com.google.gson.Gson
 import com.janustech.helpsaap.R
 import com.janustech.helpsaap.databinding.FragmentRegisterBinding
 import com.janustech.helpsaap.databinding.FragmentRegisterSecondBinding
 import com.janustech.helpsaap.extension.launchActivity
 import com.janustech.helpsaap.map.toCategoryDataModel
+import com.janustech.helpsaap.map.toUserData
 import com.janustech.helpsaap.model.CategoryDataModel
+import com.janustech.helpsaap.model.UserData
 import com.janustech.helpsaap.network.Status
+import com.janustech.helpsaap.preference.AppPreferences
 import com.janustech.helpsaap.ui.base.BaseFragmentWithBinding
 import com.janustech.helpsaap.ui.home.AppHomeActivity
 import com.janustech.helpsaap.ui.startup.AppIntroActivity
@@ -103,7 +107,14 @@ class SignupFragmentSecond : BaseFragmentWithBinding<FragmentRegisterSecondBindi
             when(it.status){
                 Status.SUCCESS -> {
                     (activity as SignupActivity).hideProgress()
-                    it.data?.data
+
+                    AppPreferences.userId = it.data?.data?:""
+                    val userData = profileViewModel.run {
+                        UserData(it.data?.data?:"", regName, regMob, regWhatsapNo, regEmail, regWeb, regPin, "", "")
+                    }
+                    AppPreferences.userData = Gson().toJson(userData)
+
+
                     showToast("Registration Success")
                     activity?.launchActivity<AppHomeActivity>{
                         addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
@@ -123,7 +134,6 @@ class SignupFragmentSecond : BaseFragmentWithBinding<FragmentRegisterSecondBindi
         profileViewModel.categoriesReceiver.observe(viewLifecycleOwner){
             when(it.status){
                 Status.SUCCESS ->{
-                    (activity as SignupActivity).hideProgress()
                     val dataList = it.data?.data
                     categoriesSuggestionList = dataList?.map { dat -> dat.toCategoryDataModel() } ?: listOf()
                     categoriesListAdapter = ArrayAdapter(
@@ -134,10 +144,8 @@ class SignupFragmentSecond : BaseFragmentWithBinding<FragmentRegisterSecondBindi
                     binding.categorySpinner.setAdapter(categoriesListAdapter)
                 }
                 Status.LOADING -> {
-                    (activity as SignupActivity).showProgress()
                 }
                 else ->{
-                    (activity as SignupActivity).hideProgress()
                     (activity as SignupActivity).showAlertDialog(it.message?:"Invalid Server Response")
                 }
             }

@@ -292,6 +292,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/etWebsiteLay"
                     android:text="Mark your Location"
                     android:textColor="@color/black"
+                    android:fontFamily="@font/segoeui_heavy"
                     android:textSize="@dimen/text_size_custom_18"
                     android:layout_marginHorizontal="24dp"
                     app:layout_constraintStart_toStartOf="parent"

@@ -15,7 +15,7 @@
         <item name="backgroundTint">@color/app_accent_color</item>
         <item name="android:textColor">@color/white</item>
         <item name="android:textSize">@dimen/text_size_custom_18</item>
-        <item name="fontFamily">@font/segoui</item>
+        <item name="fontFamily">@font/segoeui_heavy</item>
         <item name="android:textStyle">bold</item>
         <item name="cornerRadius">6dp</item>
     </style>

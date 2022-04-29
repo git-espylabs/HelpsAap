@@ -34,7 +34,7 @@
                 android:id="@+id/tvTitle"
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_size_custom_18"
-                android:fontFamily="@font/segoui"
+                android:fontFamily="@font/segoeui_heavy"
                 android:textStyle="bold"
                 android:text="Deals for the Day"
                 android:textFontWeight="700"

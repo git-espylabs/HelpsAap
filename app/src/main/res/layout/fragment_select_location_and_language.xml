@@ -59,7 +59,7 @@
             android:id="@+id/tvPromptLang"
             android:layout_marginTop="12dp"
             android:paddingVertical="22sp"
-            android:fontFamily="@font/segoui"
+            android:fontFamily="@font/segoeui_heavy"
             android:textStyle="bold"
             android:textFontWeight="700"
             android:textAlignment="textStart"

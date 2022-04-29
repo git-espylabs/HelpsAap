@@ -49,6 +49,11 @@ class LoginFragment : BaseFragmentWithBinding<FragmentLayoutLoginBinding>(R.layo
         setObserver()
     }
 
+    override fun onStop() {
+        super.onStop()
+        (activity as LoginActivity).hideProgress()
+    }
+
     private fun setObserver(){
         profileViewModel.loginResponseReceiver.observe(viewLifecycleOwner){
             when(it.status){
@@ -72,6 +77,7 @@ class LoginFragment : BaseFragmentWithBinding<FragmentLayoutLoginBinding>(R.layo
         val clickableSpan: ClickableSpan = object : ClickableSpan() {
             override fun onClick(textView: View) {
                 activity?.run {
+                    (activity as LoginActivity).showProgress()
                     launchActivity<SignupActivity>()
                     finish()
                 }
