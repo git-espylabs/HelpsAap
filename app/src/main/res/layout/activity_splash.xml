@@ -14,9 +14,10 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:src="@drawable/app_logo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:src="@drawable/splash_logo"
+        android:scaleType="fitXY"
+        android:layout_width="196dp"
+        android:layout_height="196dp"/>
 
     <TextView
         app:layout_constraintTop_toBottomOf="@+id/ivlogo"
