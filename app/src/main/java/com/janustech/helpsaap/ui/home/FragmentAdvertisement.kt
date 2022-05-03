@@ -298,7 +298,7 @@ class FragmentAdvertisement: BaseFragmentWithBinding<FragmentAdvertisementBindin
     }
 
     private fun setImage(path: String){
-        val image = BitmapFactory.decodeFile(path)
+        val image = CommonUtils.getClearExifBitmap(currentPhotoPath, path)
         image?.let {
             binding.ivUpload.apply {
                 setImageBitmap(image)

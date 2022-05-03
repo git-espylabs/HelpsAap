@@ -6,7 +6,10 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.ImageDecoder
+import android.graphics.Matrix
+import android.media.ExifInterface
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.net.Uri
@@ -156,5 +159,29 @@ object CommonUtils {
         intent.putExtra(Intent.EXTRA_TEXT, shareBody)
 
         ctx.startActivity(Intent.createChooser(intent, "Share using.."))
+    }
+
+    fun getClearExifBitmap(currentPhotoPath: String, absolutePath: String): Bitmap?{
+        val exif = ExifInterface(currentPhotoPath)
+        var image = BitmapFactory.decodeFile(absolutePath)
+
+        val matrix = Matrix()
+        when(exif.getAttribute(ExifInterface.TAG_ORIENTATION)){
+            ExifInterface.ORIENTATION_ROTATE_90.toString() -> {
+                matrix.postRotate(90F)
+            }
+            ExifInterface.ORIENTATION_ROTATE_180.toString() -> {
+                matrix.postRotate(180F)
+            }
+            ExifInterface.ORIENTATION_ROTATE_270.toString() -> {
+                matrix.postRotate(270F)
+            }
+            else ->{
+                matrix.postRotate(0F)
+            }
+        }
+        image = Bitmap.createBitmap(image , 0, 0, image.width, image.height, matrix, true)
+
+        return image
     }
 }

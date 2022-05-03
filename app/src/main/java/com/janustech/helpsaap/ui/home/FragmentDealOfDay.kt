@@ -5,6 +5,8 @@ import android.app.DatePickerDialog
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Matrix
+import android.media.ExifInterface
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
@@ -22,13 +24,11 @@ import androidx.core.content.FileProvider
 import androidx.fragment.app.activityViewModels
 import com.janustech.helpsaap.R
 import com.janustech.helpsaap.databinding.FragmentDealOfDayBinding
-import com.janustech.helpsaap.databinding.FragmentDealOfDayBindingImpl
 import com.janustech.helpsaap.map.toLocationDataModel
 import com.janustech.helpsaap.model.LocationDataModel
 import com.janustech.helpsaap.network.Status
 import com.janustech.helpsaap.ui.base.BaseFragmentWithBinding
 import com.janustech.helpsaap.ui.profile.PhotoOptionBottomSheetDialogFragment
-import com.janustech.helpsaap.ui.startup.AppIntroActivity
 import com.janustech.helpsaap.utils.CommonUtils
 import com.janustech.helpsaap.utils.PhotoOptionListener
 import dagger.hilt.android.AndroidEntryPoint
@@ -36,6 +36,7 @@ import java.io.File
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
+
 
 @AndroidEntryPoint
 class FragmentDealOfDay: BaseFragmentWithBinding<FragmentDealOfDayBinding>(R.layout.fragment_deal_of_day),View.OnClickListener, PhotoOptionListener {
@@ -322,7 +323,7 @@ class FragmentDealOfDay: BaseFragmentWithBinding<FragmentDealOfDayBinding>(R.lay
     }
 
     private fun setImage(path: String){
-        val image = BitmapFactory.decodeFile(path)
+        val image = CommonUtils.getClearExifBitmap(currentPhotoPath, path)
         image?.let {
             binding.ivUpload.apply {
                 setImageBitmap(image)
