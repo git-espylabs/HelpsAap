@@ -84,7 +84,7 @@ class AppIntroSearchListFragment: BaseFragmentWithBinding<FragmentAppIntroSearch
                         }
                     }
                     "share" ->{
-
+                        CommonUtils.share(requireContext())
                     }
                     "whatsap" ->{
                         when {

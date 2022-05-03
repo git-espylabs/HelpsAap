@@ -43,8 +43,8 @@ class AppIntroViewModel
     val adsListReceiver: LiveData<Resource<ApiResponse<List<AdsResponseData>>>>
         get() = _adsListReceiver
 
-    private val _categoriesReceiver = MutableLiveData<Resource<ApiResponse<List<CategoryResponseData>>>>()
-    val categoriesReceiver: LiveData<Resource<ApiResponse<List<CategoryResponseData>>>>
+    val _categoriesReceiver = MutableLiveData<Resource<ApiResponse<List<CategoryResponseData>>>>()
+    var categoriesReceiver: LiveData<Resource<ApiResponse<List<CategoryResponseData>>>>? = null
         get() = _categoriesReceiver
 
     private val _companyListReceiver = MutableLiveData<Resource<ApiResponse<List<CompanyResponseData>>>>()
@@ -126,7 +126,9 @@ class AppIntroViewModel
     fun getCategories(param: String){
         viewModelScope.launch {
             appIntroUseCase.getCategories(CategoriesListRequest(param))
-                .onStart { _categoriesReceiver.value = Resource.loading() }
+                .onStart {
+                    _categoriesReceiver.value = Resource.loading()
+                }
                 .collect { apiResponse ->
                     apiResponse.let{
                         it.data?.let{

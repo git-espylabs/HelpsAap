@@ -28,7 +28,7 @@
         android:fontFamily="@font/segoui"
         android:gravity="center_horizontal"
         android:textFontWeight="700"
-        android:text="Quick Solution For\nAll Your Need"
+        android:text="Quick Solution For\nAll Your Needs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 

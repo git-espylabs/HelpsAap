@@ -47,6 +47,7 @@ class FragmentEditProfile  : BaseFragmentWithBinding<FragmentEditProfileBinding>
         appHomeViewModel.categoriesReceiver.observe(viewLifecycleOwner){
             when(it.status){
                 Status.SUCCESS ->{
+                    (activity as AppHomeActivity).hideProgress()
                     val dataList = it.data?.data
                     categoriesSuggestionList = dataList?.map { dat -> dat.toCategoryDataModel() } ?: listOf()
                     categoriesListAdapter = ArrayAdapter(
@@ -54,11 +55,16 @@ class FragmentEditProfile  : BaseFragmentWithBinding<FragmentEditProfileBinding>
                         android.R.layout.simple_spinner_dropdown_item,
                         categoriesSuggestionList
                     )
-                    binding.actCategory.setAdapter(categoriesListAdapter)
+                    binding.actCategory.apply {
+                        setAdapter(categoriesListAdapter)
+                        showDropDown()
+                    }
                 }
                 Status.LOADING -> {
+                    (activity as AppHomeActivity).showProgress()
                 }
                 else ->{
+                    (activity as AppHomeActivity).hideProgress()
                     (activity as AppHomeActivity).showToast(it.message?:"Invalid Server Response")
                 }
             }
@@ -87,20 +93,11 @@ class FragmentEditProfile  : BaseFragmentWithBinding<FragmentEditProfileBinding>
 
     private fun setSearchList(){
 
-        categoriesListAdapter = ArrayAdapter(
-            requireContext(),
-            android.R.layout.simple_spinner_dropdown_item,
-            categoriesSuggestionList
-        )
-
         binding.ivClearSearch.setOnClickListener {
             binding.actCategory.setText("")
         }
 
         binding.actCategory.apply {
-            threshold = 1
-
-            setAdapter(categoriesListAdapter)
 
             addTextChangedListener(object : TextWatcher {
                 override fun beforeTextChanged(

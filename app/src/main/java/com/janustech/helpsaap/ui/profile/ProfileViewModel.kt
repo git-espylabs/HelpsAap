@@ -44,6 +44,7 @@ class ProfileViewModel @Inject constructor(
     var regImage = ""
     var regLatitude = "0.0"
     var regLongitude = "0.0"
+    var regLocalArea = ""
 
     private val _loginResponseReceiver = MutableLiveData<Resource<ApiResponse<LoginResponseData>>>()
     val loginResponseReceiver: LiveData<Resource<ApiResponse<LoginResponseData>>>

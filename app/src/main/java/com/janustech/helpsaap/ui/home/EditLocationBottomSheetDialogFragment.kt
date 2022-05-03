@@ -62,6 +62,7 @@ class EditLocationBottomSheetDialogFragment<out T>(private val viewModel: T, pri
             (viewModel as AppIntroViewModel).locationListReceiver.observe(viewLifecycleOwner){
                 when(it.status){
                     Status.SUCCESS ->{
+                        (activity as AppIntroActivity).hideProgress()
                         val locationList = it.data?.data
                         locationSuggestionList = locationList?.map { locData -> locData.toLocationDataModel() } ?: listOf()
                         locationsListAdapter = ArrayAdapter(
@@ -69,12 +70,16 @@ class EditLocationBottomSheetDialogFragment<out T>(private val viewModel: T, pri
                             android.R.layout.simple_spinner_dropdown_item,
                             locationSuggestionList
                         )
-                        binding.tvDropdownLocation.setAdapter(locationsListAdapter)
+                        binding.tvDropdownLocation.apply {
+                            setAdapter(locationsListAdapter)
+                            showDropDown()
+                        }
                     }
                     Status.LOADING ->{
-
+                        (activity as AppIntroActivity).showProgress()
                     }
                     else ->{
+                        (activity as AppIntroActivity).hideProgress()
                         Toast.makeText(activity, "Invalid Server Response", Toast.LENGTH_SHORT).show()
                     }
                 }
@@ -83,6 +88,7 @@ class EditLocationBottomSheetDialogFragment<out T>(private val viewModel: T, pri
             (viewModel as AppHomeViewModel).locationListReceiver.observe(viewLifecycleOwner){
                 when(it.status){
                     Status.SUCCESS ->{
+                        (activity as AppHomeActivity).hideProgress()
                         val locationList = it.data?.data
                         locationSuggestionList = locationList?.map { locData -> locData.toLocationDataModel() } ?: listOf()
                         locationsListAdapter = ArrayAdapter(
@@ -90,12 +96,16 @@ class EditLocationBottomSheetDialogFragment<out T>(private val viewModel: T, pri
                             android.R.layout.simple_spinner_dropdown_item,
                             locationSuggestionList
                         )
-                        binding.tvDropdownLocation.setAdapter(locationsListAdapter)
+                        binding.tvDropdownLocation.apply {
+                            setAdapter(locationsListAdapter)
+                            showDropDown()
+                        }
                     }
                     Status.LOADING ->{
-
+                        (activity as AppHomeActivity).showProgress()
                     }
                     else ->{
+                        (activity as AppHomeActivity).hideProgress()
                         Toast.makeText(activity, "Invalid Server Response", Toast.LENGTH_SHORT).show()
                     }
                 }
@@ -104,20 +114,11 @@ class EditLocationBottomSheetDialogFragment<out T>(private val viewModel: T, pri
     }
 
     private fun setLocationDropdown(){
-        locationsListAdapter = ArrayAdapter(
-            requireContext(),
-            android.R.layout.simple_spinner_dropdown_item,
-            locationSuggestionList
-        )
-
         binding.ivClearSearch.setOnClickListener {
             binding.tvDropdownLocation.setText("")
         }
 
         binding.tvDropdownLocation.apply {
-            threshold = 1
-
-            setAdapter(locationsListAdapter)
             addTextChangedListener(object : TextWatcher {
                 override fun beforeTextChanged(
                     s: CharSequence,

@@ -13,7 +13,6 @@ import android.net.Uri
 import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
-import android.view.Gravity
 import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.startActivity
@@ -21,7 +20,6 @@ import com.janustech.helpsaap.app.AppSettings
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
-import java.net.URLEncoder
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.min
@@ -145,5 +143,18 @@ object CommonUtils {
         } catch (e: Exception) {
             e.printStackTrace()
         }
+    }
+
+    fun share(ctx: Context){
+        val intent = Intent(Intent.ACTION_SEND)
+        val shareBody = "Here is the share content body"
+        intent.type = "text/plain"
+        intent.putExtra(
+            Intent.EXTRA_SUBJECT,
+            "Share Content"
+        )
+        intent.putExtra(Intent.EXTRA_TEXT, shareBody)
+
+        ctx.startActivity(Intent.createChooser(intent, "Share using.."))
     }
 }

@@ -30,14 +30,16 @@
             android:text="@={viewModel.userLocationName}"
             android:onClick="@{(view) -> viewParent.onClick(view)}"
             android:textFontWeight="200"
-            android:fontFamily="@font/segoui"
-            android:drawableStart="@drawable/ic_location"
+            android:fontFamily="@font/segoeui_heavy"
+            app:drawableStartCompat="@drawable/ic_location"
+            app:drawableEndCompat="@drawable/ic_arrow_down"
             android:drawablePadding="7dp"
             app:layout_constraintHorizontal_chainStyle="spread_inside"
             app:layout_constraintEnd_toStartOf="@+id/btnProfileIco"
             app:layout_constraintTop_toTopOf="@+id/btnProfileIco"
             app:layout_constraintBottom_toBottomOf="@+id/btnProfileIco"
-            app:layout_constraintStart_toStartOf="parent"/>
+            app:layout_constraintStart_toStartOf="parent"
+            tools:targetApi="p" />
 
         <TextView
             android:layout_marginTop="8dp"

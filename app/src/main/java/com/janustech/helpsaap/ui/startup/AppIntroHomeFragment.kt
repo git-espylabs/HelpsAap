@@ -71,6 +71,7 @@ class AppIntroHomeFragment: BaseFragmentWithBinding<FragmentAppIntroHomeBinding>
 
     override fun onStop() {
         super.onStop()
+        appIntroViewModel._categoriesReceiver.value = null
         (activity as AppIntroActivity).hideProgress()
     }
 
@@ -83,6 +84,7 @@ class AppIntroHomeFragment: BaseFragmentWithBinding<FragmentAppIntroHomeBinding>
     }
 
     private fun setObserver(){
+
         appIntroViewModel.dealsOfDay.observe(viewLifecycleOwner){
             when(it.status){
                 Status.SUCCESS ->{
@@ -121,22 +123,30 @@ class AppIntroHomeFragment: BaseFragmentWithBinding<FragmentAppIntroHomeBinding>
             }
         }
 
-        appIntroViewModel.categoriesReceiver.observe(viewLifecycleOwner){
-            when(it.status){
-                Status.SUCCESS ->{
-                    val dataList = it.data?.data
-                    categoriesSuggestionList = dataList?.map { dat -> dat.toCategoryDataModel() } ?: listOf()
-                    categoriesListAdapter = ArrayAdapter(
-                        requireContext(),
-                        android.R.layout.simple_spinner_dropdown_item,
-                        categoriesSuggestionList
-                    )
-                    binding.actSearch.setAdapter(categoriesListAdapter)
-                }
-                Status.LOADING -> {
-                }
-                else ->{
-                    (activity as AppIntroActivity).showAlertDialog(it.message?:"Invalid Server Response")
+        appIntroViewModel.categoriesReceiver?.observe(viewLifecycleOwner){ result ->
+            result?.let {
+                when(it.status){
+                    Status.SUCCESS ->{
+                        (activity as AppIntroActivity).hideProgress()
+                        val dataList = it.data?.data
+                        categoriesSuggestionList = dataList?.map { dat -> dat.toCategoryDataModel() } ?: listOf()
+                        categoriesListAdapter = ArrayAdapter(
+                            requireContext(),
+                            android.R.layout.simple_spinner_dropdown_item,
+                            categoriesSuggestionList
+                        )
+                        binding.actSearch.apply {
+                            setAdapter(categoriesListAdapter)
+                            showDropDown()
+                        }
+                    }
+                    Status.LOADING -> {
+                        (activity as AppIntroActivity).showProgress()
+                    }
+                    else ->{
+                        (activity as AppIntroActivity).hideProgress()
+                        (activity as AppIntroActivity).showAlertDialog(it.message?:"Invalid Server Response")
+                    }
                 }
             }
         }
@@ -144,21 +154,11 @@ class AppIntroHomeFragment: BaseFragmentWithBinding<FragmentAppIntroHomeBinding>
     }
 
     private fun setSearchList(){
-
-        categoriesListAdapter = ArrayAdapter(
-            requireContext(),
-            android.R.layout.simple_spinner_dropdown_item,
-            categoriesSuggestionList
-        )
-
         binding.ivClearSearch.setOnClickListener {
             binding.actSearch.setText("")
         }
 
         binding.actSearch.apply {
-            threshold = 1
-
-            setAdapter(categoriesListAdapter)
 
             addTextChangedListener(object : TextWatcher {
                 override fun beforeTextChanged(
@@ -193,6 +193,7 @@ class AppIntroHomeFragment: BaseFragmentWithBinding<FragmentAppIntroHomeBinding>
                         appIntroViewModel.userSelectedCategory = it.id
                         appIntroViewModel.userSelectedCategoryName = it.category
                         (activity as AppIntroActivity).hideKeyboard()
+                        setText("")
                         findNavController().navigate(AppIntroHomeFragmentDirections.actionAppIntroHomeToAppIntroSearchList())
                     }
                 }

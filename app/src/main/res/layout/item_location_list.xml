@@ -22,7 +22,7 @@
             android:fontFamily="@font/segoui"
             android:textFontWeight="700"
             android:textStyle="bold"
-            android:text="@{model.district}"
+            android:text="@{model.panchayath}"
             android:layout_marginVertical="5dp"
             android:layout_marginHorizontal="7dp"
             android:background="@drawable/rounded_rect_green_filled_less_radii"

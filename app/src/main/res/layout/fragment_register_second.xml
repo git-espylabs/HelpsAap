@@ -180,7 +180,7 @@
                     android:textColor="@color/black"
                     android:fontFamily="@font/segoeui_heavy"
                     android:textFontWeight="700"
-                    android:text="Just ₹ 99 ( 1 Years)"
+                    android:text="Just ₹ 99 ( 1 Year)"
                     android:textStyle="bold"
                     android:paddingVertical="7dp"
                     android:paddingLeft="36dp"

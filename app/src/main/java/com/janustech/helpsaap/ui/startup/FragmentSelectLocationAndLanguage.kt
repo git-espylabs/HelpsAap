@@ -68,6 +68,7 @@ class FragmentSelectLocationAndLanguage: BaseFragmentWithBinding<FragmentSelectL
         appIntroViewModel.locationListReceiver.observe(viewLifecycleOwner){
             when(it.status){
                 Status.SUCCESS ->{
+                    (activity as AppIntroActivity).hideProgress()
                     val locationList = it.data?.data
                     locationSuggestionList = locationList?.map { locData -> locData.toLocationDataModel() } ?: listOf()
                     locationsListAdapter = ArrayAdapter(
@@ -75,11 +76,16 @@ class FragmentSelectLocationAndLanguage: BaseFragmentWithBinding<FragmentSelectL
                         android.R.layout.simple_spinner_dropdown_item,
                         locationSuggestionList
                     )
-                    binding.tvDropdownLocation.setAdapter(locationsListAdapter)
+                    binding.tvDropdownLocation.apply {
+                        setAdapter(locationsListAdapter)
+                        showDropDown()
+                    }
                 }
                 Status.LOADING -> {
+                    (activity as AppIntroActivity).showProgress()
                 }
                 else ->{
+                    (activity as AppIntroActivity).hideProgress()
                     (activity as AppIntroActivity).showAlertDialog(it.message?:"Invalid Server Response")
                 }
             }
@@ -87,20 +93,12 @@ class FragmentSelectLocationAndLanguage: BaseFragmentWithBinding<FragmentSelectL
     }
 
     private fun setLocationDropdown(){
-        locationsListAdapter = ArrayAdapter(
-            requireContext(),
-            android.R.layout.simple_spinner_dropdown_item,
-            locationSuggestionList
-        )
 
         binding.ivClearSearch.setOnClickListener {
             binding.tvDropdownLocation.setText("")
         }
 
         binding.tvDropdownLocation.apply {
-            threshold = 1
-
-            setAdapter(locationsListAdapter)
             addTextChangedListener(object : TextWatcher {
                 override fun beforeTextChanged(
                     s: CharSequence,
@@ -162,7 +160,7 @@ class FragmentSelectLocationAndLanguage: BaseFragmentWithBinding<FragmentSelectL
 
     private fun setLanguageList(languageList: List<LanguageListResponseData>?){
         if (languageList != null && languageList.isNotEmpty()){
-            binding.myAdapter = LanguageListAdapter(languageList.map {
+            binding.myAdapter = LanguageListAdapter(requireContext(), languageList.map {
                 it.toLanguageDataModel()
             }){ model ->
 

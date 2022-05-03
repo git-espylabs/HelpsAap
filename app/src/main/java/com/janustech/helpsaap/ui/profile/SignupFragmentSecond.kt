@@ -134,6 +134,7 @@ class SignupFragmentSecond : BaseFragmentWithBinding<FragmentRegisterSecondBindi
         profileViewModel.categoriesReceiver.observe(viewLifecycleOwner){
             when(it.status){
                 Status.SUCCESS ->{
+                    (activity as SignupActivity).hideProgress()
                     val dataList = it.data?.data
                     categoriesSuggestionList = dataList?.map { dat -> dat.toCategoryDataModel() } ?: listOf()
                     categoriesListAdapter = ArrayAdapter(
@@ -141,11 +142,16 @@ class SignupFragmentSecond : BaseFragmentWithBinding<FragmentRegisterSecondBindi
                         android.R.layout.simple_spinner_dropdown_item,
                         categoriesSuggestionList
                     )
-                    binding.categorySpinner.setAdapter(categoriesListAdapter)
+                    binding.categorySpinner.apply {
+                        setAdapter(categoriesListAdapter)
+                        showDropDown()
+                    }
                 }
                 Status.LOADING -> {
+                    (activity as SignupActivity).showProgress()
                 }
                 else ->{
+                    (activity as SignupActivity).hideProgress()
                     (activity as SignupActivity).showAlertDialog(it.message?:"Invalid Server Response")
                 }
             }
@@ -245,20 +251,11 @@ class SignupFragmentSecond : BaseFragmentWithBinding<FragmentRegisterSecondBindi
 
     private fun setSearchList(){
 
-        categoriesListAdapter = ArrayAdapter(
-            requireContext(),
-            android.R.layout.simple_spinner_dropdown_item,
-            categoriesSuggestionList
-        )
-
         binding.ivClearSearch.setOnClickListener {
             binding.categorySpinner.setText("")
         }
 
         binding.categorySpinner.apply {
-            threshold = 1
-
-            setAdapter(categoriesListAdapter)
 
             addTextChangedListener(object : TextWatcher {
                 override fun beforeTextChanged(

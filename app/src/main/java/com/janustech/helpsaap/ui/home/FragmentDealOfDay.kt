@@ -120,6 +120,7 @@ class FragmentDealOfDay: BaseFragmentWithBinding<FragmentDealOfDayBinding>(R.lay
         appHomeViewModel.locationListReceiver.observe(viewLifecycleOwner){
             when(it.status){
                 Status.SUCCESS ->{
+                    (activity as AppHomeActivity).hideProgress()
                     val locationList = it.data?.data
                     locationSuggestionList = locationList?.map { locData -> locData.toLocationDataModel() } ?: listOf()
                     locationsListAdapter = ArrayAdapter(
@@ -127,11 +128,16 @@ class FragmentDealOfDay: BaseFragmentWithBinding<FragmentDealOfDayBinding>(R.lay
                         android.R.layout.simple_spinner_dropdown_item,
                         locationSuggestionList
                     )
-                    binding.actLocation.setAdapter(locationsListAdapter)
+                    binding.actLocation.apply {
+                        setAdapter(locationsListAdapter)
+                        showDropDown()
+                    }
                 }
                 Status.LOADING -> {
+                    (activity as AppHomeActivity).showProgress()
                 }
                 else ->{
+                    (activity as AppHomeActivity).hideProgress()
                     (activity as AppHomeActivity).showAlertDialog(it.message?:"Invalid Server Response")
                 }
             }
@@ -156,20 +162,12 @@ class FragmentDealOfDay: BaseFragmentWithBinding<FragmentDealOfDayBinding>(R.lay
     }
 
     private fun setLocationDropdown(){
-        locationsListAdapter = ArrayAdapter(
-            requireContext(),
-            android.R.layout.simple_spinner_dropdown_item,
-            locationSuggestionList
-        )
 
         binding.ivClearSearch.setOnClickListener {
             binding.actLocation.setText("")
         }
 
         binding.actLocation.apply {
-            threshold = 1
-
-            setAdapter(locationsListAdapter)
             addTextChangedListener(object : TextWatcher {
                 override fun beforeTextChanged(
                     s: CharSequence,

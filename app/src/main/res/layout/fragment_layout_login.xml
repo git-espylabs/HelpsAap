@@ -74,6 +74,7 @@
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_size_custom_18"
                 android:layout_height="@dimen/custom_dimen_48"
+                android:maxLength="6"
                 android:background="@drawable/rounded_rect_grey_filled"
                 android:hint="@string/text_hint_password"
                 android:inputType="textPassword"

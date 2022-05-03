@@ -3,6 +3,8 @@ package com.janustech.helpsaap.ui.startup
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.library.baseAdapters.BR
 import androidx.recyclerview.widget.RecyclerView
@@ -11,7 +13,7 @@ import com.janustech.helpsaap.databinding.ItLanguageBinding
 import com.janustech.helpsaap.model.LanguageDataModel
 
 
-class LanguageListAdapter internal constructor(private val mData: List<LanguageDataModel>, val languageSelectListener: (model: LanguageDataModel) -> Unit): RecyclerView.Adapter<LanguageListAdapter.ViewHolder>() {
+class LanguageListAdapter internal constructor(private val context: Context, private val mData: List<LanguageDataModel>, val languageSelectListener: (model: LanguageDataModel) -> Unit): RecyclerView.Adapter<LanguageListAdapter.ViewHolder>() {
 
     inner class ViewHolder(itLanguageBinding: ItLanguageBinding) : RecyclerView.ViewHolder(itLanguageBinding.root) {
         private var itLanguageBinding: ItLanguageBinding? = null
@@ -20,6 +22,11 @@ class LanguageListAdapter internal constructor(private val mData: List<LanguageD
             itLanguageBinding?.executePendingBindings()
 
             itLanguageBinding?.root?.setOnClickListener {
+                val animation: Animation = AnimationUtils.loadAnimation(
+                    context,
+                    R.anim.click
+                )
+                it?.startAnimation(animation)
                 languageSelectListener(obj as LanguageDataModel)
             }
         }

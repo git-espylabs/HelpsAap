@@ -33,8 +33,6 @@ import com.janustech.helpsaap.model.LocationDataModel
 import com.janustech.helpsaap.network.Status
 import com.janustech.helpsaap.preference.AppPreferences
 import com.janustech.helpsaap.ui.base.BaseFragmentWithBinding
-import com.janustech.helpsaap.ui.startup.AppIntroActivity
-import com.janustech.helpsaap.ui.startup.FragmentSelectLocationAndLanguageDirections
 import com.janustech.helpsaap.ui.startup.SignupActivity
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.IOException
@@ -208,6 +206,7 @@ class SignupFragmentFirst : BaseFragmentWithBinding<FragmentRegisterBinding>(R.l
         profileViewModel.locationListReceiver.observe(viewLifecycleOwner){
             when(it.status){
                 Status.SUCCESS ->{
+                    (activity as SignupActivity).hideProgress()
                     val locationList = it.data?.data
                     locationSuggestionList = locationList?.map { locData -> locData.toLocationDataModel() } ?: listOf()
                     locationsListAdapter = ArrayAdapter(
@@ -215,32 +214,29 @@ class SignupFragmentFirst : BaseFragmentWithBinding<FragmentRegisterBinding>(R.l
                         android.R.layout.simple_spinner_dropdown_item,
                         locationSuggestionList
                     )
-                    binding.actLocation.setAdapter(locationsListAdapter)
+                    binding.actLocation.apply {
+                        setAdapter(locationsListAdapter)
+                        showDropDown()
+                    }
                 }
                 Status.LOADING -> {
+                    (activity as SignupActivity).showProgress()
                 }
                 else ->{
-                    (activity as AppIntroActivity).showAlertDialog(it.message?:"Invalid Server Response")
+                    (activity as SignupActivity).hideProgress()
+                    (activity as SignupActivity).showAlertDialog(it.message?:"Invalid Server Response")
                 }
             }
         }
     }
 
     private fun setLocationDropdown(){
-        locationsListAdapter = ArrayAdapter(
-            requireContext(),
-            android.R.layout.simple_spinner_dropdown_item,
-            locationSuggestionList
-        )
 
         binding.ivClearSearch.setOnClickListener {
             binding.actLocation.setText("")
         }
 
         binding.actLocation.apply {
-            threshold = 1
-
-            setAdapter(locationsListAdapter)
             addTextChangedListener(object : TextWatcher {
                 override fun beforeTextChanged(
                     s: CharSequence,

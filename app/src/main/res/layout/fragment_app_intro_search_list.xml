@@ -29,14 +29,15 @@
             android:textColor="@color/black"
             android:text="@={viewModel.userLocationName}"
             android:textFontWeight="200"
-            android:fontFamily="@font/segoui"
-            android:drawableStart="@drawable/ic_location"
-            android:drawablePadding="7dp"
+            android:fontFamily="@font/segoeui_heavy"
             app:layout_constraintHorizontal_chainStyle="spread_inside"
             app:layout_constraintEnd_toStartOf="@+id/btnLogin"
             app:layout_constraintTop_toTopOf="@+id/btnLogin"
             app:layout_constraintBottom_toBottomOf="@+id/btnLogin"
-            app:layout_constraintStart_toStartOf="parent"/>
+            app:layout_constraintStart_toStartOf="parent"
+            app:drawableStartCompat="@drawable/ic_location"
+            app:drawableEndCompat="@drawable/ic_arrow_down"
+            tools:targetApi="p" />
 
         <TextView
             android:layout_marginTop="8dp"

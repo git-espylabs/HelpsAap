@@ -93,6 +93,7 @@
                         android:paddingHorizontal="8dp"
                         android:fontFamily="@font/segoui"
                         android:textColor="@color/black"
+                        android:maxLength="10"
                         android:textSize="@dimen/text_size_custom_18"
                         android:layout_height="@dimen/custom_dimen_48"
                         android:background="@drawable/rounded_rect_grey_filled"
@@ -121,6 +122,7 @@
                         android:paddingHorizontal="8dp"
                         android:fontFamily="@font/segoui"
                         android:textColor="@color/black"
+                        android:maxLength="6"
                         android:textSize="@dimen/text_size_custom_18"
                         android:layout_height="@dimen/custom_dimen_48"
                         android:background="@drawable/rounded_rect_grey_filled"
@@ -210,11 +212,37 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/etWtNoLay"
+                    android:id="@+id/etLocalAreaLay"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:boxBackgroundMode="none"
                     app:layout_constraintTop_toBottomOf="@+id/etCmpnyLay"
+                    android:layout_marginHorizontal="24dp"
+                    android:layout_marginTop="16dp"
+                    app:hintAnimationEnabled="false"
+                    app:hintEnabled="false">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etLocalArea"
+                        android:layout_width="match_parent"
+                        android:paddingVertical="2dp"
+                        android:paddingHorizontal="8dp"
+                        android:fontFamily="@font/segoui"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/text_size_custom_18"
+                        android:layout_height="@dimen/custom_dimen_48"
+                        android:background="@drawable/rounded_rect_grey_filled"
+                        android:hint="Local Area"
+                        android:inputType="text"
+                        android:text="@={viewModel.regLocalArea}"/>
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/etWtNoLay"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:boxBackgroundMode="none"
+                    app:layout_constraintTop_toBottomOf="@+id/etLocalAreaLay"
                     android:layout_marginHorizontal="24dp"
                     android:layout_marginTop="16dp"
                     app:hintAnimationEnabled="false"
