@@ -1,6 +1,5 @@
 package com.janustech.helpsaap.utils
 
-import android.R
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
@@ -19,10 +18,9 @@ import android.provider.MediaStore
 import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.startActivity
+import com.janustech.helpsaap.BuildConfig
 import com.janustech.helpsaap.app.AppSettings
-import java.io.ByteArrayOutputStream
-import java.io.File
-import java.io.FileOutputStream
+import java.io.*
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.min
@@ -183,5 +181,31 @@ object CommonUtils {
         image = Bitmap.createBitmap(image , 0, 0, image.width, image.height, matrix, true)
 
         return image
+    }
+
+
+    fun writeLogFile(context: Context, logText: String) {
+
+        if (BuildConfig.DEBUG.not()){
+            return
+        }
+
+        try {
+            val logTime =
+                SimpleDateFormat("dd MMM yyyy hh:mm:ss a").format(Calendar.getInstance().time)
+            val logDir = File(context.getExternalFilesDir(null), "Log")
+            if (!logDir.exists()) {
+                logDir.mkdir()
+            }
+            val logFile = File(logDir, "HAP_LOG.txt")
+            val buf = BufferedWriter(FileWriter(logFile, true))
+            buf.append("$logTime : $logText\n\n")
+            buf.newLine()
+            buf.close()
+        } catch (e: IOException) {
+            e.printStackTrace()
+        } catch (e: java.lang.Exception) {
+            e.printStackTrace()
+        }
     }
 }

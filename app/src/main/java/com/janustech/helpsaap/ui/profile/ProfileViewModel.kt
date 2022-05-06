@@ -15,6 +15,7 @@ import com.janustech.helpsaap.network.requests.LoginRequest
 import com.janustech.helpsaap.network.response.*
 import com.janustech.helpsaap.usecase.AppIntroUseCase
 import com.janustech.helpsaap.usecase.ProfileUseCase
+import com.janustech.helpsaap.utils.CommonUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onStart
@@ -97,6 +98,18 @@ class ProfileViewModel @Inject constructor(
     }
 
     fun registerApp(context: Context){
+        CommonUtils.writeLogFile(context, "registerApp() -> Request Data ->\n" +
+                "phonenumber: " + regMob + "\n" +
+                "password: " + regMob + "\n" +
+                "cusname: " + regMob + "\n" +
+                "email: " + regMob + "\n" +
+                "locationpinut: " + regMob + "\n" +
+                "businessname: " + regMob + "\n" +
+                "whatsapp: " + regMob + "\n" +
+                "website: " + regMob + "\n" +
+                "categoryid: " + regMob + "\n" +
+                "image: " + regMob + "\n"
+        )
         viewModelScope.launch {
             val partPhone = MultiPartRequestHelper.createRequestBody("phonenumber", regMob)
             val partPassword = MultiPartRequestHelper.createRequestBody("password", regPass)
@@ -129,14 +142,19 @@ class ProfileViewModel @Inject constructor(
                 .collect {  apiResponse ->
                     apiResponse.let {
                         it.data?.let { resp ->
+                            CommonUtils.writeLogFile(context, "registerApp() -> Response: \n$resp")
                             if (resp.isResponseSuccess() && resp.data != null && resp.data.isNotEmpty()) {
+                                CommonUtils.writeLogFile(context, "registerApp() -> Response: ResponseSuccess -> data:\n" + resp.data.toString())
                                 _registerResponseReceiver.value = apiResponse
                             }else if (resp.isResponseSuccess().not()){
+                                CommonUtils.writeLogFile(context, "registerApp() -> Response: ResponseFail:\n" + resp.message )
                                 _registerResponseReceiver.value = Resource.dataError(resp.message)
                             }else{
+                                CommonUtils.writeLogFile(context, "registerApp() -> Response Error: unknown")
                                 _registerResponseReceiver.value = Resource.dataError("Failed to register! Try again.")
                             }
                         }?: run {
+                            CommonUtils.writeLogFile(context, "registerApp() -> Response Null")
                             _registerResponseReceiver.value = Resource.dataError("Invalid server response!")
                         }
                     }

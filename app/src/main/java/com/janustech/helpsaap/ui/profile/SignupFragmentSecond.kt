@@ -56,6 +56,7 @@ class SignupFragmentSecond : BaseFragmentWithBinding<FragmentRegisterSecondBindi
     private val TRIGGER_AUTO_COMPLETE = 100
     private val AUTO_COMPLETE_DELAY: Long = 300
     private var selectedCategory = ""
+    private var isCameraImage = true
 
 
     private var cameraLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -209,11 +210,13 @@ class SignupFragmentSecond : BaseFragmentWithBinding<FragmentRegisterSecondBindi
     }
 
     private fun setCameraPicToImageView() {
+        isCameraImage = true;
         scaleDownImage(BitmapFactory.decodeFile(currentPhotoPath))
         deleteOriginalCameraImage()
     }
 
     private fun setGalleryPicToImageView(uri: Uri) {
+        isCameraImage = false;
         currentPhotoPath = uri.path?: ""
         photoFile = File(currentPhotoPath)
         CommonUtils.getBitmapFromUri(requireContext(), uri)
@@ -231,7 +234,11 @@ class SignupFragmentSecond : BaseFragmentWithBinding<FragmentRegisterSecondBindi
     }
 
     private fun setImage(path: String){
-        val image = CommonUtils.getClearExifBitmap(currentPhotoPath, path)
+        val image = if (isCameraImage) {
+            CommonUtils.getClearExifBitmap(currentPhotoPath, path)
+        } else {
+            BitmapFactory.decodeFile(path)
+        }
         image?.let {
             binding.ivUpload.apply {
                 setImageBitmap(image)
