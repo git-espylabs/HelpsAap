@@ -13,6 +13,7 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.DialogFragment
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.janustech.helpsaap.R
 import com.janustech.helpsaap.databinding.FragmentEditLocationBottomSheetDialogBinding
@@ -34,6 +35,11 @@ class EditLocationBottomSheetDialogFragment<out T>(private val viewModel: T, pri
 
     private val TRIGGER_AUTO_COMPLETE = 100
     private val AUTO_COMPLETE_DELAY: Long = 300
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setStyle(DialogFragment.STYLE_NORMAL, R.style.DialogStyle)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,

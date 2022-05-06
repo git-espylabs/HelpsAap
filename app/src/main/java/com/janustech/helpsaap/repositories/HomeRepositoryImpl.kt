@@ -2,6 +2,7 @@ package com.janustech.helpsaap.repositories
 
 import com.janustech.helpsaap.network.HelpsAapApis
 import com.janustech.helpsaap.network.Resource
+import com.janustech.helpsaap.network.requests.AddOfferRequest
 import com.janustech.helpsaap.network.requests.EditProfileRequest
 import com.janustech.helpsaap.network.response.ApiResponse
 import com.janustech.helpsaap.network.response.MultipartApiResponse
@@ -70,6 +71,14 @@ class HomeRepositoryImpl(private val apiService: HelpsAapApis): HomeRepository {
     override fun getNotifications(): Flow<Resource<ApiResponse<List<NotificationResponseData>>>> {
         return flow {
             emit(safeApiCall { apiService.getNotifications() })
+        }.flowOn(Dispatchers.IO)
+    }
+
+    override fun submitOffer(addOfferRequest: AddOfferRequest): Flow<Resource<ApiResponse<String>>> {
+        return flow {
+            emit(safeApiCall { apiService.submitOffer(
+                addOfferRequest
+            ) })
         }.flowOn(Dispatchers.IO)
     }
 }

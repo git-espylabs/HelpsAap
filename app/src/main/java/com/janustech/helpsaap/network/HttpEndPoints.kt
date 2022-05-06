@@ -14,5 +14,6 @@ internal class HttpEndPoints {
         const val ADS_LIST = "adslist"
         const val CATEGORY_SEARCH = "categorysearch"
         const val COMPANIES = "companylist"
+        const val ADD_OFFER = "addoffer"
     }
 }

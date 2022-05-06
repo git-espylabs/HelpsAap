@@ -1,5 +1,6 @@
 package com.janustech.helpsaap.network
 
+import com.janustech.helpsaap.network.requests.AddOfferRequest
 import com.janustech.helpsaap.network.requests.EditProfileRequest
 import com.janustech.helpsaap.network.response.ApiResponse
 import com.janustech.helpsaap.network.response.MultipartApiResponse
@@ -40,6 +41,11 @@ interface HelpsAapApis {
 
     @GET(HttpEndPoints.NOTIFICATIONS)
     suspend fun getNotifications(): ApiResponse<List<NotificationResponseData>>
+
+    @POST(HttpEndPoints.ADD_OFFER)
+    suspend fun submitOffer(
+        @Body addOfferRequest: AddOfferRequest
+    ): ApiResponse<String>
 
 
 }

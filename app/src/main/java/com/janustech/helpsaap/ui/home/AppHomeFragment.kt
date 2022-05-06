@@ -6,6 +6,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.janustech.helpsaap.R
 import com.janustech.helpsaap.databinding.FragmentAppHomeBinding
+import com.janustech.helpsaap.network.Status
 import com.janustech.helpsaap.ui.base.BaseFragmentWithBinding
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -21,6 +22,7 @@ class AppHomeFragment : BaseFragmentWithBinding<FragmentAppHomeBinding>(R.layout
             viewModel = appHomeViewModel
         }
         setListeners()
+        setObserver()
     }
 
     private fun setListeners(){
@@ -28,6 +30,7 @@ class AppHomeFragment : BaseFragmentWithBinding<FragmentAppHomeBinding>(R.layout
             ivProfileBg.setOnClickListener(this@AppHomeFragment)
             layDoD.setOnClickListener(this@AppHomeFragment)
             layAds.setOnClickListener(this@AppHomeFragment)
+            btnPromptOffer.setOnClickListener(this@AppHomeFragment)
         }
     }
 
@@ -42,6 +45,35 @@ class AppHomeFragment : BaseFragmentWithBinding<FragmentAppHomeBinding>(R.layout
             R.id.layAds -> {
                 findNavController().navigate(AppHomeFragmentDirections.actionAppHomeFragmentToAdvertiseFragment())
             }
+            R.id.btnPromptOffer -> {
+                AddOfferBottomSheetDialogFragment(appHomeViewModel).show(
+                    childFragmentManager,
+                    "AddOfferBottomSheetDialogFragment"
+                )
+            }
+        }
+    }
+
+    private fun setObserver(){
+        appHomeViewModel.offerSubmitStatusReceiver.observe(viewLifecycleOwner){
+            when(it.status){
+                Status.SUCCESS ->{
+                    (activity as AppHomeActivity).hideProgress()
+                    if (it.data?.isResponseSuccess() == true) {
+                        (activity as AppHomeActivity).showAlertDialog("Offer added successfully!")
+                    } else {
+                        (activity as AppHomeActivity).showAlertDialog("Error occurred! Please try again")
+                    }
+                }
+                Status.LOADING -> {
+                    (activity as AppHomeActivity).showProgress()
+                }
+                else ->{
+                    (activity as AppHomeActivity).hideProgress()
+                    (activity as AppHomeActivity).showToast(it.message?:"Invalid Server Response")
+                }
+            }
+
         }
     }
 }

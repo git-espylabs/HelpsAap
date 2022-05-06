@@ -1,6 +1,7 @@
 package com.janustech.helpsaap.usecase
 
 import com.janustech.helpsaap.network.Resource
+import com.janustech.helpsaap.network.requests.AddOfferRequest
 import com.janustech.helpsaap.network.requests.EditProfileRequest
 import com.janustech.helpsaap.network.response.ApiResponse
 import com.janustech.helpsaap.network.response.MultipartApiResponse
@@ -76,6 +77,12 @@ class HomeUsecases@Inject constructor(
     suspend fun getNotifications():Flow<Resource<ApiResponse<List<NotificationResponseData>>>>{
         return flow {
             homeRepository.getNotifications().collect { emit(it) }
+        }.flowOn(Dispatchers.IO)
+    }
+
+    suspend fun submitOffer(addOfferRequest: AddOfferRequest):Flow<Resource<ApiResponse<String>>>{
+        return flow {
+            homeRepository.submitOffer(addOfferRequest).collect { emit(it) }
         }.flowOn(Dispatchers.IO)
     }
 }

@@ -11,6 +11,7 @@ import com.janustech.helpsaap.model.LocationDataModel
 import com.janustech.helpsaap.model.UserData
 import com.janustech.helpsaap.network.MultiPartRequestHelper
 import com.janustech.helpsaap.network.Resource
+import com.janustech.helpsaap.network.requests.AddOfferRequest
 import com.janustech.helpsaap.network.requests.CategoriesListRequest
 import com.janustech.helpsaap.network.requests.EditProfileRequest
 import com.janustech.helpsaap.network.requests.LocationListRequest
@@ -79,6 +80,10 @@ class AppHomeViewModel @Inject constructor(private val appIntroUseCase: AppIntro
     private val _notificationsListReceiver = MutableLiveData<Resource<ApiResponse<List<NotificationResponseData>>>>()
     val notificationsListReceiver: LiveData<Resource<ApiResponse<List<NotificationResponseData>>>>
         get() = _notificationsListReceiver
+
+    private val _offerSubmitStatusReceiver = MutableLiveData<Resource<ApiResponse<String>>>()
+    val offerSubmitStatusReceiver: LiveData<Resource<ApiResponse<String>>>
+        get() = _offerSubmitStatusReceiver
 
     init {
         userLocationName = AppPreferences.userLocation
@@ -248,6 +253,23 @@ class AppHomeViewModel @Inject constructor(private val appIntroUseCase: AppIntro
                         }
                     }
                 }
+        }
+    }
+
+    fun submitOffer(percent: String){
+        val request = AddOfferRequest(AppPreferences.userId, percent)
+
+        viewModelScope.launch {
+            homeUseCases.submitOffer(request)
+                .onStart { _offerSubmitStatusReceiver.value =  Resource.loading()}
+                .collect {  apiResponse ->
+                    apiResponse.let{
+                        it.data?.let{
+                            _offerSubmitStatusReceiver.value = apiResponse
+                        }?: run {
+                            _offerSubmitStatusReceiver.value = Resource.dataError("Invalid server response!")
+                        }
+                    } }
         }
     }
 

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="24dp">
+
+        <TextView
+            android:id="@+id/tvPromptLoc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add Offer"
+            android:textColor="@color/black"
+            android:fontFamily="@font/segoeui_heavy"
+            android:textFontWeight="700"
+            android:textSize="@dimen/text_size_custom_18"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:layout_marginTop="16dp"
+            android:id="@+id/etPercent"
+            android:inputType="numberDecimal"
+            app:layout_constraintStart_toStartOf="parent"
+            android:background="@drawable/rounded_rect_plain_filled_green_stroke"
+            app:layout_constraintTop_toBottomOf="@+id/tvPromptLoc"
+            android:textSize="22sp"
+            android:textColor="@color/black"
+            android:fontFamily="@font/segoui"
+            android:textFontWeight="700"
+            android:gravity="center"
+            android:layout_width="96dp"
+            android:layout_height="49dp"/>
+
+        <TextView
+            app:layout_constraintTop_toTopOf="@+id/etPercent"
+            app:layout_constraintBottom_toBottomOf="@+id/etPercent"
+            app:layout_constraintStart_toEndOf="@+id/etPercent"
+            android:layout_marginStart="8dp"
+            android:textSize="22sp"
+            android:textColor="@color/black"
+            android:fontFamily="@font/segoui"
+            android:textFontWeight="700"
+            android:text="%"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <Button
+            android:id="@+id/btnSubmit"
+            style="@style/HelpAapButtonStyle"
+            app:layout_constraintTop_toBottomOf="@+id/etPercent"
+            android:layout_marginTop="24dp"
+            android:layout_marginHorizontal="24dp"
+            android:text="Submit"
+            android:paddingHorizontal="24dp"
+            android:textAllCaps="false"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/custom_dimen_56"
+            android:layout_marginBottom="24dp"/>
+
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

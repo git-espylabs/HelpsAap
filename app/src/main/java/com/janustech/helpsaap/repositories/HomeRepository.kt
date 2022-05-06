@@ -1,6 +1,7 @@
 package com.janustech.helpsaap.repositories
 
 import com.janustech.helpsaap.network.Resource
+import com.janustech.helpsaap.network.requests.AddOfferRequest
 import com.janustech.helpsaap.network.requests.EditProfileRequest
 import com.janustech.helpsaap.network.response.ApiResponse
 import com.janustech.helpsaap.network.response.MultipartApiResponse
@@ -32,4 +33,6 @@ interface HomeRepository {
     ): Flow<Resource<MultipartApiResponse>>
 
     fun getNotifications():Flow<Resource<ApiResponse<List<NotificationResponseData>>>>
+
+    fun submitOffer(addOfferRequest: AddOfferRequest):Flow<Resource<ApiResponse<String>>>
 }
