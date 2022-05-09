@@ -21,9 +21,13 @@ import androidx.core.content.FileProvider
 import androidx.fragment.app.activityViewModels
 import com.google.gson.Gson
 import com.janustech.helpsaap.R
+import com.janustech.helpsaap.app.AppPermission
 import com.janustech.helpsaap.databinding.FragmentRegisterBinding
 import com.janustech.helpsaap.databinding.FragmentRegisterSecondBinding
+import com.janustech.helpsaap.extension.handlePermission
 import com.janustech.helpsaap.extension.launchActivity
+import com.janustech.helpsaap.extension.requestPermission
+import com.janustech.helpsaap.location.GpsManager
 import com.janustech.helpsaap.map.toCategoryDataModel
 import com.janustech.helpsaap.map.toUserData
 import com.janustech.helpsaap.model.CategoryDataModel
@@ -46,6 +50,7 @@ class SignupFragmentSecond : BaseFragmentWithBinding<FragmentRegisterSecondBindi
 
     private val profileViewModel: ProfileViewModel by activityViewModels()
     private lateinit var currentPhotoPath: String
+    private lateinit var galleryImgUri: Uri
     private var photoFile: File? = null
     private var actualPath = ""
 
@@ -65,6 +70,14 @@ class SignupFragmentSecond : BaseFragmentWithBinding<FragmentRegisterSecondBindi
             setCameraPicToImageView()
         }
     }
+    private val requestPermissionLauncher =
+        registerForActivityResult(
+            ActivityResultContracts.RequestMultiplePermissions()
+        ) { permissions ->
+            if (permissions[AppPermission.PERMISSION_STORAGE[0]] == true) {
+                dispatchPickPhotoIntent()
+            }
+        }
 
     private var galleryLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
@@ -100,7 +113,17 @@ class SignupFragmentSecond : BaseFragmentWithBinding<FragmentRegisterSecondBindi
     }
 
     override fun onChoosePhotoSelected() {
-        dispatchPickPhotoIntent()
+        handlePermission(AppPermission.ACCESS_STORAGE,
+            onGranted = {
+                dispatchPickPhotoIntent()
+            },
+            onRationaleNeeded = {
+
+            },
+            onDenied = {
+                requestPermission(requestPermissionLauncher, AppPermission.PERMISSION_STORAGE)
+            }
+        )
     }
 
     private fun setObserver(){
@@ -111,7 +134,7 @@ class SignupFragmentSecond : BaseFragmentWithBinding<FragmentRegisterSecondBindi
 
                     AppPreferences.userId = it.data?.data?:""
                     val userData = profileViewModel.run {
-                        UserData(it.data?.data?:"", regName, regMob, regWhatsapNo, regEmail, regWeb, regPin, "", "")
+                        UserData(it.data?.data?:"", regName, regMob, regWhatsapNo, regEmail, regWeb, regPin, "", "", regPass)
                     }
                     AppPreferences.userData = Gson().toJson(userData)
 
@@ -218,6 +241,7 @@ class SignupFragmentSecond : BaseFragmentWithBinding<FragmentRegisterSecondBindi
     private fun setGalleryPicToImageView(uri: Uri) {
         isCameraImage = false;
         currentPhotoPath = uri.path?: ""
+        galleryImgUri = uri
         photoFile = File(currentPhotoPath)
         CommonUtils.getBitmapFromUri(requireContext(), uri)
             ?.let { bitmap -> scaleDownImage(bitmap) }
@@ -237,7 +261,8 @@ class SignupFragmentSecond : BaseFragmentWithBinding<FragmentRegisterSecondBindi
         val image = if (isCameraImage) {
             CommonUtils.getClearExifBitmap(currentPhotoPath, path)
         } else {
-            BitmapFactory.decodeFile(path)
+            CommonUtils.getClearExifBitmap(requireContext(), galleryImgUri, path)
+//            BitmapFactory.decodeFile(path)
         }
         image?.let {
             binding.ivUpload.apply {

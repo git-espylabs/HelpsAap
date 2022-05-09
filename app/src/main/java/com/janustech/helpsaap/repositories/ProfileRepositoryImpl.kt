@@ -3,6 +3,9 @@ package com.janustech.helpsaap.repositories
 import com.janustech.helpsaap.network.ProfileApis
 import com.janustech.helpsaap.network.Resource
 import com.janustech.helpsaap.network.requests.LoginRequest
+import com.janustech.helpsaap.network.requests.OtpSendRequest
+import com.janustech.helpsaap.network.requests.ResetPasswordRequest
+import com.janustech.helpsaap.network.requests.VerifyOtpRequest
 import com.janustech.helpsaap.network.response.ApiResponse
 import com.janustech.helpsaap.network.response.LoginResponseData
 import com.janustech.helpsaap.network.response.MultipartApiResponse
@@ -33,6 +36,10 @@ class ProfileRepositoryImpl(private val apiService: ProfileApis): ProfileReposit
         categoryid: MultipartBody.Part,
         transaction_id: MultipartBody.Part,
         amount: MultipartBody.Part,
+        latitude: MultipartBody.Part,
+        longitube: MultipartBody.Part,
+        areaname: MultipartBody.Part,
+        language: MultipartBody.Part,
         image: MultipartBody.Part
     ): Flow<Resource<MultipartApiResponse>> {
         return flow {
@@ -48,8 +55,30 @@ class ProfileRepositoryImpl(private val apiService: ProfileApis): ProfileReposit
                 categoryid,
                 transaction_id,
                 amount,
+                latitude,
+                longitube,
+                areaname,
+                language,
                 image
             ) })
+        }.flowOn(Dispatchers.IO)
+    }
+
+    override fun sendOtp(otpSendRequest: OtpSendRequest): Flow<Resource<ApiResponse<String>>> {
+        return flow {
+            emit(safeApiCall { apiService.sendOtp(otpSendRequest) })
+        }.flowOn(Dispatchers.IO)
+    }
+
+    override fun verifyOtp(verifyOtpRequest: VerifyOtpRequest): Flow<Resource<ApiResponse<LoginResponseData>>> {
+        return flow {
+            emit(safeApiCall { apiService.verifyOtp(verifyOtpRequest) })
+        }.flowOn(Dispatchers.IO)
+    }
+
+    override fun resetPassword(resetPasswordRequest: ResetPasswordRequest): Flow<Resource<ApiResponse<String>>> {
+        return flow {
+            emit(safeApiCall { apiService.resetPassword(resetPasswordRequest) })
         }.flowOn(Dispatchers.IO)
     }
 }

@@ -2,6 +2,9 @@ package com.janustech.helpsaap.repositories
 
 import com.janustech.helpsaap.network.Resource
 import com.janustech.helpsaap.network.requests.LoginRequest
+import com.janustech.helpsaap.network.requests.OtpSendRequest
+import com.janustech.helpsaap.network.requests.ResetPasswordRequest
+import com.janustech.helpsaap.network.requests.VerifyOtpRequest
 import com.janustech.helpsaap.network.response.ApiResponse
 import com.janustech.helpsaap.network.response.LoginResponseData
 import com.janustech.helpsaap.network.response.MultipartApiResponse
@@ -25,6 +28,16 @@ interface ProfileRepository {
         categoryid: MultipartBody.Part,
         transaction_id: MultipartBody.Part,
         amount: MultipartBody.Part,
+        latitude: MultipartBody.Part,
+        longitube: MultipartBody.Part,
+        areaname: MultipartBody.Part,
+        language: MultipartBody.Part,
         image: MultipartBody.Part
     ): Flow<Resource<MultipartApiResponse>>
+
+    fun sendOtp(otpSendRequest: OtpSendRequest): Flow<Resource<ApiResponse<String>>>
+
+    fun verifyOtp(verifyOtpRequest: VerifyOtpRequest): Flow<Resource<ApiResponse<LoginResponseData>>>
+
+    fun resetPassword(resetPasswordRequest: ResetPasswordRequest): Flow<Resource<ApiResponse<String>>>
 }

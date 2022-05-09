@@ -56,7 +56,6 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     android:src="@drawable/avatar"
-                    app:url="@{viewModel.editProfImg}"
                     app:layout_constraintVertical_bias="0.05"
                     android:layout_width="128dp"
                     android:layout_height="128dp"/>
@@ -143,6 +142,7 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
+                    android:visibility="gone"
                     android:id="@+id/etPasswordLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -172,7 +172,7 @@
                     android:paddingHorizontal="8dp"
                     android:id="@+id/actCategory"
                     android:layout_marginHorizontal="24dp"
-                    app:layout_constraintTop_toBottomOf="@+id/etPasswordLayout"
+                    app:layout_constraintTop_toBottomOf="@+id/etMobLayout"
                     android:background="@drawable/rounded_rect_grey_filled"
                     android:drawableStart="@drawable/ic_search"
                     android:drawablePadding="7dp"
@@ -213,7 +213,6 @@
                     android:text="Save"
                     android:paddingHorizontal="24dp"
                     android:textAllCaps="false"
-                    android:onClick="@{() -> viewModel.submitProfileEdit()}"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     android:layout_width="match_parent"

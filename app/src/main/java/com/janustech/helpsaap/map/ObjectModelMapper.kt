@@ -14,6 +14,7 @@ internal fun LoginResponseData.toUserData() = UserData(
     currentLocation  = current_location?:"",
     photo  = photo?:"",
     otp  = otp?:"",
+    password = password?:""
 )
 
 internal fun LanguageListResponseData.toLanguageDataModel() = LanguageDataModel(

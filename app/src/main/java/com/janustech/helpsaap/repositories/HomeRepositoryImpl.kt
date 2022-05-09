@@ -81,4 +81,18 @@ class HomeRepositoryImpl(private val apiService: HelpsAapApis): HomeRepository {
             ) })
         }.flowOn(Dispatchers.IO)
     }
+
+    override fun editProfile(
+        customer_id: MultipartBody.Part,
+        cusname: MultipartBody.Part,
+        email: MultipartBody.Part,
+        categorylist: MultipartBody.Part,
+        image: MultipartBody.Part
+    ): Flow<Resource<MultipartApiResponse>> {
+        return flow {
+            emit(safeApiCall { apiService.editProfile(
+                customer_id, cusname, email, categorylist, image
+            ) })
+        }.flowOn(Dispatchers.IO)
+    }
 }

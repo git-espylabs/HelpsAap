@@ -47,5 +47,15 @@ interface HelpsAapApis {
         @Body addOfferRequest: AddOfferRequest
     ): ApiResponse<String>
 
+    @Multipart
+    @POST(HttpEndPoints.EDIT_PROFILE)
+    suspend fun editProfile(
+        @Part customer_id: MultipartBody.Part,
+        @Part cusname: MultipartBody.Part,
+        @Part email: MultipartBody.Part,
+        @Part categorylist: MultipartBody.Part,
+        @Part image: MultipartBody.Part
+    ): MultipartApiResponse
+
 
 }

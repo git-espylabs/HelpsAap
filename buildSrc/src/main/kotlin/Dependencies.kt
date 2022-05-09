@@ -39,7 +39,8 @@ object Libs {
         "com.squareup.retrofit2:converter-moshi:${Versions.moshi_converter}",
         "com.google.android.gms:play-services-maps:${Versions.play_services_maps}",
         "androidx.cardview:cardview:${Versions.cardView}",
-        "de.hdodenhof:circleimageview:${Versions.hdodenhof}"
+        "de.hdodenhof:circleimageview:${Versions.hdodenhof}",
+        "io.github.chaosleung:pinview:${Versions.otp_view}"
     )
 
     val testImplementations = listOf(

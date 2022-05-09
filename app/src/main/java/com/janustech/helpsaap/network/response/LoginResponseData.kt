@@ -13,4 +13,5 @@ data class LoginResponseData(
     val current_location: String = "",
     val photo: String = "",
     val otp: String = "",
+    val password: String = ""
 )

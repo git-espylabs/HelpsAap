@@ -8,6 +8,8 @@ object AppPreferences {
     private const val USER_LOCATION = "user_location"
     private const val USER_LANGUAGE_ID = "user_language_id"
     private const val USER_LANGUAGE = "user_language"
+    private const val USER_IMAGE = "user_image"
+    private const val USER_IMAGE_DISK = "user_image_disk"
 
 
     var userId: String by PreferenceProvider(USER_ID, "")
@@ -16,6 +18,8 @@ object AppPreferences {
     var userLocation: String by PreferenceProvider(USER_LOCATION, "")
     var userLanguageId: String by PreferenceProvider(USER_LANGUAGE_ID, "")
     var userLanguage: String by PreferenceProvider(USER_LANGUAGE, "")
+    var userImageUrl: String by PreferenceProvider(USER_IMAGE, "")
+    var userImageDisk: String by PreferenceProvider(USER_IMAGE_DISK, "")
 
     fun clearAll(){
         userId = ""
@@ -24,5 +28,7 @@ object AppPreferences {
         userLocation = ""
         userLanguageId = ""
         userLanguage = ""
+        userImageUrl = ""
+        userImageDisk = ""
     }
 }

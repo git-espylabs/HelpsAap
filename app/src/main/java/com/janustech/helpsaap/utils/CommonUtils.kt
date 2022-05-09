@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.database.Cursor
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.ImageDecoder
@@ -14,6 +15,7 @@ import android.net.NetworkCapabilities
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
+import android.os.ParcelFileDescriptor
 import android.provider.MediaStore
 import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
@@ -179,6 +181,36 @@ object CommonUtils {
             }
         }
         image = Bitmap.createBitmap(image , 0, 0, image.width, image.height, matrix, true)
+
+        return image
+    }
+
+    fun getClearExifBitmap(context: Context, uri: Uri, absolutePath: String): Bitmap?{
+        var image = BitmapFactory.decodeFile(absolutePath)
+
+        val parcelFileDescriptor: ParcelFileDescriptor? =
+            context.contentResolver.openFileDescriptor(uri, "r")
+        val fileDescriptor = parcelFileDescriptor?.fileDescriptor
+        fileDescriptor?.let {
+            val exif = ExifInterface(it)
+
+            val matrix = Matrix()
+            when(exif.getAttribute(ExifInterface.TAG_ORIENTATION)){
+                ExifInterface.ORIENTATION_ROTATE_90.toString() -> {
+                    matrix.postRotate(90F)
+                }
+                ExifInterface.ORIENTATION_ROTATE_180.toString() -> {
+                    matrix.postRotate(180F)
+                }
+                ExifInterface.ORIENTATION_ROTATE_270.toString() -> {
+                    matrix.postRotate(270F)
+                }
+                else ->{
+                    matrix.postRotate(0F)
+                }
+            }
+            image = Bitmap.createBitmap(image , 0, 0, image.width, image.height, matrix, true)
+        }
 
         return image
     }

@@ -9,10 +9,9 @@ import com.janustech.helpsaap.BuildConfig
 import com.janustech.helpsaap.network.MultiPartRequestHelper
 import com.janustech.helpsaap.network.Resource
 import com.janustech.helpsaap.network.Status
-import com.janustech.helpsaap.network.requests.CategoriesListRequest
-import com.janustech.helpsaap.network.requests.LocationListRequest
-import com.janustech.helpsaap.network.requests.LoginRequest
+import com.janustech.helpsaap.network.requests.*
 import com.janustech.helpsaap.network.response.*
+import com.janustech.helpsaap.preference.AppPreferences
 import com.janustech.helpsaap.usecase.AppIntroUseCase
 import com.janustech.helpsaap.usecase.ProfileUseCase
 import com.janustech.helpsaap.utils.CommonUtils
@@ -47,6 +46,12 @@ class ProfileViewModel @Inject constructor(
     var regLongitude = "0.0"
     var regLocalArea = ""
 
+
+    var fgtPasEmail = ""
+    var fgtPasCustomerId = ""
+    var fgtPasOtp = ""
+    var fgtPasNewPassword = ""
+
     private val _loginResponseReceiver = MutableLiveData<Resource<ApiResponse<LoginResponseData>>>()
     val loginResponseReceiver: LiveData<Resource<ApiResponse<LoginResponseData>>>
         get() = _loginResponseReceiver
@@ -63,6 +68,18 @@ class ProfileViewModel @Inject constructor(
     val locationListReceiver: LiveData<Resource<ApiResponse<List<LocationListResponseData>>>>
         get() = _locationListReceiver
 
+    private val _otpSendStatusReceiver = MutableLiveData<Resource<ApiResponse<String>>>()
+    val otpSendStatusReceiver: LiveData<Resource<ApiResponse<String>>>
+        get() = _otpSendStatusReceiver
+
+    private val _verifyOtpStatusReceiver = MutableLiveData<Resource<ApiResponse<LoginResponseData>>>()
+    val verifyOtpStatusReceiver: LiveData<Resource<ApiResponse<LoginResponseData>>>
+        get() = _verifyOtpStatusReceiver
+
+    private val _resetPassStatusReceiver = MutableLiveData<Resource<ApiResponse<String>>>()
+    val resetPassStatusReceiver: LiveData<Resource<ApiResponse<String>>>
+        get() = _resetPassStatusReceiver
+
     init {
         if (BuildConfig.DEBUG){
             userName = "tesjo@gmail.com"
@@ -72,6 +89,18 @@ class ProfileViewModel @Inject constructor(
 
     fun processLogin(){
         loginApp(LoginRequest(userName, password))
+    }
+
+    fun processRequestSendOtp() {
+        requestSendOtp(OtpSendRequest(fgtPasEmail))
+    }
+
+    fun processVerifyOtp(otp: String){
+        verifyOtp(VerifyOtpRequest(fgtPasCustomerId, otp))
+    }
+
+    fun processResetPassword(newPassword: String){
+        resetPassword(ResetPasswordRequest(fgtPasCustomerId, newPassword))
     }
 
     private fun loginApp(loginRequest: LoginRequest){
@@ -122,6 +151,10 @@ class ProfileViewModel @Inject constructor(
             val partCategoryid = MultiPartRequestHelper.createRequestBody("categoryid", regCategoryId)
             val partTransactionId = MultiPartRequestHelper.createRequestBody("transaction_id", ((100000..1000000).random()).toString())
             val partAmount = MultiPartRequestHelper.createRequestBody("amount", "99")
+            val partLatitude = MultiPartRequestHelper.createRequestBody("latitude", regLatitude)
+            val partLongitude = MultiPartRequestHelper.createRequestBody("longitube", regLongitude)
+            val partArea = MultiPartRequestHelper.createRequestBody("areaname", regLocalArea)
+            val partLanguage = MultiPartRequestHelper.createRequestBody("language", AppPreferences.userLanguageId)
             val partFile = MultiPartRequestHelper.createFileRequestBody(regImage, "image", context)
 
             profileUseCase.register(
@@ -136,6 +169,10 @@ class ProfileViewModel @Inject constructor(
                 partCategoryid,
                 partTransactionId,
                 partAmount,
+                partLatitude,
+                partLongitude,
+                partArea,
+                partLanguage,
                 partFile
             )
                 .onStart { _registerResponseReceiver.value = Resource.loading() }
@@ -145,6 +182,7 @@ class ProfileViewModel @Inject constructor(
                             CommonUtils.writeLogFile(context, "registerApp() -> Response: \n$resp")
                             if (resp.isResponseSuccess() && resp.data != null && resp.data.isNotEmpty()) {
                                 CommonUtils.writeLogFile(context, "registerApp() -> Response: ResponseSuccess -> data:\n" + resp.data.toString())
+                                AppPreferences.userImageDisk = regImage
                                 _registerResponseReceiver.value = apiResponse
                             }else if (resp.isResponseSuccess().not()){
                                 CommonUtils.writeLogFile(context, "registerApp() -> Response: ResponseFail:\n" + resp.message )
@@ -192,6 +230,87 @@ class ProfileViewModel @Inject constructor(
                         }
                     }
                 }
+        }
+    }
+
+    private fun requestSendOtp(sendRequest: OtpSendRequest){
+        viewModelScope.launch {
+            profileUseCase.sendOtp(sendRequest).onStart {
+                _otpSendStatusReceiver.value = Resource.loading()
+            }.collect { apiResponse ->
+                apiResponse.let {
+                    it.data?.let { resp ->
+                        when {
+                            resp.isResponseSuccess() -> {
+                                _otpSendStatusReceiver.value = apiResponse
+                            }
+                            resp.isResponseSuccess().not() -> {
+                                _otpSendStatusReceiver.value = Resource.dataError(resp.message)
+                            }
+                            else -> {
+                                _otpSendStatusReceiver.value = Resource.dataError("Failed to send OTP! Try again.")
+                            }
+                        }
+                    }?: run {
+                        _otpSendStatusReceiver.value = Resource.dataError("Failed to send OTP! Try again.")
+                    }
+                }
+
+            }
+        }
+    }
+
+    private fun verifyOtp(sendRequest: VerifyOtpRequest){
+        viewModelScope.launch {
+            profileUseCase.verifyOtp(sendRequest).onStart {
+                _verifyOtpStatusReceiver.value = Resource.loading()
+            }.collect { apiResponse ->
+                apiResponse.let {
+                    it.data?.let { resp ->
+                        when {
+                            resp.isResponseSuccess() -> {
+                                _verifyOtpStatusReceiver.value = apiResponse
+                            }
+                            resp.isResponseSuccess().not() -> {
+                                _verifyOtpStatusReceiver.value = Resource.dataError(resp.message)
+                            }
+                            else -> {
+                                _verifyOtpStatusReceiver.value = Resource.dataError("OTP does not match! Try again.")
+                            }
+                        }
+                    }?: run {
+                        _verifyOtpStatusReceiver.value = Resource.dataError("Failed to validate OTP! Try again.")
+                    }
+                }
+
+            }
+        }
+    }
+
+    private fun resetPassword(sendRequest: ResetPasswordRequest){
+        viewModelScope.launch {
+            profileUseCase.resetPassword(sendRequest).onStart {
+                _resetPassStatusReceiver.value = Resource.loading()
+            }.collect { apiResponse ->
+                apiResponse.let {
+                    it.data?.let { resp ->
+                        when {
+                            resp.isResponseSuccess() -> {
+                                _resetPassStatusReceiver.value = apiResponse
+                            }
+                            resp.isResponseSuccess().not() -> {
+                                _resetPassStatusReceiver.value = Resource.dataError(resp.message)
+                            }
+                            else -> {
+                                _resetPassStatusReceiver.value = Resource.dataError("Reset Password Failed! Try again.")
+                            }
+                        }
+                    }?: run {
+                        _resetPassStatusReceiver.value = Resource.dataError("Reset Password Failed! Try again.")
+                    }
+                }
+
+            }
         }
     }
 }

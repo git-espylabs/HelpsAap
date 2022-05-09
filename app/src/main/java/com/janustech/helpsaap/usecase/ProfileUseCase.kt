@@ -2,6 +2,9 @@ package com.janustech.helpsaap.usecase
 
 import com.janustech.helpsaap.network.Resource
 import com.janustech.helpsaap.network.requests.LoginRequest
+import com.janustech.helpsaap.network.requests.OtpSendRequest
+import com.janustech.helpsaap.network.requests.ResetPasswordRequest
+import com.janustech.helpsaap.network.requests.VerifyOtpRequest
 import com.janustech.helpsaap.network.response.ApiResponse
 import com.janustech.helpsaap.network.response.LoginResponseData
 import com.janustech.helpsaap.network.response.MultipartApiResponse
@@ -37,6 +40,10 @@ class ProfileUseCase @Inject constructor(
         categoryid: MultipartBody.Part,
         transaction_id: MultipartBody.Part,
         amount: MultipartBody.Part,
+        latitude: MultipartBody.Part,
+        longitube: MultipartBody.Part,
+        areaname: MultipartBody.Part,
+        language: MultipartBody.Part,
         image: MultipartBody.Part
     ): Flow<Resource<MultipartApiResponse>> {
         return flow {
@@ -52,8 +59,36 @@ class ProfileUseCase @Inject constructor(
                 categoryid,
                 transaction_id,
                 amount,
+                latitude,
+                longitube,
+                areaname,
+                language,
                 image
             ).collect {
+                emit(it)
+            }
+        }.flowOn(Dispatchers.IO)
+    }
+
+    suspend fun sendOtp(otpSendRequest: OtpSendRequest): Flow<Resource<ApiResponse<String>>> {
+        return flow {
+            profileRepository.sendOtp(otpSendRequest).collect {
+                emit(it)
+            }
+        }.flowOn(Dispatchers.IO)
+    }
+
+    suspend fun verifyOtp(verifyOtpRequest: VerifyOtpRequest): Flow<Resource<ApiResponse<LoginResponseData>>> {
+        return flow {
+            profileRepository.verifyOtp(verifyOtpRequest).collect {
+                emit(it)
+            }
+        }.flowOn(Dispatchers.IO)
+    }
+
+    suspend fun resetPassword(resetPasswordRequest: ResetPasswordRequest): Flow<Resource<ApiResponse<String>>> {
+        return flow {
+            profileRepository.resetPassword(resetPasswordRequest).collect {
                 emit(it)
             }
         }.flowOn(Dispatchers.IO)

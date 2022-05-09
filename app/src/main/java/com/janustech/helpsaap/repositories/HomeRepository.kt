@@ -35,4 +35,13 @@ interface HomeRepository {
     fun getNotifications():Flow<Resource<ApiResponse<List<NotificationResponseData>>>>
 
     fun submitOffer(addOfferRequest: AddOfferRequest):Flow<Resource<ApiResponse<String>>>
+
+    fun editProfile(
+        customer_id: MultipartBody.Part,
+        cusname: MultipartBody.Part,
+        email: MultipartBody.Part,
+        categorylist: MultipartBody.Part,
+        image: MultipartBody.Part
+    ): Flow<Resource<MultipartApiResponse>>
+
 }

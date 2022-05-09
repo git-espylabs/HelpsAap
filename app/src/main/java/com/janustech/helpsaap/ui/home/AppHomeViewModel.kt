@@ -19,6 +19,7 @@ import com.janustech.helpsaap.network.response.*
 import com.janustech.helpsaap.preference.AppPreferences
 import com.janustech.helpsaap.usecase.AppIntroUseCase
 import com.janustech.helpsaap.usecase.HomeUsecases
+import com.janustech.helpsaap.utils.CommonUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onStart
@@ -85,6 +86,10 @@ class AppHomeViewModel @Inject constructor(private val appIntroUseCase: AppIntro
     val offerSubmitStatusReceiver: LiveData<Resource<ApiResponse<String>>>
         get() = _offerSubmitStatusReceiver
 
+    private val _editSubmitStatusReceiver_ = MutableLiveData<Resource<MultipartApiResponse>>()
+    val editSubmitStatusReceiver_: LiveData<Resource<MultipartApiResponse>>
+        get() = _editSubmitStatusReceiver_
+
     init {
         userLocationName = AppPreferences.userLocation
         userLocationId = AppPreferences.userLocationId
@@ -96,6 +101,7 @@ class AppHomeViewModel @Inject constructor(private val appIntroUseCase: AppIntro
         editEmail = userData?.email?: ""
         editEditMob = userData?.phoneNumber?: ""
         editProfImg = userData?.photo?:""
+        editPassword = userData?.password?:""
     }
 
     private fun getUserObjectFromPreference(): UserData{
@@ -182,7 +188,7 @@ class AppHomeViewModel @Inject constructor(private val appIntroUseCase: AppIntro
 
     fun submitProfileEdit(){
         val editProfileCategories = addedCategories.map { cat -> cat.toProfileCategoryModel() }
-        val request = EditProfileRequest(editUserID, editUsername, editPassword, editEmail, editProfileCategories)
+        val request = EditProfileRequest(editUserID, editUsername, editEmail, editProfileCategories)
 
         viewModelScope.launch {
             homeUseCases.submitEditProfile(request)
@@ -270,6 +276,47 @@ class AppHomeViewModel @Inject constructor(private val appIntroUseCase: AppIntro
                             _offerSubmitStatusReceiver.value = Resource.dataError("Invalid server response!")
                         }
                     } }
+        }
+    }
+
+
+
+    fun editProfile(context: Context){
+        viewModelScope.launch {
+
+            val editProfileCategories = addedCategories.map { cat -> cat.toProfileCategoryModel() }
+            val partCusId = MultiPartRequestHelper.createRequestBody("customer_id", editUserID)
+            val partCusname = MultiPartRequestHelper.createRequestBody("cusname", editUsername)
+            val partEmail = MultiPartRequestHelper.createRequestBody("email", editEmail)
+            val partCategorylist = MultiPartRequestHelper.createRequestBody("categorylist", editProfileCategories.toString())
+            val partFile = MultiPartRequestHelper.createFileRequestBody(editProfImg, "image", context)
+
+            homeUseCases.editProfile(
+                partCusId, partCusname, partEmail, partCategorylist, partFile
+            )
+                .onStart { _editSubmitStatusReceiver.value = Resource.loading() }
+                .collect {  apiResponse ->
+                    apiResponse.let {
+                        it.data?.let { resp ->
+                            CommonUtils.writeLogFile(context, "editProfile() -> Response: \n$resp")
+                            if (resp.isResponseSuccess() && resp.data != null && resp.data.isNotEmpty()) {
+                                CommonUtils.writeLogFile(context, "editProfile() -> Response: ResponseSuccess -> data:\n" + resp.data.toString())
+                                AppPreferences.userImageDisk = editProfImg
+                                _editSubmitStatusReceiver_.value = apiResponse
+                            }else if (resp.isResponseSuccess().not()){
+                                CommonUtils.writeLogFile(context, "editProfile() -> Response: ResponseFail:\n" + resp.message )
+                                _editSubmitStatusReceiver.value = Resource.dataError(resp.message)
+                            }else{
+                                CommonUtils.writeLogFile(context, "editProfile() -> Response Error: unknown")
+                                _editSubmitStatusReceiver.value = Resource.dataError("Failed to register! Try again.")
+                            }
+                        }?: run {
+                            CommonUtils.writeLogFile(context, "editProfile() -> Response Null")
+                            _editSubmitStatusReceiver_.value = Resource.dataError("Invalid server response!")
+                        }
+                    }
+                }
+
         }
     }
 

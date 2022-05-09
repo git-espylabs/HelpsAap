@@ -15,5 +15,8 @@ internal class HttpEndPoints {
         const val CATEGORY_SEARCH = "categorysearch"
         const val COMPANIES = "companylist"
         const val ADD_OFFER = "addoffer"
+        const val SEND_OTP = "sendotp"
+        const val VERIFY_OTP = "verifyotp"
+        const val RESET_PASSWORD = "resetpassword"
     }
 }

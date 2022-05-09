@@ -15,6 +15,17 @@
         android:id="@+id/loginFragment"
         android:name="com.janustech.helpsaap.ui.profile.LoginFragment"
         tools:layout="@layout/fragment_layout_login">
+        <action
+            android:id="@+id/action_loginFragment_to_forgotPasswordFragment"
+            app:destination="@id/forgotPasswordFragment">
+        </action>
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/forgotPasswordFragment"
+        android:name="com.janustech.helpsaap.ui.profile.ForgotPasswordFragment"
+        tools:layout="@layout/fragment_forget_password">
 
     </fragment>
 

@@ -10,4 +10,5 @@ data class UserData(
     val currentLocation: String = "",
     val photo: String = "",
     val otp: String = "",
+    val password: String = ""
 )

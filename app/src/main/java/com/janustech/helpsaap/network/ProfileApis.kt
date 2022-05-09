@@ -1,6 +1,9 @@
 package com.janustech.helpsaap.network
 
 import com.janustech.helpsaap.network.requests.LoginRequest
+import com.janustech.helpsaap.network.requests.OtpSendRequest
+import com.janustech.helpsaap.network.requests.ResetPasswordRequest
+import com.janustech.helpsaap.network.requests.VerifyOtpRequest
 import com.janustech.helpsaap.network.response.ApiResponse
 import com.janustech.helpsaap.network.response.LoginResponseData
 import com.janustech.helpsaap.network.response.MultipartApiResponse
@@ -31,6 +34,25 @@ interface ProfileApis {
         @Part categoryid: MultipartBody.Part,
         @Part transaction_id: MultipartBody.Part,
         @Part amount: MultipartBody.Part,
+        @Part latitude: MultipartBody.Part,
+        @Part longitube: MultipartBody.Part,
+        @Part areaname: MultipartBody.Part,
+        @Part language: MultipartBody.Part,
         @Part image: MultipartBody.Part
     ): MultipartApiResponse
+
+    @POST(HttpEndPoints.SEND_OTP)
+    suspend fun sendOtp(
+        @Body otpSendRequest: OtpSendRequest,
+    ): ApiResponse<String>
+
+    @POST(HttpEndPoints.VERIFY_OTP)
+    suspend fun verifyOtp(
+        @Body verifyOtpRequest: VerifyOtpRequest,
+    ): ApiResponse<LoginResponseData>
+
+    @POST(HttpEndPoints.RESET_PASSWORD)
+    suspend fun resetPassword(
+        @Body resetPasswordRequest: ResetPasswordRequest,
+    ): ApiResponse<String>
 }

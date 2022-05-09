@@ -85,4 +85,21 @@ class HomeUsecases@Inject constructor(
             homeRepository.submitOffer(addOfferRequest).collect { emit(it) }
         }.flowOn(Dispatchers.IO)
     }
+
+    suspend fun editProfile(
+        customer_id: MultipartBody.Part,
+        cusname: MultipartBody.Part,
+        email: MultipartBody.Part,
+        categorylist: MultipartBody.Part,
+        image: MultipartBody.Part
+    ): Flow<Resource<MultipartApiResponse>> {
+        return flow {
+            homeRepository.editProfile(
+                customer_id, cusname, email, categorylist, image
+            ).collect {
+                emit(it)
+            }
+        }.flowOn(Dispatchers.IO)
+    }
+
 }

@@ -102,9 +102,12 @@ android {
             buildConfigField("String", "IMAGE_URL", "\"https://$it\"")
         }
     }
+
+
 }
 
 dependencies {
+
     Libs.implementations.forEach(::implementation)
     Libs.kaptDependencyNotions.forEach(::kapt)
     Libs.testImplementations.forEach(::testImplementation)

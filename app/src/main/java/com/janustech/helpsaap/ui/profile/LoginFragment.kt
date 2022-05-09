@@ -11,6 +11,7 @@ import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.view.View
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import com.google.gson.Gson
 import com.janustech.helpsaap.BuildConfig
 import com.janustech.helpsaap.R
@@ -28,7 +29,7 @@ import dagger.hilt.android.AndroidEntryPoint
 
 
 @AndroidEntryPoint
-class LoginFragment : BaseFragmentWithBinding<FragmentLayoutLoginBinding>(R.layout.fragment_layout_login) {
+class LoginFragment : BaseFragmentWithBinding<FragmentLayoutLoginBinding>(R.layout.fragment_layout_login), View.OnClickListener {
 
     private val profileViewModel: ProfileViewModel by activityViewModels()
 
@@ -36,6 +37,7 @@ class LoginFragment : BaseFragmentWithBinding<FragmentLayoutLoginBinding>(R.layo
         super.onViewCreated(view, savedInstanceState)
         binding.apply {
             viewModel = profileViewModel
+            viewParent = this@LoginFragment
         }
 
         if (BuildConfig.DEBUG){
@@ -101,6 +103,7 @@ class LoginFragment : BaseFragmentWithBinding<FragmentLayoutLoginBinding>(R.layo
         loginResponseData?.apply {
             AppPreferences.userId = id
             AppPreferences.userData = Gson().toJson(loginResponseData.toUserData())
+            AppPreferences.userImageUrl = photo
 
             activity?.launchActivity<AppHomeActivity>{
                 addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
@@ -110,5 +113,13 @@ class LoginFragment : BaseFragmentWithBinding<FragmentLayoutLoginBinding>(R.layo
             showAlertDialog("Invalid Server Response")
         }
 
+    }
+
+    override fun onClick(v: View?) {
+        when(v?.id){
+            R.id.tvPromptForgotPass -> {
+                findNavController().navigate(LoginFragmentDirections.actionLoginFragmentToForgotPasswordFragment())
+            }
+        }
     }
 }

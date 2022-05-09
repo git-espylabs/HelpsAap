@@ -41,4 +41,5 @@ object Versions {
     const val play_services_maps = "18.0.2"
     const val cardView = "1.0.0"
     const val hdodenhof = "3.1.0"
+    const val otp_view = "1.4.4"
 }
