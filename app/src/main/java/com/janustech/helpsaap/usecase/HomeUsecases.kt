@@ -4,9 +4,11 @@ import com.janustech.helpsaap.network.Resource
 import com.janustech.helpsaap.network.requests.AddCategoriesRequest
 import com.janustech.helpsaap.network.requests.AddOfferRequest
 import com.janustech.helpsaap.network.requests.EditProfileRequest
+import com.janustech.helpsaap.network.requests.PostedListRequest
 import com.janustech.helpsaap.network.response.ApiResponse
 import com.janustech.helpsaap.network.response.MultipartApiResponse
 import com.janustech.helpsaap.network.response.NotificationResponseData
+import com.janustech.helpsaap.network.response.PostedAdsResponseData
 import com.janustech.helpsaap.repositories.HomeRepository
 import com.janustech.helpsaap.repositories.ProfileRepository
 import kotlinx.coroutines.Dispatchers
@@ -106,6 +108,12 @@ class HomeUsecases@Inject constructor(
     suspend fun addCategories(addCategoriesRequest: AddCategoriesRequest):Flow<Resource<ApiResponse<String>>>{
         return flow {
             homeRepository.addCategories(addCategoriesRequest).collect { emit(it) }
+        }.flowOn(Dispatchers.IO)
+    }
+
+    suspend fun getPostedAds(postedListRequest: PostedListRequest):Flow<Resource<ApiResponse<List<PostedAdsResponseData>>>>{
+        return flow {
+            homeRepository.getPostedAds(postedListRequest).collect { emit(it) }
         }.flowOn(Dispatchers.IO)
     }
 

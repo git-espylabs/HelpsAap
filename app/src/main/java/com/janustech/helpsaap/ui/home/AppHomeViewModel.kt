@@ -96,6 +96,10 @@ class AppHomeViewModel @Inject constructor(private val appIntroUseCase: AppIntro
     val addCatgoriesResponseStatus: LiveData<Resource<ApiResponse<String>>>
         get() = _addCatgoriesResponseStatus
 
+    private val _postedAdsListReceiver = MutableLiveData<Resource<ApiResponse<List<PostedAdsResponseData>>>>()
+    val postedAdsListReceiver: LiveData<Resource<ApiResponse<List<PostedAdsResponseData>>>>
+        get() = _postedAdsListReceiver
+
     init {
         userLocationName = AppPreferences.userLocation
         userLocationId = AppPreferences.userLocationId
@@ -357,6 +361,23 @@ class AppHomeViewModel @Inject constructor(private val appIntroUseCase: AppIntro
                             _addCatgoriesResponseStatus.value = Resource.dataError("Invalid server response!")
                         }
                     } }
+        }
+    }
+
+    fun getPostedAds(){
+        viewModelScope.launch {
+            homeUseCases.getPostedAds(PostedListRequest(AppPreferences.userId))
+                .onStart { _postedAdsListReceiver.value = Resource.loading() }
+                .collect { apiResponse ->
+                    apiResponse.let {
+                        it.data?.let {
+                            _postedAdsListReceiver.value = apiResponse
+                        }?: run {
+                            _postedAdsListReceiver.value = Resource.dataError("Invalid server response!")
+                        }
+                    }
+                }
+
         }
     }
 

@@ -113,6 +113,11 @@ object CommonUtils {
             SimpleDateFormat("dd-MM-yyyy", Locale.US).format(it)
         } ?: ""
 
+    fun getConvertedDateWithMonthN(dateString: String): String =
+        SimpleDateFormat(serverTimeFormat2, Locale.US).parse(dateString)?.let {
+            SimpleDateFormat("dd MMM yyyy", Locale.US).format(it)
+        } ?: ""
+
 
     fun isAppInstalled(ctx: Context, packageName: String): Boolean {
         val pm = ctx.packageManager

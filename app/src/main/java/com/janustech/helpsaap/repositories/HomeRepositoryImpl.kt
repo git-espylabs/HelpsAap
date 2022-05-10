@@ -2,12 +2,11 @@ package com.janustech.helpsaap.repositories
 
 import com.janustech.helpsaap.network.HelpsAapApis
 import com.janustech.helpsaap.network.Resource
-import com.janustech.helpsaap.network.requests.AddCategoriesRequest
-import com.janustech.helpsaap.network.requests.AddOfferRequest
-import com.janustech.helpsaap.network.requests.EditProfileRequest
+import com.janustech.helpsaap.network.requests.*
 import com.janustech.helpsaap.network.response.ApiResponse
 import com.janustech.helpsaap.network.response.MultipartApiResponse
 import com.janustech.helpsaap.network.response.NotificationResponseData
+import com.janustech.helpsaap.network.response.PostedAdsResponseData
 import com.janustech.helpsaap.network.safeApiCall
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -102,6 +101,12 @@ class HomeRepositoryImpl(private val apiService: HelpsAapApis): HomeRepository {
             emit(safeApiCall { apiService.addOnCategories(
                 addCategoriesRequest
             ) })
+        }.flowOn(Dispatchers.IO)
+    }
+
+    override fun getPostedAds(postedListRequest: PostedListRequest): Flow<Resource<ApiResponse<List<PostedAdsResponseData>>>> {
+        return flow {
+            emit(safeApiCall { apiService.getPostedAds(postedListRequest) })
         }.flowOn(Dispatchers.IO)
     }
 }

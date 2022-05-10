@@ -93,3 +93,16 @@ internal fun NotificationResponseData.toNotificationDataModel() = NotificationDa
     description = description?:""
 )
 
+internal fun PostedAdsResponseData.toPostedAdDataModel() = PostedAdDataModel(
+    id = id,
+    cus_id = cus_id?:"",
+    ads_name = ads_name?:"",
+    start_date = start_date?:"",
+    end_date = end_date?:"",
+    ads_image = ads_image?:"",
+    status = status?:"",
+    payment_refid = payment_refid?:"",
+    publish_type = publish_type?:"",
+    public_loc = public_loc?:""
+)
+

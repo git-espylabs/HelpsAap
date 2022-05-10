@@ -31,6 +31,7 @@ class AppHomeFragment : BaseFragmentWithBinding<FragmentAppHomeBinding>(R.layout
             layDoD.setOnClickListener(this@AppHomeFragment)
             layAds.setOnClickListener(this@AppHomeFragment)
             btnPromptOffer.setOnClickListener(this@AppHomeFragment)
+            layPostedAds.setOnClickListener(this@AppHomeFragment)
         }
     }
 
@@ -50,6 +51,9 @@ class AppHomeFragment : BaseFragmentWithBinding<FragmentAppHomeBinding>(R.layout
                     childFragmentManager,
                     "AddOfferBottomSheetDialogFragment"
                 )
+            }
+            R.id.layPostedAds -> {
+                findNavController().navigate(AppHomeFragmentDirections.actionAppHomeFragmentToPostedAdsFragment())
             }
         }
     }

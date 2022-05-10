@@ -1,11 +1,10 @@
 package com.janustech.helpsaap.network
 
-import com.janustech.helpsaap.network.requests.AddCategoriesRequest
-import com.janustech.helpsaap.network.requests.AddOfferRequest
-import com.janustech.helpsaap.network.requests.EditProfileRequest
+import com.janustech.helpsaap.network.requests.*
 import com.janustech.helpsaap.network.response.ApiResponse
 import com.janustech.helpsaap.network.response.MultipartApiResponse
 import com.janustech.helpsaap.network.response.NotificationResponseData
+import com.janustech.helpsaap.network.response.PostedAdsResponseData
 import okhttp3.MultipartBody
 import retrofit2.http.*
 
@@ -62,6 +61,11 @@ interface HelpsAapApis {
     suspend fun addOnCategories(
         @Body addCategoriesRequest: AddCategoriesRequest
     ): ApiResponse<String>
+
+    @POST(HttpEndPoints.POSTED_ADS)
+    suspend fun getPostedAds(
+        @Body postedListRequest: PostedListRequest
+    ): ApiResponse<List<PostedAdsResponseData>>
 
 
 }

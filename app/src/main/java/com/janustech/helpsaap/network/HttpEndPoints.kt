@@ -19,5 +19,6 @@ internal class HttpEndPoints {
         const val VERIFY_OTP = "verifyotp"
         const val RESET_PASSWORD = "resetpassword"
         const val ADDON_CATEGORIES = "addoncategory"
+        const val POSTED_ADS = "customerads"
     }
 }

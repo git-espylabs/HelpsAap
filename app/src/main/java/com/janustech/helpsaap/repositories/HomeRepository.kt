@@ -1,12 +1,11 @@
 package com.janustech.helpsaap.repositories
 
 import com.janustech.helpsaap.network.Resource
-import com.janustech.helpsaap.network.requests.AddCategoriesRequest
-import com.janustech.helpsaap.network.requests.AddOfferRequest
-import com.janustech.helpsaap.network.requests.EditProfileRequest
+import com.janustech.helpsaap.network.requests.*
 import com.janustech.helpsaap.network.response.ApiResponse
 import com.janustech.helpsaap.network.response.MultipartApiResponse
 import com.janustech.helpsaap.network.response.NotificationResponseData
+import com.janustech.helpsaap.network.response.PostedAdsResponseData
 import kotlinx.coroutines.flow.Flow
 import okhttp3.MultipartBody
 
@@ -46,5 +45,7 @@ interface HomeRepository {
     ): Flow<Resource<MultipartApiResponse>>
 
     fun addCategories(addCategoriesRequest: AddCategoriesRequest):Flow<Resource<ApiResponse<String>>>
+
+    fun getPostedAds(postedListRequest: PostedListRequest):Flow<Resource<ApiResponse<List<PostedAdsResponseData>>>>
 
 }

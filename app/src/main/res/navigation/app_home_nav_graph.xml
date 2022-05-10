@@ -27,6 +27,10 @@
             android:id="@+id/action_appHomeFragment_to_advertiseFragment"
             app:destination="@id/advertiseFragment">
         </action>
+        <action
+            android:id="@+id/action_appHomeFragment_to_postedAdsFragment"
+            app:destination="@id/postedAdsFragment">
+        </action>
 
     </fragment>
 
@@ -55,6 +59,13 @@
         android:id="@+id/notificationsFragment"
         android:name="com.janustech.helpsaap.ui.home.NotificationListFragment"
         tools:layout="@layout/fragment_notification">
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/postedAdsFragment"
+        android:name="com.janustech.helpsaap.ui.home.PostedAdsListFragments"
+        tools:layout="@layout/fragment_posted_ads_list">
 
     </fragment>
 
