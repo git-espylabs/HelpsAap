@@ -21,6 +21,7 @@
     <string name="title_activity_maps">MapsActivity</string>
     <string name="no_apps_found">No apps found to perform this action.</string>
     <string name="exit_tap_alert">Click BACK again to exit</string>
+    <string name="add_categories"><u>Add Categories</u></string>
     <string name="forgot_pass_desc">We will send an OTP to your registered email id, use the OTP to verify your account and then Reset your password.</string>
 
 </resources>

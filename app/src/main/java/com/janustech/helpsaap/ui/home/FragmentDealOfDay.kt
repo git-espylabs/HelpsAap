@@ -42,9 +42,12 @@ import java.util.*
 class FragmentDealOfDay: BaseFragmentWithBinding<FragmentDealOfDayBinding>(R.layout.fragment_deal_of_day),View.OnClickListener, PhotoOptionListener {
 
     private val appHomeViewModel: AppHomeViewModel by activityViewModels()
+
     private lateinit var currentPhotoPath: String
+    private lateinit var galleryImgUri: Uri
     private var photoFile: File? = null
     private var actualPath = ""
+    private var isCameraImage = true
 
     lateinit var locationsListAdapter: ArrayAdapter<Any>
     private var locationSuggestionList = listOf<LocationDataModel>()
@@ -301,12 +304,15 @@ class FragmentDealOfDay: BaseFragmentWithBinding<FragmentDealOfDayBinding>(R.lay
     }
 
     private fun setCameraPicToImageView() {
+        isCameraImage = true;
         scaleDownImage(BitmapFactory.decodeFile(currentPhotoPath))
         deleteOriginalCameraImage()
     }
 
     private fun setGalleryPicToImageView(uri: Uri) {
+        isCameraImage = false;
         currentPhotoPath = uri.path?: ""
+        galleryImgUri = uri
         photoFile = File(currentPhotoPath)
         CommonUtils.getBitmapFromUri(requireContext(), uri)
             ?.let { bitmap -> scaleDownImage(bitmap) }
@@ -323,7 +329,11 @@ class FragmentDealOfDay: BaseFragmentWithBinding<FragmentDealOfDayBinding>(R.lay
     }
 
     private fun setImage(path: String){
-        val image = CommonUtils.getClearExifBitmap(currentPhotoPath, path)
+        val image = if (isCameraImage) {
+            CommonUtils.getClearExifBitmap(currentPhotoPath, path)
+        } else {
+            CommonUtils.getClearExifBitmap(requireContext(), galleryImgUri, path)
+        }
         image?.let {
             binding.ivUpload.apply {
                 setImageBitmap(image)

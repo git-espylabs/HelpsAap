@@ -18,5 +18,6 @@ internal class HttpEndPoints {
         const val SEND_OTP = "sendotp"
         const val VERIFY_OTP = "verifyotp"
         const val RESET_PASSWORD = "resetpassword"
+        const val ADDON_CATEGORIES = "addoncategory"
     }
 }

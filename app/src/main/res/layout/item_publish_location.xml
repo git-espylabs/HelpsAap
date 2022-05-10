@@ -5,6 +5,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+        <variable
+            name="model"
+            type="com.janustech.helpsaap.model.PublishTypeModel" />
     </data>
 
 
@@ -30,12 +33,12 @@
                 android:layout_height="wrap_content">
 
                 <TextView
-                    android:text="State"
                     android:id="@+id/tvLocTitle"
                     android:textColor="@color/black"
                     android:textSize="16sp"
                     android:fontFamily="@font/segoui"
                     android:textFontWeight="700"
+                    android:text="@{model.publishTypeIdName}"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     android:layout_width="wrap_content"
@@ -48,11 +51,13 @@
                     app:layout_constraintTop_toBottomOf="@+id/tvLocTitle"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/btnPrice2"
-                    android:background="@drawable/rounded_rect_green_filled"
+                    android:background="@drawable/text_bg_selector"
                     android:paddingVertical="5dp"
                     android:paddingHorizontal="24dp"
+                    android:clickable="true"
+                    android:textColor="@drawable/text_color_selector"
                     android:gravity="center"
-                    android:text="price1"
+                    android:text="@{model.packageList.get(0).packageName}"
                     android:textAllCaps="false"
                     app:layout_constraintHorizontal_chainStyle="spread_inside"
                     android:layout_width="0dp"
@@ -66,11 +71,13 @@
                     app:layout_constraintTop_toBottomOf="@+id/tvLocTitle"
                     app:layout_constraintStart_toEndOf="@+id/btnPrice1"
                     app:layout_constraintEnd_toStartOf="@+id/btnPrice3"
-                    android:background="@drawable/rounded_rect_grey_filled"
+                    android:background="@drawable/text_bg_selector"
                     android:paddingVertical="5dp"
                     android:paddingHorizontal="24dp"
                     android:gravity="center"
-                    android:text="price1"
+                    android:clickable="true"
+                    android:textColor="@drawable/text_color_selector"
+                    android:text="@{model.packageList.get(1).packageName}"
                     android:textAllCaps="false"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"/>
@@ -82,11 +89,13 @@
                     app:layout_constraintTop_toBottomOf="@+id/tvLocTitle"
                     app:layout_constraintStart_toEndOf="@+id/btnPrice2"
                     app:layout_constraintEnd_toEndOf="parent"
-                    android:background="@drawable/rounded_rect_grey_filled"
+                    android:background="@drawable/text_bg_selector"
                     android:paddingVertical="5dp"
                     android:paddingHorizontal="24dp"
                     android:gravity="center"
-                    android:text="price1"
+                    android:clickable="true"
+                    android:textColor="@drawable/text_color_selector"
+                    android:text="@{model.packageList.get(2).packageName}"
                     android:textAllCaps="false"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"/>

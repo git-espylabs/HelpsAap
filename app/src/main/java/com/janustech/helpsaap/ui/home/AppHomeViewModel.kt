@@ -11,10 +11,7 @@ import com.janustech.helpsaap.model.LocationDataModel
 import com.janustech.helpsaap.model.UserData
 import com.janustech.helpsaap.network.MultiPartRequestHelper
 import com.janustech.helpsaap.network.Resource
-import com.janustech.helpsaap.network.requests.AddOfferRequest
-import com.janustech.helpsaap.network.requests.CategoriesListRequest
-import com.janustech.helpsaap.network.requests.EditProfileRequest
-import com.janustech.helpsaap.network.requests.LocationListRequest
+import com.janustech.helpsaap.network.requests.*
 import com.janustech.helpsaap.network.response.*
 import com.janustech.helpsaap.preference.AppPreferences
 import com.janustech.helpsaap.usecase.AppIntroUseCase
@@ -95,6 +92,10 @@ class AppHomeViewModel @Inject constructor(private val appIntroUseCase: AppIntro
     val languageListReceiver: LiveData<Resource<ApiResponse<List<LanguageListResponseData>>>>
         get() = _languageListReceiver
 
+    private val _addCatgoriesResponseStatus = MutableLiveData<Resource<ApiResponse<String>>>()
+    val addCatgoriesResponseStatus: LiveData<Resource<ApiResponse<String>>>
+        get() = _addCatgoriesResponseStatus
+
     init {
         userLocationName = AppPreferences.userLocation
         userLocationId = AppPreferences.userLocationId
@@ -107,6 +108,7 @@ class AppHomeViewModel @Inject constructor(private val appIntroUseCase: AppIntro
         editEditMob = userData?.phoneNumber?: ""
         editProfImg = userData?.photo?:""
         editPassword = userData?.password?:""
+        editLangId = AppPreferences.userLanguageId
     }
 
     private fun getUserObjectFromPreference(): UserData{
@@ -216,9 +218,9 @@ class AppHomeViewModel @Inject constructor(private val appIntroUseCase: AppIntro
             val partEndDate = MultiPartRequestHelper.createRequestBody("end_date", selectedToAdsDate)
             val partTxId = MultiPartRequestHelper.createRequestBody("transaction_id", ((100000..1000000).random()).toString())
             val partAmount = MultiPartRequestHelper.createRequestBody("amount", selectedAMount)
-            val partAdsName = MultiPartRequestHelper.createRequestBody("ads_name", "")
-            val partLocationType = MultiPartRequestHelper.createRequestBody("locationtype", selectedPublicLocationType)
-            val partPublishLocId = MultiPartRequestHelper.createRequestBody("publish_loc", selectedPublicLocationType)
+            val partAdsName = MultiPartRequestHelper.createRequestBody("ads_name", "nil")
+            val partLocationType = MultiPartRequestHelper.createRequestBody("locationtype", selectedPublicLocationId)
+            val partPublishLocId = MultiPartRequestHelper.createRequestBody("publish_loc", selectedPublicLocationId)
             val partFile = MultiPartRequestHelper.createFileRequestBody(adsImage, "image", context)
 
             homeUseCases.postAds(
@@ -288,16 +290,14 @@ class AppHomeViewModel @Inject constructor(private val appIntroUseCase: AppIntro
 
     fun editProfile(context: Context){
         viewModelScope.launch {
-
-            val editProfileCategories = addedCategories.map { cat -> cat.toProfileCategoryModel() }
             val partCusId = MultiPartRequestHelper.createRequestBody("customer_id", editUserID)
             val partCusname = MultiPartRequestHelper.createRequestBody("cusname", editUsername)
             val partEmail = MultiPartRequestHelper.createRequestBody("email", editEmail)
-            val partCategorylist = MultiPartRequestHelper.createRequestBody("categorylist", editProfileCategories.toString())
+            val partLanguage = MultiPartRequestHelper.createRequestBody("language", editLangId)
             val partFile = MultiPartRequestHelper.createFileRequestBody(editProfImg, "image", context)
 
             homeUseCases.editProfile(
-                partCusId, partCusname, partEmail, partCategorylist, partFile
+                partCusId, partCusname, partEmail, partLanguage, partFile
             )
                 .onStart { _editSubmitStatusReceiver.value = Resource.loading() }
                 .collect {  apiResponse ->
@@ -339,6 +339,24 @@ class AppHomeViewModel @Inject constructor(private val appIntroUseCase: AppIntro
                     }
                 }
 
+        }
+    }
+
+    fun addCategories(){
+        val editProfileCategories = addedCategories.map { cat -> cat.toProfileCategoryModel() }
+        val request = AddCategoriesRequest(editUserID, editProfileCategories)
+
+        viewModelScope.launch {
+            homeUseCases.addCategories(request)
+                .onStart { _addCatgoriesResponseStatus.value =  Resource.loading()}
+                .collect {  apiResponse ->
+                    apiResponse.let{
+                        it.data?.let{
+                            _addCatgoriesResponseStatus.value = apiResponse
+                        }?: run {
+                            _addCatgoriesResponseStatus.value = Resource.dataError("Invalid server response!")
+                        }
+                    } }
         }
     }
 

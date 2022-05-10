@@ -18,6 +18,7 @@ import androidx.fragment.app.activityViewModels
 import com.janustech.helpsaap.R
 import com.janustech.helpsaap.databinding.FragmentAdvertisementBinding
 import com.janustech.helpsaap.databinding.FragmentAdvertisementBindingImpl
+import com.janustech.helpsaap.model.AdsPackageModel
 import com.janustech.helpsaap.model.PublishTypeModel
 import com.janustech.helpsaap.network.Status
 import com.janustech.helpsaap.ui.base.BaseFragmentWithBinding
@@ -35,14 +36,19 @@ class FragmentAdvertisement: BaseFragmentWithBinding<FragmentAdvertisementBindin
     View.OnClickListener, PhotoOptionListener {
 
     private val appHomeViewModel: AppHomeViewModel by activityViewModels()
+
     private lateinit var currentPhotoPath: String
+    private lateinit var galleryImgUri: Uri
     private var photoFile: File? = null
     private var actualPath = ""
+    private var isCameraImage = true
+
     val DATE_FORMAT = "dd MMM yyyy"
     val DATE_FORMAT_REGULAR = "dd-MM-yyyy"
     val DATE_FORMAT_SERVER = "yyyy-MM-dd"
     var selectedDateFrom = "";
     var selectedDateTo = "";
+    var selectedPackageDuration = 0
     private lateinit var publishListAdapter: ArrayAdapter<PublishTypeModel>
 
 
@@ -89,6 +95,18 @@ class FragmentAdvertisement: BaseFragmentWithBinding<FragmentAdvertisementBindin
                 showPhotoPickOption()
             }
             R.id.btnPost -> {
+                val curDateString = SimpleDateFormat(DATE_FORMAT_SERVER, Locale.US).format(Calendar.getInstance().time)
+                val currentDate = SimpleDateFormat(DATE_FORMAT_SERVER, Locale.US).parse(curDateString)
+
+                val expDateCal = Calendar.getInstance().apply {
+                    time = currentDate as Date
+                    add(Calendar.MONTH,selectedPackageDuration)
+                }
+                val expDateString = SimpleDateFormat(DATE_FORMAT_SERVER, Locale.US).format(expDateCal.time)
+
+                appHomeViewModel.selectedFromAdsDate = curDateString
+                appHomeViewModel.selectedToAdsDate = expDateString
+
                 appHomeViewModel.postAds(requireContext())
             }
 
@@ -123,81 +141,44 @@ class FragmentAdvertisement: BaseFragmentWithBinding<FragmentAdvertisementBindin
 
 
     private fun setPublishLocations(){
-
-        binding.tvDropdownClub.setText("State")
         val publishList = arrayListOf<PublishTypeModel>()
-        publishList.add(PublishTypeModel("4", "State"))
-        publishList.add(PublishTypeModel("5", "District"))
-        publishList.add(PublishTypeModel("1", "Panchayth"))
-        publishList.add(PublishTypeModel("2", "Municipality"))
-        publishList.add(PublishTypeModel("3", "Corporation"))
-
-        publishListAdapter = ArrayAdapter(
-            requireContext(),
-            android.R.layout.simple_spinner_dropdown_item,
-            publishList
+        val statePacks = listOf(
+            AdsPackageModel("1","₹ 99/Month", "99", 1 ),
+            AdsPackageModel("2","₹ 149/Month", "149", 2 ),
+            AdsPackageModel("3","₹ 199/Month", "199", 3 ),
         )
-        binding.tvDropdownClub.setAdapter(publishListAdapter)
-
-        setPriceLayout(publishList[0])
-
-        binding.tvDropdownClub.setOnItemClickListener { _, _, position, _ ->
-            appHomeViewModel.selectedPublicLocationId = publishList[position].publishTypeId
-            appHomeViewModel.selectedPublicLocationType = publishList[position].publishTypeId
-            setPriceLayout(publishList[position])
-        }
-    }
-
-    private fun setPriceLayout(publishTypeModel: PublishTypeModel){
+        val districtPacks = listOf(
+            AdsPackageModel("1","₹ 89/Month", "89", 1 ),
+            AdsPackageModel("2","₹ 139/Month", "139", 2 ),
+            AdsPackageModel("3","₹ 189/Month", "189", 3 ),
+        )
+        val corporationPacks = listOf(
+            AdsPackageModel("1","₹ 79/Month", "79", 1 ),
+            AdsPackageModel("2","₹ 129/Month", "129", 2 ),
+            AdsPackageModel("3","₹ 179/Month", "179", 3 ),
+        )
+        val municipalityPacks = listOf(
+            AdsPackageModel("1","₹ 89/Month", "89", 1 ),
+            AdsPackageModel("2","₹ 139/Month", "139", 2 ),
+            AdsPackageModel("3","₹ 189/Month", "189", 3 ),
+        )
+        val panchayathPacks = listOf(
+            AdsPackageModel("1","₹ 49/Month", "49", 1 ),
+            AdsPackageModel("2","₹ 99/Month", "99", 2 ),
+            AdsPackageModel("3","₹ 149/Month", "149", 3 ),
+        )
+        publishList.add(PublishTypeModel("4", "State", statePacks))
+        publishList.add(PublishTypeModel("5", "District", districtPacks))
+        publishList.add(PublishTypeModel("3", "Corporation", corporationPacks))
+        publishList.add(PublishTypeModel("2", "Municipality", municipalityPacks))
+        publishList.add(PublishTypeModel("1", "Grama Panchayath", panchayathPacks))
 
         binding.apply {
-            lPubLoc.run{
-                tvLocTitle.text = publishTypeModel.publishTypeIdName
-                btnPrice1.text = "₹ 79/\nMonth"
-                btnPrice2.text = "₹ 139/\n2 Month"
-                btnPrice3.text = "₹ 189/\n3 Month"
-                btnPrice1.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
-                btnPrice1.setBackgroundResource(R.drawable.rounded_rect_green_filled)
-                appHomeViewModel.selectedAMount = "79"
-
-                btnPrice1.setOnClickListener {
-                    appHomeViewModel.selectedAMount = "79"
-
-                    btnPrice1.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
-                    btnPrice1.setBackgroundResource(R.drawable.rounded_rect_green_filled)
-
-                    btnPrice2.setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
-                    btnPrice2.setBackgroundResource(R.drawable.rounded_rect_grey_filled)
-
-                    btnPrice3.setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
-                    btnPrice3.setBackgroundResource(R.drawable.rounded_rect_grey_filled)
-                }
-
-                btnPrice2.setOnClickListener {
-                    appHomeViewModel.selectedAMount = "139"
-
-                    btnPrice1.setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
-                    btnPrice1.setBackgroundResource(R.drawable.rounded_rect_grey_filled)
-
-                    btnPrice2.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
-                    btnPrice2.setBackgroundResource(R.drawable.rounded_rect_green_filled)
-
-                    btnPrice3.setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
-                    btnPrice3.setBackgroundResource(R.drawable.rounded_rect_grey_filled)
-                }
-
-                btnPrice3.setOnClickListener {
-                    appHomeViewModel.selectedAMount = "189"
-
-                    btnPrice1.setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
-                    btnPrice1.setBackgroundResource(R.drawable.rounded_rect_grey_filled)
-
-                    btnPrice2.setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
-                    btnPrice2.setBackgroundResource(R.drawable.rounded_rect_grey_filled)
-
-                    btnPrice3.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
-                    btnPrice3.setBackgroundResource(R.drawable.rounded_rect_green_filled)
-                }
+            publishTypesAdapter = PublishTypesAdapter(requireContext(), publishList){ packageTypeId, packageTypeName, _, packagePrice, packageDuration ->
+                appHomeViewModel.selectedPublicLocationId = packageTypeId
+                appHomeViewModel.selectedPublicLocationType = packageTypeName
+                appHomeViewModel.selectedAMount = packagePrice
+                selectedPackageDuration = packageDuration
             }
         }
     }
@@ -274,12 +255,15 @@ class FragmentAdvertisement: BaseFragmentWithBinding<FragmentAdvertisementBindin
     }
 
     private fun setCameraPicToImageView() {
+        isCameraImage = true;
         scaleDownImage(BitmapFactory.decodeFile(currentPhotoPath))
         deleteOriginalCameraImage()
     }
 
     private fun setGalleryPicToImageView(uri: Uri) {
+        isCameraImage = false;
         currentPhotoPath = uri.path?: ""
+        galleryImgUri = uri
         photoFile = File(currentPhotoPath)
         CommonUtils.getBitmapFromUri(requireContext(), uri)
             ?.let { bitmap -> scaleDownImage(bitmap) }
@@ -296,7 +280,11 @@ class FragmentAdvertisement: BaseFragmentWithBinding<FragmentAdvertisementBindin
     }
 
     private fun setImage(path: String){
-        val image = CommonUtils.getClearExifBitmap(currentPhotoPath, path)
+        val image = if (isCameraImage) {
+            CommonUtils.getClearExifBitmap(currentPhotoPath, path)
+        } else {
+            CommonUtils.getClearExifBitmap(requireContext(), galleryImgUri, path)
+        }
         image?.let {
             binding.ivUpload.apply {
                 setImageBitmap(image)

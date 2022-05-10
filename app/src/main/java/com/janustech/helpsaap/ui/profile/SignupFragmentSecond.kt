@@ -134,7 +134,21 @@ class SignupFragmentSecond : BaseFragmentWithBinding<FragmentRegisterSecondBindi
 
                     AppPreferences.userId = it.data?.data?:""
                     val userData = profileViewModel.run {
-                        UserData(it.data?.data?:"", regName, regMob, regWhatsapNo, regEmail, regWeb, regPin, "", "", regPass)
+                        UserData(it.data?.data?:"",
+                            regName,
+                            regMob,
+                            regWhatsapNo,
+                            regEmail,
+                            regWeb,
+                            regPin,
+                            "",
+                            "",
+                            regPass,
+                            "",
+                            regLatitude,
+                            regLongitude,
+                            regLocalArea,
+                            AppPreferences.userLanguageId)
                     }
                     AppPreferences.userData = Gson().toJson(userData)
 
@@ -262,7 +276,6 @@ class SignupFragmentSecond : BaseFragmentWithBinding<FragmentRegisterSecondBindi
             CommonUtils.getClearExifBitmap(currentPhotoPath, path)
         } else {
             CommonUtils.getClearExifBitmap(requireContext(), galleryImgUri, path)
-//            BitmapFactory.decodeFile(path)
         }
         image?.let {
             binding.ivUpload.apply {

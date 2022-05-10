@@ -13,5 +13,10 @@ data class LoginResponseData(
     val current_location: String = "",
     val photo: String = "",
     val otp: String = "",
-    val password: String = ""
+    val password: String = "",
+    val offerpercentage: String = "",
+    val lat: String = "",
+    val long: String = "",
+    val areaname: String = "",
+    val language: String = ""
 )

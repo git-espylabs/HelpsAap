@@ -11,6 +11,10 @@
         <variable
             name="viewParent"
             type="com.janustech.helpsaap.ui.home.FragmentAdvertisement" />
+
+        <variable
+            name="publishTypesAdapter"
+            type="com.janustech.helpsaap.ui.home.PublishTypesAdapter" />
     </data>
 
     <ScrollView
@@ -102,7 +106,7 @@
                 android:layout_height="0dp"/>
 
             <TextView
-                android:id="@+id/tvPublishLocations"
+                android:visibility="gone"
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_size_custom_18"
                 android:fontFamily="@font/segoeui_heavy"
@@ -116,6 +120,7 @@
                 android:layout_height="wrap_content"/>
 
             <com.google.android.material.textfield.TextInputLayout
+                android:visibility="gone"
                 android:id="@+id/tilDropdownClub"
                 style="@style/EspyEditTextStyle"
                 android:layout_width="0dp"
@@ -151,17 +156,33 @@
                     tools:ignore="LabelFor" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <include
-                android:id="@+id/lPubLoc"
-                android:layout_marginTop="12dp"
-                layout="@layout/item_publish_location"
+            <TextView
+                android:id="@+id/tvPublishLocations"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_custom_18"
+                android:fontFamily="@font/segoui"
+                android:textStyle="bold"
+                android:text="Publishing Location"
+                android:textFontWeight="700"
+                android:layout_marginTop="24dp"
+                app:layout_constraintTop_toBottomOf="@+id/borderV"
+                app:layout_constraintStart_toStartOf="parent"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@+id/tilDropdownClub"/>
+                android:layout_height="wrap_content"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvPublishTypes"
+                tools:listitem="@layout/item_publish_location"
+                android:adapter="@{publishTypesAdapter}"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                android:orientation="vertical"
+                app:layout_constraintTop_toBottomOf="@+id/tvPublishLocations"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
 
             <Button
                 android:id="@+id/btnPost"
-                app:layout_constraintTop_toBottomOf="@+id/lPubLoc"
+                app:layout_constraintTop_toBottomOf="@+id/rvPublishTypes"
                 style="@style/HelpAapButtonStyle"
                 android:layout_marginTop="24dp"
                 android:text="Make a Payment"

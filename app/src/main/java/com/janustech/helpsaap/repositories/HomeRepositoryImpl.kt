@@ -2,6 +2,7 @@ package com.janustech.helpsaap.repositories
 
 import com.janustech.helpsaap.network.HelpsAapApis
 import com.janustech.helpsaap.network.Resource
+import com.janustech.helpsaap.network.requests.AddCategoriesRequest
 import com.janustech.helpsaap.network.requests.AddOfferRequest
 import com.janustech.helpsaap.network.requests.EditProfileRequest
 import com.janustech.helpsaap.network.response.ApiResponse
@@ -86,12 +87,20 @@ class HomeRepositoryImpl(private val apiService: HelpsAapApis): HomeRepository {
         customer_id: MultipartBody.Part,
         cusname: MultipartBody.Part,
         email: MultipartBody.Part,
-        categorylist: MultipartBody.Part,
+        language: MultipartBody.Part,
         image: MultipartBody.Part
     ): Flow<Resource<MultipartApiResponse>> {
         return flow {
             emit(safeApiCall { apiService.editProfile(
-                customer_id, cusname, email, categorylist, image
+                customer_id, cusname, email, language, image
+            ) })
+        }.flowOn(Dispatchers.IO)
+    }
+
+    override fun addCategories(addCategoriesRequest: AddCategoriesRequest): Flow<Resource<ApiResponse<String>>> {
+        return flow {
+            emit(safeApiCall { apiService.addOnCategories(
+                addCategoriesRequest
             ) })
         }.flowOn(Dispatchers.IO)
     }

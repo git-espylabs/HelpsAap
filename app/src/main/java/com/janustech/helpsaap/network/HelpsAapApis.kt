@@ -1,5 +1,6 @@
 package com.janustech.helpsaap.network
 
+import com.janustech.helpsaap.network.requests.AddCategoriesRequest
 import com.janustech.helpsaap.network.requests.AddOfferRequest
 import com.janustech.helpsaap.network.requests.EditProfileRequest
 import com.janustech.helpsaap.network.response.ApiResponse
@@ -53,9 +54,14 @@ interface HelpsAapApis {
         @Part customer_id: MultipartBody.Part,
         @Part cusname: MultipartBody.Part,
         @Part email: MultipartBody.Part,
-        @Part categorylist: MultipartBody.Part,
+        @Part language: MultipartBody.Part,
         @Part image: MultipartBody.Part
     ): MultipartApiResponse
+
+    @POST(HttpEndPoints.ADDON_CATEGORIES)
+    suspend fun addOnCategories(
+        @Body addCategoriesRequest: AddCategoriesRequest
+    ): ApiResponse<String>
 
 
 }

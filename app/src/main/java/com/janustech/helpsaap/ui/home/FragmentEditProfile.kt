@@ -93,6 +93,12 @@ class FragmentEditProfile  : BaseFragmentWithBinding<FragmentEditProfileBinding>
         super.onViewCreated(view, savedInstanceState)
         binding.apply {
             viewModel = appHomeViewModel
+            tvPromptAddCategs.setOnClickListener {
+                AddCategoryBottomSheetDialogFragment(appHomeViewModel).show(
+                    childFragmentManager,
+                    "AddCategoryFragment"
+                )
+            }
         }
 
         setObserver()
@@ -217,6 +223,28 @@ class FragmentEditProfile  : BaseFragmentWithBinding<FragmentEditProfileBinding>
                 else ->{
                     (activity as AppHomeActivity).hideProgress()
                     (activity as AppHomeActivity).showAlertDialog(it.message?:"Invalid Server Response")
+                }
+            }
+        }
+
+
+
+        appHomeViewModel.addCatgoriesResponseStatus.observe(viewLifecycleOwner){
+            when(it.status){
+                Status.SUCCESS ->{
+                    (activity as AppHomeActivity).hideProgress()
+                    if (it.data?.isResponseSuccess() == true){
+                        showToast("Categories Added Successfully")
+                    }else{
+                        (activity as AppHomeActivity).showToast("Something went wrong try again later!")
+                    }
+                }
+                Status.LOADING -> {
+                    (activity as AppHomeActivity).showProgress()
+                }
+                else ->{
+                    (activity as AppHomeActivity).hideProgress()
+                    (activity as AppHomeActivity).showToast(it.message?:"Invalid Server Response")
                 }
             }
         }
@@ -395,7 +423,6 @@ class FragmentEditProfile  : BaseFragmentWithBinding<FragmentEditProfileBinding>
                 setImageBitmap(image)
                 scaleType = ImageView.ScaleType.CENTER_CROP
                 setPadding(0, 0, 0, 0)
-//                url = path
             }
         }
     }

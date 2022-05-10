@@ -1,6 +1,7 @@
 package com.janustech.helpsaap.usecase
 
 import com.janustech.helpsaap.network.Resource
+import com.janustech.helpsaap.network.requests.AddCategoriesRequest
 import com.janustech.helpsaap.network.requests.AddOfferRequest
 import com.janustech.helpsaap.network.requests.EditProfileRequest
 import com.janustech.helpsaap.network.response.ApiResponse
@@ -90,15 +91,21 @@ class HomeUsecases@Inject constructor(
         customer_id: MultipartBody.Part,
         cusname: MultipartBody.Part,
         email: MultipartBody.Part,
-        categorylist: MultipartBody.Part,
+        language: MultipartBody.Part,
         image: MultipartBody.Part
     ): Flow<Resource<MultipartApiResponse>> {
         return flow {
             homeRepository.editProfile(
-                customer_id, cusname, email, categorylist, image
+                customer_id, cusname, email, language, image
             ).collect {
                 emit(it)
             }
+        }.flowOn(Dispatchers.IO)
+    }
+
+    suspend fun addCategories(addCategoriesRequest: AddCategoriesRequest):Flow<Resource<ApiResponse<String>>>{
+        return flow {
+            homeRepository.addCategories(addCategoriesRequest).collect { emit(it) }
         }.flowOn(Dispatchers.IO)
     }
 
