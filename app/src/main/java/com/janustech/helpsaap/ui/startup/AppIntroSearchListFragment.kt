@@ -3,8 +3,11 @@ package com.janustech.helpsaap.ui.startup
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.view.MenuInflater
 import android.view.View
+import androidx.appcompat.widget.PopupMenu
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import com.janustech.helpsaap.R
 import com.janustech.helpsaap.databinding.FragmentAppIntroSearchListBinding
 import com.janustech.helpsaap.extension.isValidPhoneNumber
@@ -13,7 +16,9 @@ import com.janustech.helpsaap.map.toCompanyDataModel
 import com.janustech.helpsaap.model.CompanyDataModel
 import com.janustech.helpsaap.model.LocationDataModel
 import com.janustech.helpsaap.network.Status
+import com.janustech.helpsaap.preference.AppPreferences
 import com.janustech.helpsaap.ui.base.BaseFragmentWithBinding
+import com.janustech.helpsaap.ui.home.AppHomeActivity
 import com.janustech.helpsaap.ui.home.EditLocationBottomSheetDialogFragment
 import com.janustech.helpsaap.ui.profile.LoginActivity
 import com.janustech.helpsaap.utils.CommonUtils
@@ -36,6 +41,18 @@ class AppIntroSearchListFragment: BaseFragmentWithBinding<FragmentAppIntroSearch
                     childFragmentManager,
                     "EditLocationFragment"
                 )
+            }
+
+            btnProfileIco.setOnClickListener {
+                showPopup(it)
+            }
+
+            if (AppPreferences.userId.isNotEmpty()){
+                btnLogin.visibility = View.GONE
+                btnProfileIco.visibility = View.VISIBLE
+            }else{
+                btnLogin.visibility = View.VISIBLE
+                btnProfileIco.visibility = View.GONE
             }
         }
 
@@ -103,4 +120,25 @@ class AppIntroSearchListFragment: BaseFragmentWithBinding<FragmentAppIntroSearch
             }
         }
     }
+
+    private fun showPopup(v : View){
+        val popup = PopupMenu(requireActivity(), v)
+        val inflater: MenuInflater = popup.menuInflater
+        inflater.inflate(R.menu.menu_sub_home, popup.menu)
+        popup.setOnMenuItemClickListener { menuItem ->
+            when(menuItem.itemId){
+                R.id.actionLogout-> {
+                    AppPreferences.clearAll()
+                    findNavController().navigate(AppIntroSearchListFragmentDirections.actionAppIntroSearchListToSelectLocationFragment())
+                }
+                R.id.actionProfile ->{
+                    activity?.launchActivity<AppHomeActivity>()
+                    activity?.finish()
+                }
+            }
+            true
+        }
+        popup.show()
+    }
+
 }

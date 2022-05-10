@@ -34,6 +34,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="16sp"
+                android:layout_marginTop="8dp"
                 android:textColor="@color/black"
                 android:text="@={viewModel.userLocationName}"
                 android:textFontWeight="200"
@@ -41,16 +42,14 @@
                 app:drawableStartCompat="@drawable/ic_location"
                 app:drawableEndCompat="@drawable/ic_arrow_down"
                 app:layout_constraintHorizontal_chainStyle="spread_inside"
-                app:layout_constraintEnd_toStartOf="@+id/btnLogin"
-                app:layout_constraintTop_toTopOf="@+id/btnLogin"
-                app:layout_constraintBottom_toBottomOf="@+id/btnLogin"
+                app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 tools:targetApi="p" />
 
             <TextView
                 android:layout_marginTop="8dp"
                 android:id="@+id/btnLogin"
-                app:layout_constraintStart_toEndOf="@+id/tvLocation"
+                android:visibility="visible"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:text="@string/text_login"
@@ -66,10 +65,29 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
+            <TextView
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="12dp"
+                android:id="@+id/btnProfileIco"
+                android:visibility="gone"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:text="@={viewModel.userNameIc}"
+                android:textSize="18sp"
+                android:background="@drawable/circle_bg"
+                android:textColor="@color/white"
+                android:fontFamily="@font/segoui"
+                android:textStyle="bold"
+                android:textFontWeight="700"
+                android:gravity="center"
+                android:textAllCaps="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
             <AutoCompleteTextView
                 android:paddingHorizontal="5dp"
                 android:id="@+id/actSearch"
-                app:layout_constraintTop_toBottomOf="@+id/btnLogin"
+                app:layout_constraintTop_toBottomOf="@+id/tvLocation"
                 android:background="@drawable/rounded_rect_grey_filled"
                 android:drawableStart="@drawable/ic_search"
                 android:drawablePadding="7dp"

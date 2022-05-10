@@ -67,19 +67,8 @@ class AppHomeActivity : BaseActivity<ActivityAppHomeBinding>(), View.OnClickList
 
         when {
             controller.currentDestination?.id == R.id.appHomeFragment -> {
-
-                if (doubleBackToExitPressedOnce) {
-                    val setIntent = Intent(Intent.ACTION_MAIN)
-                    setIntent.addCategory(Intent.CATEGORY_HOME)
-                    setIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                    startActivity(setIntent)
-                    finish()
-                }
-
-                this.doubleBackToExitPressedOnce = true
-                showToast(getString(R.string.exit_tap_alert))
-
-                Handler(Looper.getMainLooper()).postDelayed({ doubleBackToExitPressedOnce = false }, EXIT_DELAY)
+                launchActivity<AppIntroActivity>()
+                this.finish()
             }
             supportFragmentManager.backStackEntryCount > 0 -> {
                 super.onBackPressed()

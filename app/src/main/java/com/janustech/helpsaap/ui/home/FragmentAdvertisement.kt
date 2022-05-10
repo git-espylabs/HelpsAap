@@ -214,11 +214,9 @@ class FragmentAdvertisement: BaseFragmentWithBinding<FragmentAdvertisementBindin
             c.set(Calendar.MONTH, monthOfYear)
             c.set(Calendar.DAY_OF_MONTH, dayOfMonth)
             if (dateType == 1) {
-                binding.tvStartDate.text = SimpleDateFormat(DATE_FORMAT, Locale.US).format(c.time)
                 selectedDateFrom = SimpleDateFormat(DATE_FORMAT_SERVER, Locale.US).format(c.time)
                 appHomeViewModel.selectedFromAdsDate = SimpleDateFormat(DATE_FORMAT_SERVER, Locale.US).format(c.time)
             } else {
-                binding.tvEndDate.text = SimpleDateFormat(DATE_FORMAT, Locale.US).format(c.time)
                 selectedDateTo = SimpleDateFormat(DATE_FORMAT_SERVER, Locale.US).format(c.time)
                 appHomeViewModel.selectedToAdsDate = SimpleDateFormat(DATE_FORMAT_SERVER, Locale.US).format(c.time)
             }

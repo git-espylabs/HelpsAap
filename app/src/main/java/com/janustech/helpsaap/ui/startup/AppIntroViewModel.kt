@@ -4,6 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.gson.Gson
+import com.janustech.helpsaap.model.UserData
 import com.janustech.helpsaap.network.Resource
 import com.janustech.helpsaap.network.requests.*
 import com.janustech.helpsaap.network.response.*
@@ -26,6 +28,9 @@ class AppIntroViewModel
     var userLanguageId = ""
     var userSelectedCategory = ""
     var userSelectedCategoryName = ""
+    var userData: UserData? = null
+    var userNameIc = ""
+    var userName = ""
 
     private val _languageListReceiver = MutableLiveData<Resource<ApiResponse<List<LanguageListResponseData>>>>()
     val languageListReceiver: LiveData<Resource<ApiResponse<List<LanguageListResponseData>>>>
@@ -56,6 +61,27 @@ class AppIntroViewModel
         userLocationId = AppPreferences.userLocationId
         userLanguage = AppPreferences.userLanguage
         userLanguageId = AppPreferences.userLanguageId
+        if (AppPreferences.userId.isNotEmpty()) {
+            userData = getUserObjectFromPreference()
+            userNameIc = getUserNameIcon()
+            userName = userData?.customerName?: ""
+        }
+    }
+
+    private fun getUserObjectFromPreference(): UserData{
+        val json = AppPreferences.userData
+        return Gson().fromJson(json, UserData::class.java)
+    }
+
+    fun getUserNameIcon(): String{
+        val name = userData?.customerName?:"Unknown"
+        val nameparts: List<String> = name.split(" ")
+        var initFirst = nameparts[0][0].toString()
+        var initSecond = ""
+        if (nameparts.size > 1){
+            initSecond = nameparts[1][0].toString()
+        }
+        return  initFirst + initSecond
     }
 
     fun getLanguages(){

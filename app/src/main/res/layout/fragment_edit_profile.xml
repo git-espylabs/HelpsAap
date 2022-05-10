@@ -55,6 +55,7 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginTop="8dp"
                     android:src="@drawable/avatar"
                     app:layout_constraintVertical_bias="0.05"
                     android:layout_width="128dp"
@@ -142,12 +143,50 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tilDropdownLang"
+                    style="@style/EspyEditTextStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="32dp"
+                    android:layout_marginHorizontal="24dp"
+                    android:gravity="center"
+                    android:theme="@style/EspyAutoCompleteStyle"
+                    app:boxStrokeWidth="0dp"
+                    app:boxStrokeWidthFocused="0dp"
+                    app:endIconTint="@color/app_accent_color"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHeight_max="200dp"
+                    android:background="@drawable/rounded_rect_grey_filled"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/etMobLayout">
+
+                    <AutoCompleteTextView
+                        android:id="@+id/tvDropdownLang"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center|left"
+                        android:paddingHorizontal="8dp"
+                        android:background="@android:color/transparent"
+                        android:backgroundTint="@android:color/transparent"
+                        android:dropDownHeight="200dp"
+                        android:inputType="none"
+                        android:paddingVertical="18dp"
+                        android:textAlignment="viewStart"
+                        android:textColor="@color/black"
+                        android:fontFamily="@font/segoui"
+                        android:textSize="@dimen/text_size_custom_18"
+                        app:backgroundTint="@android:color/transparent"
+                        tools:ignore="LabelFor" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+
+                <com.google.android.material.textfield.TextInputLayout
                     android:visibility="gone"
                     android:id="@+id/etPasswordLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:boxBackgroundMode="none"
-                    app:layout_constraintTop_toBottomOf="@+id/etMobLayout"
+                    app:layout_constraintTop_toBottomOf="@+id/tilDropdownLang"
                     android:layout_marginHorizontal="24dp"
                     android:layout_marginTop="16dp"
                     app:hintAnimationEnabled="false"
@@ -172,7 +211,7 @@
                     android:paddingHorizontal="8dp"
                     android:id="@+id/actCategory"
                     android:layout_marginHorizontal="24dp"
-                    app:layout_constraintTop_toBottomOf="@+id/etMobLayout"
+                    app:layout_constraintTop_toBottomOf="@+id/tilDropdownLang"
                     android:background="@drawable/rounded_rect_grey_filled"
                     android:drawableStart="@drawable/ic_search"
                     android:drawablePadding="7dp"

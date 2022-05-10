@@ -48,6 +48,7 @@ class AppHomeViewModel @Inject constructor(private val appIntroUseCase: AppIntro
     var editPassword = ""
     var editProfImg = ""
     var addedCategories = arrayListOf<String>()
+    var editLangId = ""
 
     var selectedFromAdsDate = ""
     var selectedToAdsDate = ""
@@ -89,6 +90,10 @@ class AppHomeViewModel @Inject constructor(private val appIntroUseCase: AppIntro
     private val _editSubmitStatusReceiver_ = MutableLiveData<Resource<MultipartApiResponse>>()
     val editSubmitStatusReceiver_: LiveData<Resource<MultipartApiResponse>>
         get() = _editSubmitStatusReceiver_
+
+    private val _languageListReceiver = MutableLiveData<Resource<ApiResponse<List<LanguageListResponseData>>>>()
+    val languageListReceiver: LiveData<Resource<ApiResponse<List<LanguageListResponseData>>>>
+        get() = _languageListReceiver
 
     init {
         userLocationName = AppPreferences.userLocation
@@ -313,6 +318,23 @@ class AppHomeViewModel @Inject constructor(private val appIntroUseCase: AppIntro
                         }?: run {
                             CommonUtils.writeLogFile(context, "editProfile() -> Response Null")
                             _editSubmitStatusReceiver_.value = Resource.dataError("Invalid server response!")
+                        }
+                    }
+                }
+
+        }
+    }
+
+    fun getLanguages(){
+        viewModelScope.launch {
+            appIntroUseCase.getLanguages()
+                .onStart { _languageListReceiver.value = Resource.loading() }
+                .collect { apiResponse ->
+                    apiResponse.let {
+                        it.data?.let {
+                            _languageListReceiver.value = apiResponse
+                        }?: run {
+                            _languageListReceiver.value = Resource.dataError("Invalid server response!")
                         }
                     }
                 }

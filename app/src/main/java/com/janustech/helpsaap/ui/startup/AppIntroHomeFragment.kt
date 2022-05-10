@@ -1,14 +1,17 @@
 package com.janustech.helpsaap.ui.startup
 
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
+import android.view.MenuInflater
 import android.view.View
 import android.widget.AdapterView.OnItemClickListener
 import android.widget.ArrayAdapter
+import androidx.appcompat.widget.PopupMenu
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.janustech.helpsaap.R
@@ -24,6 +27,7 @@ import com.janustech.helpsaap.model.LocationDataModel
 import com.janustech.helpsaap.network.Status
 import com.janustech.helpsaap.preference.AppPreferences
 import com.janustech.helpsaap.ui.base.BaseFragmentWithBinding
+import com.janustech.helpsaap.ui.home.AppHomeActivity
 import com.janustech.helpsaap.ui.home.EditLocationBottomSheetDialogFragment
 import com.janustech.helpsaap.ui.profile.LoginActivity
 import com.janustech.helpsaap.utils.EditLocationListener
@@ -55,6 +59,18 @@ class AppIntroHomeFragment: BaseFragmentWithBinding<FragmentAppIntroHomeBinding>
                     childFragmentManager,
                     "EditLocationFragment"
                 )
+            }
+
+            btnProfileIco.setOnClickListener {
+                showPopup(it)
+            }
+
+            if (AppPreferences.userId.isNotEmpty()){
+                btnLogin.visibility = View.GONE
+                btnProfileIco.visibility = View.VISIBLE
+            }else{
+                btnLogin.visibility = View.VISIBLE
+                btnProfileIco.visibility = View.GONE
             }
         }
 
@@ -237,6 +253,26 @@ class AppIntroHomeFragment: BaseFragmentWithBinding<FragmentAppIntroHomeBinding>
                 rvAds.visibility = View.GONE
             }
         }
+    }
+
+    private fun showPopup(v : View){
+        val popup = PopupMenu(requireActivity(), v)
+        val inflater: MenuInflater = popup.menuInflater
+        inflater.inflate(R.menu.menu_sub_home, popup.menu)
+        popup.setOnMenuItemClickListener { menuItem ->
+            when(menuItem.itemId){
+                R.id.actionLogout-> {
+                    AppPreferences.clearAll()
+                    findNavController().navigate(AppIntroHomeFragmentDirections.actionAppIntroHomeToSelectLocationFragment())
+                }
+                R.id.actionProfile ->{
+                    activity?.launchActivity<AppHomeActivity>()
+                    activity?.finish()
+                }
+            }
+            true
+        }
+        popup.show()
     }
 
 
