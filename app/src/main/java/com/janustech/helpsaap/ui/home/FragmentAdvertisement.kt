@@ -82,6 +82,11 @@ class FragmentAdvertisement: BaseFragmentWithBinding<FragmentAdvertisementBindin
 
     }
 
+    override fun onStop() {
+        super.onStop()
+        appHomeViewModel._publishAdsResponseReceiver.value = null
+    }
+
     override fun onClick(p0: View?) {
         when(p0?.id){
 
@@ -95,19 +100,29 @@ class FragmentAdvertisement: BaseFragmentWithBinding<FragmentAdvertisementBindin
                 showPhotoPickOption()
             }
             R.id.btnPost -> {
-                val curDateString = SimpleDateFormat(DATE_FORMAT_SERVER, Locale.US).format(Calendar.getInstance().time)
-                val currentDate = SimpleDateFormat(DATE_FORMAT_SERVER, Locale.US).parse(curDateString)
 
-                val expDateCal = Calendar.getInstance().apply {
-                    time = currentDate as Date
-                    add(Calendar.MONTH,selectedPackageDuration)
+                if (appHomeViewModel.adsImage.isEmpty()){
+                    showAlertDialog("Please select an Ad Image")
+                }else if(selectedPackageDuration <= 0 ||
+                    appHomeViewModel.selectedAMount.isEmpty() ||
+                    appHomeViewModel.selectedPublicLocationId.isEmpty() ||
+                    appHomeViewModel.selectedPublicLocationType.isEmpty()){
+                    showAlertDialog("Please select a valid publishing location & package")
+                }else{
+                    val curDateString = SimpleDateFormat(DATE_FORMAT_SERVER, Locale.US).format(Calendar.getInstance().time)
+                    val currentDate = SimpleDateFormat(DATE_FORMAT_SERVER, Locale.US).parse(curDateString)
+
+                    val expDateCal = Calendar.getInstance().apply {
+                        time = currentDate as Date
+                        add(Calendar.MONTH,selectedPackageDuration)
+                    }
+                    val expDateString = SimpleDateFormat(DATE_FORMAT_SERVER, Locale.US).format(expDateCal.time)
+
+                    appHomeViewModel.selectedFromAdsDate = curDateString
+                    appHomeViewModel.selectedToAdsDate = expDateString
+
+                    appHomeViewModel.postAds(requireContext())
                 }
-                val expDateString = SimpleDateFormat(DATE_FORMAT_SERVER, Locale.US).format(expDateCal.time)
-
-                appHomeViewModel.selectedFromAdsDate = curDateString
-                appHomeViewModel.selectedToAdsDate = expDateString
-
-                appHomeViewModel.postAds(requireContext())
             }
 
         }
@@ -122,19 +137,24 @@ class FragmentAdvertisement: BaseFragmentWithBinding<FragmentAdvertisementBindin
     }
 
     private fun setObserver(){
-        appHomeViewModel.publishAdsResponseReceiver.observe(viewLifecycleOwner){
-            when(it.status){
-                Status.SUCCESS ->{
-                    (activity as AppHomeActivity).hideProgress()
-                    showToast("Ad posted successfully")
+        appHomeViewModel.publishAdsResponseReceiver?.observe(viewLifecycleOwner){ res->
+            try {
+                res?.let {
+                    when(it.status){
+                        Status.SUCCESS ->{
+                            (activity as AppHomeActivity).hideProgress()
+                            showToast("Ad posted successfully")
+                        }
+                        Status.LOADING -> {
+                            (activity as AppHomeActivity).showProgress()
+                        }
+                        else ->{
+                            (activity as AppHomeActivity).hideProgress()
+                            (activity as AppHomeActivity).showAlertDialog(it.message?:"Invalid Server Response")
+                        }
+                    }
                 }
-                Status.LOADING -> {
-                    (activity as AppHomeActivity).showProgress()
-                }
-                else ->{
-                    (activity as AppHomeActivity).hideProgress()
-                    (activity as AppHomeActivity).showAlertDialog(it.message?:"Invalid Server Response")
-                }
+            } catch (e: Exception) {
             }
         }
     }

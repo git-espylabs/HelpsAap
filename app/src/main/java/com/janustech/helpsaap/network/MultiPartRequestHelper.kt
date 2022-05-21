@@ -19,12 +19,18 @@ object MultiPartRequestHelper {
     fun createFileRequestBody(imageFile: String?, fileName: String, context: Context): MultipartBody.Part {
         var file: File? = null
         var inputStream: InputStream? = null
-        if (imageFile != null && imageFile.isNotEmpty()) {
+        var placeHolderFile = "placeholder.png"
+        var fileExtn = imageFile?.substring(imageFile.lastIndexOf("."))
+
+        if ((imageFile != null && imageFile.isNotEmpty()) && fileExtn != SUFFIX) {
             inputStream  = FileInputStream(imageFile);
         } else {
             val am = context.assets
             try {
-                inputStream = am.open("defaults/placeholder.png")
+                if (fileExtn == SUFFIX){
+                    placeHolderFile = "avatar.jpg"
+                }
+                inputStream = am.open("defaults/$placeHolderFile")
             } catch (e: IOException) {
                 e.printStackTrace()
             }

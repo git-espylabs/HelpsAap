@@ -60,20 +60,20 @@ class AppHomeViewModel @Inject constructor(private val appIntroUseCase: AppIntro
     val locationListReceiver: LiveData<Resource<ApiResponse<List<LocationListResponseData>>>>
         get() = _locationListReceiver
 
-    private val _postDealResponseReceiver = MutableLiveData<Resource<MultipartApiResponse>>()
-    val postDealResponseReceiver: LiveData<Resource<MultipartApiResponse>>
+    val _postDealResponseReceiver = MutableLiveData<Resource<MultipartApiResponse>>()
+    var postDealResponseReceiver: LiveData<Resource<MultipartApiResponse>>? = null
         get() = _postDealResponseReceiver
 
     private val _categoriesReceiver = MutableLiveData<Resource<ApiResponse<List<CategoryResponseData>>>>()
     val categoriesReceiver: LiveData<Resource<ApiResponse<List<CategoryResponseData>>>>
         get() = _categoriesReceiver
 
-    private val _editSubmitStatusReceiver = MutableLiveData<Resource<ApiResponse<String>>>()
-    val editSubmitStatusReceiver: LiveData<Resource<ApiResponse<String>>>
+    var _editSubmitStatusReceiver = MutableLiveData<Resource<ApiResponse<String>>>()
+    var editSubmitStatusReceiver: LiveData<Resource<ApiResponse<String>>>? = null
         get() = _editSubmitStatusReceiver
 
-    private val _publishAdsResponseReceiver = MutableLiveData<Resource<MultipartApiResponse>>()
-    val publishAdsResponseReceiver: LiveData<Resource<MultipartApiResponse>>
+    var _publishAdsResponseReceiver = MutableLiveData<Resource<MultipartApiResponse>>()
+    var publishAdsResponseReceiver: LiveData<Resource<MultipartApiResponse>>? = null
         get() = _publishAdsResponseReceiver
 
     private val _notificationsListReceiver = MutableLiveData<Resource<ApiResponse<List<NotificationResponseData>>>>()
@@ -84,16 +84,16 @@ class AppHomeViewModel @Inject constructor(private val appIntroUseCase: AppIntro
     val offerSubmitStatusReceiver: LiveData<Resource<ApiResponse<String>>>
         get() = _offerSubmitStatusReceiver
 
-    private val _editSubmitStatusReceiver_ = MutableLiveData<Resource<MultipartApiResponse>>()
-    val editSubmitStatusReceiver_: LiveData<Resource<MultipartApiResponse>>
+    var _editSubmitStatusReceiver_ = MutableLiveData<Resource<MultipartApiResponse>>()
+    var editSubmitStatusReceiver_: LiveData<Resource<MultipartApiResponse>>? = null
         get() = _editSubmitStatusReceiver_
 
     private val _languageListReceiver = MutableLiveData<Resource<ApiResponse<List<LanguageListResponseData>>>>()
     val languageListReceiver: LiveData<Resource<ApiResponse<List<LanguageListResponseData>>>>
         get() = _languageListReceiver
 
-    private val _addCatgoriesResponseStatus = MutableLiveData<Resource<ApiResponse<String>>>()
-    val addCatgoriesResponseStatus: LiveData<Resource<ApiResponse<String>>>
+    var _addCatgoriesResponseStatus = MutableLiveData<Resource<ApiResponse<String>>>()
+    var addCatgoriesResponseStatus: LiveData<Resource<ApiResponse<String>>>? = null
         get() = _addCatgoriesResponseStatus
 
     private val _postedAdsListReceiver = MutableLiveData<Resource<ApiResponse<List<PostedAdsResponseData>>>>()

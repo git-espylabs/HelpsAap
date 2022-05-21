@@ -123,6 +123,13 @@ class FragmentEditProfile  : BaseFragmentWithBinding<FragmentEditProfileBinding>
         appHomeViewModel.getLanguages()
     }
 
+    override fun onStop() {
+        super.onStop()
+        appHomeViewModel._addCatgoriesResponseStatus.value = null
+        appHomeViewModel._editSubmitStatusReceiver_.value = null
+        appHomeViewModel._editSubmitStatusReceiver.value = null
+    }
+
     override fun onTakePhotoSelected() {
         dispatchTakePictureIntent()
     }
@@ -169,44 +176,54 @@ class FragmentEditProfile  : BaseFragmentWithBinding<FragmentEditProfileBinding>
             }
         }
 
-        appHomeViewModel.editSubmitStatusReceiver.observe(viewLifecycleOwner){
-            when(it.status){
-                Status.SUCCESS ->{
-                    (activity as AppHomeActivity).hideProgress()
-                    if (it.data?.isResponseSuccess() == true) {
-                        (activity as AppHomeActivity).showAlertDialog("Profile edited successfully!")
-                    } else {
-                        (activity as AppHomeActivity).showAlertDialog("Edit profile failed! Please try again")
+        appHomeViewModel.editSubmitStatusReceiver?.observe(viewLifecycleOwner){ res ->
+            try {
+                res?.let {
+                    when(it.status){
+                        Status.SUCCESS ->{
+                            (activity as AppHomeActivity).hideProgress()
+                            if (it.data?.isResponseSuccess() == true) {
+                                (activity as AppHomeActivity).showAlertDialog("Profile edited successfully!")
+                            } else {
+                                (activity as AppHomeActivity).showAlertDialog("Edit profile failed! Please try again")
+                            }
+                        }
+                        Status.LOADING -> {
+                            (activity as AppHomeActivity).showProgress()
+                        }
+                        else ->{
+                            (activity as AppHomeActivity).hideProgress()
+                            (activity as AppHomeActivity).showToast(it.message?:"Invalid Server Response")
+                        }
                     }
                 }
-                Status.LOADING -> {
-                    (activity as AppHomeActivity).showProgress()
-                }
-                else ->{
-                    (activity as AppHomeActivity).hideProgress()
-                    (activity as AppHomeActivity).showToast(it.message?:"Invalid Server Response")
-                }
+            } catch (e: Exception) {
             }
         }
 
-        appHomeViewModel.editSubmitStatusReceiver_.observe(viewLifecycleOwner){
-            when(it.status){
-                Status.SUCCESS ->{
-                    (activity as AppHomeActivity).hideProgress()
-                    if (it.data?.isResponseSuccess() == true) {
-                        AppPreferences.userLanguageId = appHomeViewModel.editLangId;
-                        (activity as AppHomeActivity).showAlertDialog("Profile edited successfully!")
-                    } else {
-                        (activity as AppHomeActivity).showAlertDialog("Edit profile failed! Please try again")
+        appHomeViewModel.editSubmitStatusReceiver_?.observe(viewLifecycleOwner){ res ->
+            try {
+                res?.let {
+                    when(it.status){
+                        Status.SUCCESS ->{
+                            (activity as AppHomeActivity).hideProgress()
+                            if (it.data?.isResponseSuccess() == true) {
+                                AppPreferences.userLanguageId = appHomeViewModel.editLangId;
+                                (activity as AppHomeActivity).showAlertDialog("Profile edited successfully!")
+                            } else {
+                                (activity as AppHomeActivity).showAlertDialog("Edit profile failed! Please try again")
+                            }
+                        }
+                        Status.LOADING -> {
+                            (activity as AppHomeActivity).showProgress()
+                        }
+                        else ->{
+                            (activity as AppHomeActivity).hideProgress()
+                            (activity as AppHomeActivity).showToast(it.message?:"Invalid Server Response")
+                        }
                     }
                 }
-                Status.LOADING -> {
-                    (activity as AppHomeActivity).showProgress()
-                }
-                else ->{
-                    (activity as AppHomeActivity).hideProgress()
-                    (activity as AppHomeActivity).showToast(it.message?:"Invalid Server Response")
-                }
+            } catch (e: Exception) {
             }
         }
 
@@ -229,23 +246,28 @@ class FragmentEditProfile  : BaseFragmentWithBinding<FragmentEditProfileBinding>
 
 
 
-        appHomeViewModel.addCatgoriesResponseStatus.observe(viewLifecycleOwner){
-            when(it.status){
-                Status.SUCCESS ->{
-                    (activity as AppHomeActivity).hideProgress()
-                    if (it.data?.isResponseSuccess() == true){
-                        showToast("Categories Added Successfully")
-                    }else{
-                        (activity as AppHomeActivity).showToast("Something went wrong try again later!")
+        appHomeViewModel.addCatgoriesResponseStatus?.observe(viewLifecycleOwner){ res->
+            try {
+                res?.let {
+                    when(it.status){
+                        Status.SUCCESS ->{
+                            (activity as AppHomeActivity).hideProgress()
+                            if (it.data?.isResponseSuccess() == true){
+                                showToast("Categories Added Successfully")
+                            }else{
+                                (activity as AppHomeActivity).showToast("Something went wrong try again later!")
+                            }
+                        }
+                        Status.LOADING -> {
+                            (activity as AppHomeActivity).showProgress()
+                        }
+                        else ->{
+                            (activity as AppHomeActivity).hideProgress()
+                            (activity as AppHomeActivity).showToast(it.message?:"Invalid Server Response")
+                        }
                     }
                 }
-                Status.LOADING -> {
-                    (activity as AppHomeActivity).showProgress()
-                }
-                else ->{
-                    (activity as AppHomeActivity).hideProgress()
-                    (activity as AppHomeActivity).showToast(it.message?:"Invalid Server Response")
-                }
+            } catch (e: Exception) {
             }
         }
     }

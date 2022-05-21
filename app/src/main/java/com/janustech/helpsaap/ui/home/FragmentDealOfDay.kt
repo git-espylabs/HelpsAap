@@ -93,6 +93,11 @@ class FragmentDealOfDay: BaseFragmentWithBinding<FragmentDealOfDayBinding>(R.lay
         setSelectedLocationListView()
     }
 
+    override fun onStop() {
+        super.onStop()
+        appHomeViewModel._postDealResponseReceiver.value = null
+    }
+
     override fun onClick(v: View?) {
         when(v?.id){
 
@@ -147,19 +152,24 @@ class FragmentDealOfDay: BaseFragmentWithBinding<FragmentDealOfDayBinding>(R.lay
             }
         }
 
-        appHomeViewModel.postDealResponseReceiver.observe(viewLifecycleOwner){
-            when(it.status){
-                Status.SUCCESS ->{
-                    (activity as AppHomeActivity).hideProgress()
-                    showToast("Deal posted successfully")
+        appHomeViewModel.postDealResponseReceiver?.observe(viewLifecycleOwner){ res ->
+            try {
+                res?.let {
+                    when(it.status){
+                        Status.SUCCESS ->{
+                            (activity as AppHomeActivity).hideProgress()
+                            showToast("Deal posted successfully")
+                        }
+                        Status.LOADING -> {
+                            (activity as AppHomeActivity).showProgress()
+                        }
+                        else ->{
+                            (activity as AppHomeActivity).hideProgress()
+                            (activity as AppHomeActivity).showAlertDialog(it.message?:"Invalid Server Response")
+                        }
+                    }
                 }
-                Status.LOADING -> {
-                    (activity as AppHomeActivity).showProgress()
-                }
-                else ->{
-                    (activity as AppHomeActivity).hideProgress()
-                    (activity as AppHomeActivity).showAlertDialog(it.message?:"Invalid Server Response")
-                }
+            } catch (e: Exception) {
             }
         }
 
