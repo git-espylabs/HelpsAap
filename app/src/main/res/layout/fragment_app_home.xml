@@ -60,13 +60,13 @@
 
         <View
             android:id="@+id/layDoD"
-            android:layout_marginTop="28dp"
+            android:layout_marginTop="18dp"
             app:layout_constraintTop_toBottomOf="@+id/ivProfileBg"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/sep"
             android:background="@drawable/rounded_rect_green_filled"
             android:layout_width="0dp"
-            android:layout_height="150dp"/>
+            android:layout_height="135dp"/>
 
         <View
             android:id="@+id/sep"
@@ -74,23 +74,23 @@
             app:layout_constraintStart_toEndOf="@+id/layDoD"
             app:layout_constraintEnd_toStartOf="@+id/layAds"
             app:layout_constraintTop_toTopOf="@+id/layDoD"
-            android:layout_width="24dp"
+            android:layout_width="12dp"
             android:layout_height="48dp"/>
 
         <View
             android:id="@+id/layAds"
-            android:layout_marginTop="28dp"
+            android:layout_marginTop="18dp"
             android:background="@drawable/rounded_rect_plain_filled_green_stroke"
             app:layout_constraintTop_toBottomOf="@+id/ivProfileBg"
             app:layout_constraintStart_toEndOf="@+id/sep"
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_width="0dp"
-            android:layout_height="150dp"/>
+            android:layout_height="135dp"/>
 
         <TextView
             android:id="@+id/tvDod"
             android:textColor="@color/white"
-            android:textSize="16sp"
+            android:textSize="15sp"
             android:fontFamily="@font/segoeui_heavy"
             android:textFontWeight="700"
             app:layout_constraintTop_toTopOf="@+id/layDoD"
@@ -98,7 +98,7 @@
             app:layout_constraintStart_toStartOf="@+id/layDoD"
             android:textStyle="bold"
             app:layout_constraintVertical_bias="0.65"
-            android:layout_marginLeft="16dp"
+            android:layout_marginLeft="12dp"
             android:text="Deals for the Day"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
@@ -122,7 +122,7 @@
         <TextView
             android:id="@+id/tvAds"
             android:textColor="@color/black"
-            android:textSize="16sp"
+            android:textSize="15sp"
             android:fontFamily="@font/segoeui_heavy"
             android:textFontWeight="700"
             app:layout_constraintTop_toTopOf="@+id/layAds"
@@ -153,18 +153,18 @@
 
         <View
             android:id="@+id/layPostedAds"
-            android:layout_marginTop="28dp"
+            android:layout_marginTop="16dp"
             app:layout_constraintTop_toBottomOf="@+id/layDoD"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/sep"
             android:background="@drawable/rounded_rect_plain_filled_green_stroke"
             android:layout_width="0dp"
-            android:layout_height="150dp"/>
+            android:layout_height="135dp"/>
 
         <TextView
             android:id="@+id/tvPostedAds"
             android:textColor="@color/black"
-            android:textSize="16sp"
+            android:textSize="15sp"
             android:fontFamily="@font/segoeui_heavy"
             android:textFontWeight="700"
             app:layout_constraintTop_toTopOf="@+id/layPostedAds"
@@ -184,11 +184,11 @@
             app:layout_constraintEnd_toEndOf="parent"
             android:textSize="16sp"
             android:fontFamily="@font/segoeui_heavy"
-            android:layout_marginBottom="16dp"
+            android:layout_marginBottom="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingVertical="12dp"
-            android:paddingHorizontal="24dp"
+            android:paddingVertical="8dp"
+            android:paddingHorizontal="18dp"
             app:icon="@drawable/ic_add_24"
             android:textAllCaps="false"
             app:cornerRadius="20dp"

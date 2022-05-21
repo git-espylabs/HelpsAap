@@ -236,7 +236,7 @@ class FragmentDealOfDay: BaseFragmentWithBinding<FragmentDealOfDayBinding>(R.lay
         val day = c.get(Calendar.DAY_OF_MONTH)
 
 
-        DatePickerDialog(requireActivity(), { _, year, monthOfYear, dayOfMonth ->
+        val d = DatePickerDialog(requireActivity(), { _, year, monthOfYear, dayOfMonth ->
             c.set(Calendar.YEAR, year)
             c.set(Calendar.MONTH, monthOfYear)
             c.set(Calendar.DAY_OF_MONTH, dayOfMonth)
@@ -249,7 +249,18 @@ class FragmentDealOfDay: BaseFragmentWithBinding<FragmentDealOfDayBinding>(R.lay
                 selectedDateTo = SimpleDateFormat(DATE_FORMAT_SERVER, Locale.US).format(c.time)
                 appHomeViewModel.selectedToDealDate = SimpleDateFormat(DATE_FORMAT_SERVER, Locale.US).format(c.time)
             }
-        }, year, month, day).show()
+        }, year, month, day)
+        if (dateType == 2 && selectedDateFrom.isNotEmpty()){
+            val selDate = SimpleDateFormat(DATE_FORMAT_SERVER, Locale.US).parse(selectedDateFrom)
+            val expDateCal = Calendar.getInstance().apply {
+                time = selDate as Date
+                add(Calendar.DAY_OF_MONTH,7)
+            }
+            d.datePicker.minDate = expDateCal.time.time
+        }
+        d.show()
+
+
     }
 
 
