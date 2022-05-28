@@ -15,11 +15,12 @@ internal fun LoginResponseData.toUserData() = UserData(
     photo  = photo?:"",
     otp  = otp?:"",
     password = password?:"",
-    offerpercentage = offerpercentage?:"",
+    offerpercentage = offerpercentage?:"0",
     lat = lat?:"",
     long = long?:"",
     areaname = areaname?:"",
-    language = language?:""
+    language = language?:"",
+    businessname = businessname
 
 )
 
@@ -103,6 +104,9 @@ internal fun PostedAdsResponseData.toPostedAdDataModel() = PostedAdDataModel(
     status = status?:"",
     payment_refid = payment_refid?:"",
     publish_type = publish_type?:"",
-    public_loc = public_loc?:""
+    public_loc = public_loc?:"",
+    panchayath = panchayath?:"",
+    district = district?:"",
+    state = state?:""
 )
 

@@ -39,6 +39,8 @@
             android:layout_height="0dp">
 
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:focusable="true"
+                android:focusableInTouchMode="true"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -144,9 +146,53 @@
                     android:layout_height="wrap_content"/>
 
                 <TextView
+                    android:id="@+id/promptOffer"
+                    app:layout_constraintTop_toTopOf="@+id/etOffer"
+                    app:layout_constraintBottom_toBottomOf="@+id/etOffer"
+                    app:layout_constraintStart_toStartOf="@+id/categorySpinner"
+                    app:layout_constraintEnd_toStartOf="@+id/etOffer"
+                    android:text="Offer:"
+                    android:textSize="18sp"
+                    android:textColor="@color/app_accent_color"
+                    android:fontFamily="@font/segoeui_heavy"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <EditText
+                    android:id="@+id/etOffer"
+                    android:layout_marginTop="18dp"
+                    android:textSize="16sp"
+                    android:textColor="@color/black"
+                    android:fontFamily="@font/segoui"
+                    android:hint="0"
+                    android:text="@={viewModel.regOfferPerc}"
+                    android:gravity="center"
+                    android:inputType="numberDecimal"
+                    android:imeOptions="actionDone"
+                    android:background="@drawable/rounded_rect_plain_filled_green_stroke"
+                    app:layout_constraintTop_toBottomOf="@+id/promptAddCategory"
+                    app:layout_constraintStart_toEndOf="@+id/promptOffer"
+                    android:layout_marginLeft="16dp"
+                    android:layout_width="72dp"
+                    android:layout_height="41dp"/>
+
+                <TextView
+                    android:id="@+id/tvOfferPercSym"
+                    app:layout_constraintTop_toTopOf="@+id/etOffer"
+                    app:layout_constraintBottom_toBottomOf="@+id/etOffer"
+                    app:layout_constraintStart_toEndOf="@+id/etOffer"
+                    android:layout_marginLeft="8dp"
+                    android:text="%"
+                    android:textSize="18sp"
+                    android:textColor="@color/app_accent_color"
+                    android:fontFamily="@font/segoeui_heavy"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <TextView
                     android:id="@+id/tvTitleMemshp"
                     android:layout_marginTop="24dp"
-                    app:layout_constraintTop_toBottomOf="@+id/promptAddCategory"
+                    app:layout_constraintTop_toBottomOf="@+id/etOffer"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     android:textSize="14sp"

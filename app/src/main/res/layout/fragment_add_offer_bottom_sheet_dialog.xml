@@ -31,6 +31,7 @@
             android:background="@drawable/rounded_rect_plain_filled_green_stroke"
             app:layout_constraintTop_toBottomOf="@+id/tvPromptLoc"
             android:textSize="22sp"
+            android:hint="0"
             android:textColor="@color/black"
             android:fontFamily="@font/segoui"
             android:textFontWeight="700"

@@ -45,6 +45,7 @@ class ProfileViewModel @Inject constructor(
     var regLatitude = "0.0"
     var regLongitude = "0.0"
     var regLocalArea = ""
+    var regOfferPerc = "0"
 
 
     var fgtPasEmail = ""
@@ -155,6 +156,7 @@ class ProfileViewModel @Inject constructor(
             val partLongitude = MultiPartRequestHelper.createRequestBody("longitube", regLongitude)
             val partArea = MultiPartRequestHelper.createRequestBody("areaname", regLocalArea)
             val partLanguage = MultiPartRequestHelper.createRequestBody("language", AppPreferences.userLanguageId)
+            val partOffer = MultiPartRequestHelper.createRequestBody("offerpercentage", regOfferPerc)
             val partFile = MultiPartRequestHelper.createFileRequestBody(regImage, "image", context)
 
             profileUseCase.register(
@@ -173,6 +175,7 @@ class ProfileViewModel @Inject constructor(
                 partLongitude,
                 partArea,
                 partLanguage,
+                partOffer,
                 partFile
             )
                 .onStart { _registerResponseReceiver.value = Resource.loading() }

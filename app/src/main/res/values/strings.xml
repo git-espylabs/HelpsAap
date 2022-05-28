@@ -8,6 +8,7 @@
     <string name="permission_storage_required_text">Requires Storage Permission</string>
 
     <string name="text_login">Log In</string>
+    <string name="text_hint_name">Name</string>
     <string name="text_hint_username">Email</string>
     <string name="text_hint_password">Password</string>
     <string name="text_signup_prompt">Haven’t registered yet? Register Now</string>

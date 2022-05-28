@@ -10,8 +10,10 @@ import android.os.Handler
 import android.os.Looper
 import android.provider.MediaStore
 import android.text.Editable
+import android.text.SpannableString
 import android.text.TextUtils
 import android.text.TextWatcher
+import android.text.style.UnderlineSpan
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -25,23 +27,23 @@ import com.janustech.helpsaap.R
 import com.janustech.helpsaap.app.AppPermission
 import com.janustech.helpsaap.databinding.FragmentEditProfileBinding
 import com.janustech.helpsaap.extension.handlePermission
+import com.janustech.helpsaap.extension.isNumeric
 import com.janustech.helpsaap.extension.requestPermission
 import com.janustech.helpsaap.map.toCategoryDataModel
 import com.janustech.helpsaap.map.toLanguageDataModel
 import com.janustech.helpsaap.model.CategoryDataModel
 import com.janustech.helpsaap.model.LanguageDataModel
-import com.janustech.helpsaap.model.PublishTypeModel
 import com.janustech.helpsaap.network.Status
 import com.janustech.helpsaap.network.response.LanguageListResponseData
 import com.janustech.helpsaap.preference.AppPreferences
 import com.janustech.helpsaap.ui.base.BaseFragmentWithBinding
 import com.janustech.helpsaap.ui.profile.PhotoOptionBottomSheetDialogFragment
-import com.janustech.helpsaap.ui.startup.AppIntroActivity
 import com.janustech.helpsaap.utils.CommonUtils
 import com.janustech.helpsaap.utils.PhotoOptionListener
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
 import java.io.IOException
+
 
 @AndroidEntryPoint
 class FragmentEditProfile  : BaseFragmentWithBinding<FragmentEditProfileBinding>(R.layout.fragment_edit_profile),
@@ -99,8 +101,18 @@ class FragmentEditProfile  : BaseFragmentWithBinding<FragmentEditProfileBinding>
                     "AddCategoryFragment"
                 )
             }
+            btnContinue.setOnClickListener {
+                appHomeViewModel.editProfile(requireContext())
+            }
+            promtOffer.setOnClickListener {
+                AddOfferBottomSheetDialogFragment(appHomeViewModel).show(
+                    childFragmentManager,
+                    "AddOfferBottomSheetDialogFragment"
+                )
+            }
         }
 
+        populatePercentage()
         setObserver()
         setSearchList()
         setSelectedCategoryListView()
@@ -116,10 +128,6 @@ class FragmentEditProfile  : BaseFragmentWithBinding<FragmentEditProfileBinding>
             }
         }
 
-        binding.btnContinue.setOnClickListener {
-            appHomeViewModel.editProfile(requireContext())
-        }
-
         appHomeViewModel.getLanguages()
     }
 
@@ -128,6 +136,7 @@ class FragmentEditProfile  : BaseFragmentWithBinding<FragmentEditProfileBinding>
         appHomeViewModel._addCatgoriesResponseStatus.value = null
         appHomeViewModel._editSubmitStatusReceiver_.value = null
         appHomeViewModel._editSubmitStatusReceiver.value = null
+        appHomeViewModel._offerSubmitStatusReceiver.value = null
     }
 
     override fun onTakePhotoSelected() {
@@ -208,6 +217,7 @@ class FragmentEditProfile  : BaseFragmentWithBinding<FragmentEditProfileBinding>
                         Status.SUCCESS ->{
                             (activity as AppHomeActivity).hideProgress()
                             if (it.data?.isResponseSuccess() == true) {
+                                appHomeViewModel.updateUserDataWithEditSuccess()
                                 AppPreferences.userLanguageId = appHomeViewModel.editLangId;
                                 (activity as AppHomeActivity).showAlertDialog("Profile edited successfully!")
                             } else {
@@ -244,8 +254,6 @@ class FragmentEditProfile  : BaseFragmentWithBinding<FragmentEditProfileBinding>
             }
         }
 
-
-
         appHomeViewModel.addCatgoriesResponseStatus?.observe(viewLifecycleOwner){ res->
             try {
                 res?.let {
@@ -256,6 +264,33 @@ class FragmentEditProfile  : BaseFragmentWithBinding<FragmentEditProfileBinding>
                                 showToast("Categories Added Successfully")
                             }else{
                                 (activity as AppHomeActivity).showToast("Something went wrong try again later!")
+                            }
+                        }
+                        Status.LOADING -> {
+                            (activity as AppHomeActivity).showProgress()
+                        }
+                        else ->{
+                            (activity as AppHomeActivity).hideProgress()
+                            (activity as AppHomeActivity).showToast(it.message?:"Invalid Server Response")
+                        }
+                    }
+                }
+            } catch (e: Exception) {
+            }
+        }
+
+        appHomeViewModel.offerSubmitStatusReceiver?.observe(viewLifecycleOwner){ res->
+            try {
+                res?.let {
+                    when(it.status){
+                        Status.SUCCESS ->{
+                            (activity as AppHomeActivity).hideProgress()
+                            if (it.data?.isResponseSuccess() == true) {
+                                appHomeViewModel.updateUserDataWithOfferPercentage()
+                                populatePercentage()
+                                (activity as AppHomeActivity).showAlertDialog("Offer added successfully!")
+                            } else {
+                                (activity as AppHomeActivity).showAlertDialog("Error occurred! Please try again")
                             }
                         }
                         Status.LOADING -> {
@@ -455,5 +490,28 @@ class FragmentEditProfile  : BaseFragmentWithBinding<FragmentEditProfileBinding>
         } catch (_: Exception) {
         }
         photoFile = null
+    }
+
+    private fun populatePercentage(){
+        val offerPercent = appHomeViewModel.editOfferPercent
+        if (offerPercent.isNotEmpty() && offerPercent.isNumeric() && offerPercent.toDouble() > 0){
+            binding.promtOffer.apply {
+                val str = "Offer: $offerPercent%"
+                val content = SpannableString(str)
+                content.setSpan(UnderlineSpan(), 0, str.length, 0)
+                text = content
+                setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_edit_24, 0);
+            }
+        }else{
+            binding.promtOffer.apply {
+                val str = "Add Offer"
+                val content = SpannableString(str)
+                content.setSpan(UnderlineSpan(), 0, str.length, 0)
+                text = content
+                setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_add_24, 0, 0, 0);
+            }
+        }
+
+
     }
 }

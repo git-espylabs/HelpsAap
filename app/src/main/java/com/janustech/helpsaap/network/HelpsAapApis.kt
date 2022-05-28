@@ -52,7 +52,7 @@ interface HelpsAapApis {
     suspend fun editProfile(
         @Part customer_id: MultipartBody.Part,
         @Part cusname: MultipartBody.Part,
-        @Part email: MultipartBody.Part,
+        @Part phone_number: MultipartBody.Part,
         @Part language: MultipartBody.Part,
         @Part image: MultipartBody.Part
     ): MultipartApiResponse

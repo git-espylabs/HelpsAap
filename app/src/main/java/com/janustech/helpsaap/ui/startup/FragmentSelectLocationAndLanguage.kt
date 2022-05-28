@@ -144,6 +144,8 @@ class FragmentSelectLocationAndLanguage: BaseFragmentWithBinding<FragmentSelectL
 
                     if (appIntroViewModel.userLanguageId.isNotEmpty()) {
                         findNavController().navigate(FragmentSelectLocationAndLanguageDirections.actionSelectLocationFragmentToAppIntroHome())
+                    }else{
+                        showSelectionDialogue(2)
                     }
                 }
 
@@ -180,8 +182,17 @@ class FragmentSelectLocationAndLanguage: BaseFragmentWithBinding<FragmentSelectL
 
                 if (appIntroViewModel.userLocationId.isNotEmpty()){
                     findNavController().navigate(FragmentSelectLocationAndLanguageDirections.actionSelectLocationFragmentToAppIntroHome())
+                }else{
+                    showSelectionDialogue(1)
                 }
             }
         }
+    }
+
+    private fun showSelectionDialogue(type: Int){
+        val selectTypeStr = if (type == 1) "Search and Select a location" else "Select a language"
+        val msg = "Please " + selectTypeStr + "to continue"
+
+        showAlertDialog(msg)
     }
 }

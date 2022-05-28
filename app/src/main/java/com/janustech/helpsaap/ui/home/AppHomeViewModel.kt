@@ -34,7 +34,9 @@ class AppHomeViewModel @Inject constructor(private val appIntroUseCase: AppIntro
     var userName = ""
 
     var selectedFromDealDate = ""
+    var selectedFromDealDateTv = ""
     var selectedToDealDate = ""
+    var selectedToDealDateTv = ""
     var selectedDealLocations = arrayListOf<String>()
     var dealOfDayImage = ""
 
@@ -46,6 +48,7 @@ class AppHomeViewModel @Inject constructor(private val appIntroUseCase: AppIntro
     var editProfImg = ""
     var addedCategories = arrayListOf<String>()
     var editLangId = ""
+    var editOfferPercent = "0"
 
     var selectedFromAdsDate = ""
     var selectedToAdsDate = ""
@@ -80,8 +83,8 @@ class AppHomeViewModel @Inject constructor(private val appIntroUseCase: AppIntro
     val notificationsListReceiver: LiveData<Resource<ApiResponse<List<NotificationResponseData>>>>
         get() = _notificationsListReceiver
 
-    private val _offerSubmitStatusReceiver = MutableLiveData<Resource<ApiResponse<String>>>()
-    val offerSubmitStatusReceiver: LiveData<Resource<ApiResponse<String>>>
+    var _offerSubmitStatusReceiver = MutableLiveData<Resource<ApiResponse<String>>>()
+    var offerSubmitStatusReceiver: LiveData<Resource<ApiResponse<String>>>? = null
         get() = _offerSubmitStatusReceiver
 
     var _editSubmitStatusReceiver_ = MutableLiveData<Resource<MultipartApiResponse>>()
@@ -113,6 +116,7 @@ class AppHomeViewModel @Inject constructor(private val appIntroUseCase: AppIntro
         editProfImg = userData?.photo?:""
         editPassword = userData?.password?:""
         editLangId = AppPreferences.userLanguageId
+        editOfferPercent = userData?.offerpercentage?:"0"
     }
 
     private fun getUserObjectFromPreference(): UserData{
@@ -120,15 +124,63 @@ class AppHomeViewModel @Inject constructor(private val appIntroUseCase: AppIntro
         return Gson().fromJson(json, UserData::class.java)
     }
 
-    fun getUserNameIcon(): String{
-        val name = userData?.customerName?:"Unknown"
-        val nameparts: List<String> = name.split(" ")
-        var initFirst = nameparts[0][0].toString()
-        var initSecond = ""
-        if (nameparts.size > 1){
-            initSecond = nameparts[1][0].toString()
+    fun updateUserDataWithEditSuccess(){
+        val data = UserData(
+            userData?.userId?:"",
+            editUsername,
+            editEditMob,
+            userData?.whatsapp?:"",
+            userData?.email?:"",
+            userData?.website?:"",
+            userData?.currentLocation?:"",
+            editProfImg,
+            userData?.otp?:"",
+            userData?.password?:"",
+            userData?.offerpercentage?:"0",
+            userData?.lat?:"",
+            userData?.long?:"",
+            userData?.areaname?:"",
+            editLangId)
+        AppPreferences.userData = Gson().toJson(data)
+    }
+
+    fun updateUserDataWithOfferPercentage(){
+       val data = UserData(
+            userData?.userId?:"",
+            userData?.customerName?:"",
+            userData?.phoneNumber?:"",
+            userData?.whatsapp?:"",
+            userData?.email?:"",
+            userData?.website?:"",
+            userData?.currentLocation?:"",
+            userData?.photo?:"",
+            userData?.otp?:"",
+            userData?.password?:"",
+            editOfferPercent,
+            userData?.lat?:"",
+            userData?.long?:"",
+            userData?.areaname?:"",
+            AppPreferences.userLanguageId)
+        AppPreferences.userData = Gson().toJson(data)
+    }
+
+    private fun getUserNameIcon(): String{
+        val name = if (userData?.businessname != null && userData?.businessname?.isNotEmpty() == true) {
+            userData?.businessname
+        } else {
+            userData?.customerName?:"Unknown"
         }
-        return  initFirst + initSecond
+        name?.let {
+            val nameparts: List<String> = it.split(" ")
+            var initFirst = nameparts[0][0].toString()
+            var initSecond = ""
+            if (nameparts.size > 1){
+                initSecond = nameparts[1][0].toString()
+            }
+            return  initFirst + initSecond
+        }?: run {
+            return  "U"
+        }
     }
 
 
@@ -282,6 +334,7 @@ class AppHomeViewModel @Inject constructor(private val appIntroUseCase: AppIntro
                 .collect {  apiResponse ->
                     apiResponse.let{
                         it.data?.let{
+                            editOfferPercent = percent
                             _offerSubmitStatusReceiver.value = apiResponse
                         }?: run {
                             _offerSubmitStatusReceiver.value = Resource.dataError("Invalid server response!")
@@ -296,12 +349,12 @@ class AppHomeViewModel @Inject constructor(private val appIntroUseCase: AppIntro
         viewModelScope.launch {
             val partCusId = MultiPartRequestHelper.createRequestBody("customer_id", editUserID)
             val partCusname = MultiPartRequestHelper.createRequestBody("cusname", editUsername)
-            val partEmail = MultiPartRequestHelper.createRequestBody("email", editEmail)
+            val partMob = MultiPartRequestHelper.createRequestBody("phone_number", editEditMob)
             val partLanguage = MultiPartRequestHelper.createRequestBody("language", editLangId)
             val partFile = MultiPartRequestHelper.createFileRequestBody(editProfImg, "image", context)
 
             homeUseCases.editProfile(
-                partCusId, partCusname, partEmail, partLanguage, partFile
+                partCusId, partCusname, partMob, partLanguage, partFile
             )
                 .onStart { _editSubmitStatusReceiver.value = Resource.loading() }
                 .collect {  apiResponse ->

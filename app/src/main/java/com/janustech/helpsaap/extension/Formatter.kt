@@ -29,3 +29,8 @@ internal fun String.isValidPhoneNumber(): Boolean{
     }
     return false;
 }
+
+internal fun String.isNumeric(): Boolean {
+    val regex = "-?[0-9]+(\\.[0-9]+)?".toRegex()
+    return matches(regex)
+}

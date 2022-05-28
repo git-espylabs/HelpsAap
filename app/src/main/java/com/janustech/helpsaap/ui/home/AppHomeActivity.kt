@@ -70,6 +70,11 @@ class AppHomeActivity : BaseActivity<ActivityAppHomeBinding>(), View.OnClickList
                 launchActivity<AppIntroActivity>()
                 this.finish()
             }
+            controller.currentDestination?.id == R.id.dealOfDayFragment -> {
+                appHomeViewModel.selectedFromDealDateTv = ""
+                appHomeViewModel.selectedToDealDateTv = ""
+                super.onBackPressed()
+            }
             supportFragmentManager.backStackEntryCount > 0 -> {
                 super.onBackPressed()
             }

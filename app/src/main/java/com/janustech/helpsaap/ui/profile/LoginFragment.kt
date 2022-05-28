@@ -101,9 +101,12 @@ class LoginFragment : BaseFragmentWithBinding<FragmentLayoutLoginBinding>(R.layo
 
     private fun handleLoginResponse(loginResponseData: LoginResponseData?){
         loginResponseData?.apply {
-            AppPreferences.userId = id
-            AppPreferences.userData = Gson().toJson(loginResponseData.toUserData())
-            AppPreferences.userImageUrl = photo
+            val userData = loginResponseData.toUserData()
+            AppPreferences.userId = userData.userId
+            AppPreferences.userData = Gson().toJson(userData)
+            if (userData.photo != null) {
+                AppPreferences.userImageUrl = userData.photo
+            }
 
             activity?.launchActivity<AppHomeActivity>{
                 addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)

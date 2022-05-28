@@ -40,6 +40,7 @@ class ProfileRepositoryImpl(private val apiService: ProfileApis): ProfileReposit
         longitube: MultipartBody.Part,
         areaname: MultipartBody.Part,
         language: MultipartBody.Part,
+        offerpercentage: MultipartBody.Part,
         image: MultipartBody.Part
     ): Flow<Resource<MultipartApiResponse>> {
         return flow {
@@ -59,6 +60,7 @@ class ProfileRepositoryImpl(private val apiService: ProfileApis): ProfileReposit
                 longitube,
                 areaname,
                 language,
+                offerpercentage,
                 image
             ) })
         }.flowOn(Dispatchers.IO)

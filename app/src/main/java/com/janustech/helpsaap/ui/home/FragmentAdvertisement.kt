@@ -142,6 +142,7 @@ class FragmentAdvertisement: BaseFragmentWithBinding<FragmentAdvertisementBindin
                 res?.let {
                     when(it.status){
                         Status.SUCCESS ->{
+                            resetViews()
                             (activity as AppHomeActivity).hideProgress()
                             showToast("Ad posted successfully")
                         }
@@ -320,5 +321,19 @@ class FragmentAdvertisement: BaseFragmentWithBinding<FragmentAdvertisementBindin
         } catch (_: Exception) {
         }
         photoFile = null
+    }
+
+    private fun resetViews(){
+        appHomeViewModel.selectedPublicLocationId = ""
+        appHomeViewModel.selectedPublicLocationType = ""
+        appHomeViewModel.selectedAMount = ""
+        appHomeViewModel.selectedFromAdsDate = ""
+        appHomeViewModel.selectedToAdsDate = ""
+        appHomeViewModel.adsImage = ""
+        selectedPackageDuration = 0
+        setPublishLocations()
+        binding.apply {
+            ivUpload.setImageResource(R.drawable.ic_upload)
+        }
     }
 }

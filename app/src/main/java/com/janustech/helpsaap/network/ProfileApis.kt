@@ -38,6 +38,7 @@ interface ProfileApis {
         @Part longitube: MultipartBody.Part,
         @Part areaname: MultipartBody.Part,
         @Part language: MultipartBody.Part,
+        @Part offerpercentage: MultipartBody.Part,
         @Part image: MultipartBody.Part
     ): MultipartApiResponse
 

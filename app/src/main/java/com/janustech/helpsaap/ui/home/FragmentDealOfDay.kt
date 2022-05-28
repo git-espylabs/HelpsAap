@@ -157,6 +157,7 @@ class FragmentDealOfDay: BaseFragmentWithBinding<FragmentDealOfDayBinding>(R.lay
                 res?.let {
                     when(it.status){
                         Status.SUCCESS ->{
+                            resetViews()
                             (activity as AppHomeActivity).hideProgress()
                             showToast("Deal posted successfully")
                         }
@@ -252,11 +253,13 @@ class FragmentDealOfDay: BaseFragmentWithBinding<FragmentDealOfDayBinding>(R.lay
             c.set(Calendar.DAY_OF_MONTH, dayOfMonth)
             if (dateType == 1) {
                 binding.tvStartDate.text = SimpleDateFormat(DATE_FORMAT, Locale.US).format(c.time)
+                appHomeViewModel.selectedFromDealDateTv = SimpleDateFormat(DATE_FORMAT, Locale.US).format(c.time)
                 selectedDateFrom = SimpleDateFormat(DATE_FORMAT_SERVER, Locale.US).format(c.time)
                 appHomeViewModel.selectedFromDealDate = SimpleDateFormat(DATE_FORMAT_SERVER, Locale.US).format(c.time)
             } else {
                 binding.tvEndDate.text = SimpleDateFormat(DATE_FORMAT, Locale.US).format(c.time)
-                selectedDateTo = SimpleDateFormat(DATE_FORMAT_SERVER, Locale.US).format(c.time)
+                appHomeViewModel.selectedToDealDateTv = SimpleDateFormat(DATE_FORMAT, Locale.US).format(c.time)
+                    selectedDateTo = SimpleDateFormat(DATE_FORMAT_SERVER, Locale.US).format(c.time)
                 appHomeViewModel.selectedToDealDate = SimpleDateFormat(DATE_FORMAT_SERVER, Locale.US).format(c.time)
             }
         }, year, month, day)
@@ -267,6 +270,8 @@ class FragmentDealOfDay: BaseFragmentWithBinding<FragmentDealOfDayBinding>(R.lay
                 add(Calendar.DAY_OF_MONTH,7)
             }
             d.datePicker.minDate = expDateCal.time.time
+        }else if (dateType == 1){
+            d.datePicker.minDate = System.currentTimeMillis() - 1000
         }
         d.show()
 
@@ -370,5 +375,22 @@ class FragmentDealOfDay: BaseFragmentWithBinding<FragmentDealOfDayBinding>(R.lay
         } catch (_: Exception) {
         }
         photoFile = null
+    }
+
+    private fun resetViews(){
+        binding.apply {
+            tvStartDate.text = ""
+            tvEndDate.text = ""
+            ivUpload.setImageResource(R.drawable.ic_upload)
+            actLocation.setText("")
+        }
+        locationsList.clear()
+        setSelectedLocationListView()
+        appHomeViewModel.selectedFromDealDate = ""
+        appHomeViewModel.selectedFromDealDateTv = ""
+        appHomeViewModel.selectedToDealDate = ""
+        appHomeViewModel.selectedToDealDateTv = ""
+        appHomeViewModel.dealOfDayImage = ""
+        appHomeViewModel.selectedDealLocations.clear()
     }
 }

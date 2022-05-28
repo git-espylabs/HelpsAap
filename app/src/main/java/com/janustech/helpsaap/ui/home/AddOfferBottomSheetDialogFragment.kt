@@ -10,6 +10,7 @@ import androidx.fragment.app.DialogFragment
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.janustech.helpsaap.R
 import com.janustech.helpsaap.databinding.FragmentAddOfferBottomSheetDialogBinding
+import com.janustech.helpsaap.extension.isNumeric
 
 class AddOfferBottomSheetDialogFragment(private val viewModel: AppHomeViewModel): BottomSheetDialogFragment() {
 
@@ -39,6 +40,11 @@ class AddOfferBottomSheetDialogFragment(private val viewModel: AppHomeViewModel)
         super.onViewCreated(view, savedInstanceState)
 
         binding.apply {
+
+            if (viewModel.editOfferPercent.isNotEmpty() && viewModel.editOfferPercent.isNumeric() && viewModel.editOfferPercent.toDouble() > 0){
+                etPercent.setText(viewModel.editOfferPercent)
+            }
+
             btnSubmit.setOnClickListener {
                 if (etPercent.text.toString().isNotEmpty() && etPercent.text.toString().toInt() > 0){
                     viewModel.submitOffer(etPercent.text.toString())

@@ -44,6 +44,7 @@ class ProfileUseCase @Inject constructor(
         longitube: MultipartBody.Part,
         areaname: MultipartBody.Part,
         language: MultipartBody.Part,
+        offerpercentage: MultipartBody.Part,
         image: MultipartBody.Part
     ): Flow<Resource<MultipartApiResponse>> {
         return flow {
@@ -63,6 +64,7 @@ class ProfileUseCase @Inject constructor(
                 longitube,
                 areaname,
                 language,
+                offerpercentage,
                 image
             ).collect {
                 emit(it)

@@ -28,7 +28,7 @@ class PostedAdsAdapter internal constructor(private val context: Context, privat
                 }
 
                 if (obj.publish_type.isNotEmpty()){
-                    tvPublishType.text = getPublishLocationType(obj.publish_type)
+                    tvPublishType.text = getPublishLocationType(obj.panchayath)
                 }
             }
         }

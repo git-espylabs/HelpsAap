@@ -85,13 +85,13 @@ class HomeRepositoryImpl(private val apiService: HelpsAapApis): HomeRepository {
     override fun editProfile(
         customer_id: MultipartBody.Part,
         cusname: MultipartBody.Part,
-        email: MultipartBody.Part,
+        phone_number: MultipartBody.Part,
         language: MultipartBody.Part,
         image: MultipartBody.Part
     ): Flow<Resource<MultipartApiResponse>> {
         return flow {
             emit(safeApiCall { apiService.editProfile(
-                customer_id, cusname, email, language, image
+                customer_id, cusname, phone_number, language, image
             ) })
         }.flowOn(Dispatchers.IO)
     }

@@ -9,6 +9,7 @@ import android.os.Looper
 import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
+import android.view.MotionEvent
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -36,6 +37,7 @@ import com.janustech.helpsaap.ui.base.BaseFragmentWithBinding
 import com.janustech.helpsaap.ui.startup.SignupActivity
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.IOException
+
 
 @AndroidEntryPoint
 class SignupFragmentFirst : BaseFragmentWithBinding<FragmentRegisterBinding>(R.layout.fragment_register),
@@ -90,22 +92,49 @@ class SignupFragmentFirst : BaseFragmentWithBinding<FragmentRegisterBinding>(R.l
         configureCameraIdle()
         setObserver()
         setLocationDropdown()
+
+
+        binding.mapDummy.apply {
+            setOnTouchListener { _, event ->
+                val action = event.action
+                when (action) {
+                    MotionEvent.ACTION_DOWN -> {
+                        // Disallow ScrollView to intercept touch events.
+                        binding.svw.requestDisallowInterceptTouchEvent(true)
+                        // Disable touch on transparent view
+                        false
+                    }
+                    MotionEvent.ACTION_UP -> {
+                        // Allow ScrollView to intercept touch events.
+                        binding.svw.requestDisallowInterceptTouchEvent(false)
+                        true
+                    }
+                    MotionEvent.ACTION_MOVE -> {
+                        binding.svw.requestDisallowInterceptTouchEvent(true)
+                        false
+                    }
+                    else -> true
+                }
+            }
+        }
     }
+
+
 
     @SuppressLint("MissingPermission")
     override fun onMapReady(gMap: GoogleMap) {
         mMap = gMap
         mMap?.apply {
             mapType = GoogleMap.MAP_TYPE_NORMAL
-            setOnCameraIdleListener(onCameraIdleListener)
+            uiSettings.apply {
+                isZoomControlsEnabled = true
+                setAllGesturesEnabled(true)
+            }
+//            setMinZoomPreference(1F)
+//            setMinZoomPreference(15F)
 
             handlePermission(AppPermission.ACCESS_FINE_LOCATION,
                 onGranted = {
-                    isMyLocationEnabled = true
-                    uiSettings.isMyLocationButtonEnabled = true
-                    setOnMyLocationButtonClickListener(this@SignupFragmentFirst)
-                    setOnMyLocationClickListener(this@SignupFragmentFirst)
-
                     (activity as SignupActivity).showProgress()
                     GpsManager(this@SignupFragmentFirst, requireActivity()).getLastLocation()
                 },
@@ -122,6 +151,11 @@ class SignupFragmentFirst : BaseFragmentWithBinding<FragmentRegisterBinding>(R.l
                     remove()
                 }
                 locationMarker = addMarker(MarkerOptions().position(LatLng(it.latitude, it.longitude)).title("Your location"))
+
+                profileViewModel.apply {
+                    regLatitude = it.latitude.toString()
+                    regLongitude = it.longitude.toString()
+                }
             }
         }
     }
@@ -146,12 +180,12 @@ class SignupFragmentFirst : BaseFragmentWithBinding<FragmentRegisterBinding>(R.l
             }
 
             mMap?.apply {
-                moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(it.latitude, it.longitude), 0f))
+                moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(it.latitude, it.longitude), 10F))
                 locationMarker?.apply {  ->
                     remove()
                 }
                 locationMarker = addMarker(MarkerOptions().position(LatLng(it.latitude, it.longitude)).title("Your location"))
-                setOnCameraIdleListener(onCameraIdleListener)
+//                setOnCameraIdleListener(onCameraIdleListener)
             }
         }
     }

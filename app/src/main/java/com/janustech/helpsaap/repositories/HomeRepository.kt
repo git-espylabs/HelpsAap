@@ -39,7 +39,7 @@ interface HomeRepository {
     fun editProfile(
         customer_id: MultipartBody.Part,
         cusname: MultipartBody.Part,
-        email: MultipartBody.Part,
+        phone_number: MultipartBody.Part,
         language: MultipartBody.Part,
         image: MultipartBody.Part
     ): Flow<Resource<MultipartApiResponse>>

@@ -32,6 +32,7 @@ interface ProfileRepository {
         longitube: MultipartBody.Part,
         areaname: MultipartBody.Part,
         language: MultipartBody.Part,
+        offerpercentage: MultipartBody.Part,
         image: MultipartBody.Part
     ): Flow<Resource<MultipartApiResponse>>
 

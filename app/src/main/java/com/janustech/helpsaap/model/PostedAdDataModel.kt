@@ -10,5 +10,8 @@ data class PostedAdDataModel(
     val status: String = "",
     val payment_refid: String = "",
     val publish_type: String = "",
-    val public_loc: String = ""
+    val public_loc: String = "",
+    val panchayath: String = "",
+    val district: String = "",
+    val state: String = ""
 )

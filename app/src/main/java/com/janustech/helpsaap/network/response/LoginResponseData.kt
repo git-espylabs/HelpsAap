@@ -18,5 +18,6 @@ data class LoginResponseData(
     val lat: String = "",
     val long: String = "",
     val areaname: String = "",
-    val language: String = ""
+    val language: String = "",
+    val businessname: String = ""
 )
