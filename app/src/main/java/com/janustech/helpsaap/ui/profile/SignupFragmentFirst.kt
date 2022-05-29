@@ -130,8 +130,6 @@ class SignupFragmentFirst : BaseFragmentWithBinding<FragmentRegisterBinding>(R.l
                 isZoomControlsEnabled = true
                 setAllGesturesEnabled(true)
             }
-//            setMinZoomPreference(1F)
-//            setMinZoomPreference(15F)
 
             handlePermission(AppPermission.ACCESS_FINE_LOCATION,
                 onGranted = {
