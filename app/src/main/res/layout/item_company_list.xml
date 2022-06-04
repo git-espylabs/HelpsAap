@@ -21,9 +21,8 @@
             app:layout_constraintStart_toStartOf="parent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:elevation="8dp"
-            app:cardElevation="8dp"
             app:cardUseCompatPadding="true"
+            app:cardElevation="4dp"
             app:cardCornerRadius="@dimen/bg_rectangle_radius_11"
             app:contentPadding="7dp">
 

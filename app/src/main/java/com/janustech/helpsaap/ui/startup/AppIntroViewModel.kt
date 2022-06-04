@@ -26,7 +26,7 @@ class AppIntroViewModel
     var userLocationId = ""
     var userLanguage = ""
     var userLanguageId = ""
-    var userSelectedCategory = ""
+    var userSelectedCategory = "1"
     var userSelectedCategoryName = ""
     var userData: UserData? = null
     var userNameIc = ""
@@ -169,7 +169,7 @@ class AppIntroViewModel
 
     fun getCompanies(){
         viewModelScope.launch {
-            appIntroUseCase.getCompanyList(CompanyListRequest(userSelectedCategory))
+            appIntroUseCase.getCompanyList(CompanyListRequest(userSelectedCategory, userLocationId))
                 .onStart { _companyListReceiver.value = Resource.loading() }
                 .collect { apiResponse ->
                     apiResponse.let{

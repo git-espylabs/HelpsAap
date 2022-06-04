@@ -1,10 +1,7 @@
 package com.janustech.helpsaap.network
 
 import com.janustech.helpsaap.network.requests.*
-import com.janustech.helpsaap.network.response.ApiResponse
-import com.janustech.helpsaap.network.response.MultipartApiResponse
-import com.janustech.helpsaap.network.response.NotificationResponseData
-import com.janustech.helpsaap.network.response.PostedAdsResponseData
+import com.janustech.helpsaap.network.response.*
 import okhttp3.MultipartBody
 import retrofit2.http.*
 
@@ -45,7 +42,7 @@ interface HelpsAapApis {
     @POST(HttpEndPoints.ADD_OFFER)
     suspend fun submitOffer(
         @Body addOfferRequest: AddOfferRequest
-    ): ApiResponse<String>
+    ): ApiResponse<CommonResponse>
 
     @Multipart
     @POST(HttpEndPoints.EDIT_PROFILE)

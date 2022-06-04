@@ -48,11 +48,17 @@ class AppIntroSearchListFragment: BaseFragmentWithBinding<FragmentAppIntroSearch
             }
 
             if (AppPreferences.userId.isNotEmpty()){
-                btnLogin.visibility = View.GONE
+                btnLogin.visibility = View.INVISIBLE
+                btnLogin.isEnabled = false
+
                 btnProfileIco.visibility = View.VISIBLE
+                btnProfileIco.isEnabled = true
             }else{
                 btnLogin.visibility = View.VISIBLE
-                btnProfileIco.visibility = View.GONE
+                btnLogin.isEnabled = true
+
+                btnProfileIco.visibility = View.INVISIBLE
+                btnProfileIco.isEnabled = false
             }
         }
 
@@ -89,6 +95,7 @@ class AppIntroSearchListFragment: BaseFragmentWithBinding<FragmentAppIntroSearch
 
     private fun setCompanyList(companyList: List<CompanyDataModel>?){
         if (companyList != null && companyList.isNotEmpty()){
+
             binding.cmpnyAdapter = CompanyListAdapter(companyList){ model, action ->
                 when(action){
                     "call" ->{
@@ -118,6 +125,8 @@ class AppIntroSearchListFragment: BaseFragmentWithBinding<FragmentAppIntroSearch
                     }
                 }
             }
+        }else{
+            showAlertDialog("No companies found!")
         }
     }
 

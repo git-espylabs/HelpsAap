@@ -52,7 +52,7 @@
                 android:textSize="@dimen/text_size_custom_18"
                 android:layout_height="@dimen/custom_dimen_48"
                 android:background="@drawable/rounded_rect_grey_filled"
-                android:hint="@string/text_hint_username"
+                android:hint="@string/text_hint_mob"
                 android:imeOptions="actionNext"
                 android:inputType="text"
                 android:text="@={viewModel.userName}"/>

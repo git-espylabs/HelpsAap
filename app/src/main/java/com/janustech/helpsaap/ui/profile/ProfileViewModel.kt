@@ -141,65 +141,69 @@ class ProfileViewModel @Inject constructor(
                 "image: " + regMob + "\n"
         )
         viewModelScope.launch {
-            val partPhone = MultiPartRequestHelper.createRequestBody("phonenumber", regMob)
-            val partPassword = MultiPartRequestHelper.createRequestBody("password", regPass)
-            val partCusname = MultiPartRequestHelper.createRequestBody("cusname", regName)
-            val partEmail = MultiPartRequestHelper.createRequestBody("email", regEmail)
-            val partLocationPinut = MultiPartRequestHelper.createRequestBody("locationpinut", regPin)
-            val partBusinessNname= MultiPartRequestHelper.createRequestBody("businessname", regCmpny)
-            val partWhatsapp = MultiPartRequestHelper.createRequestBody("whatsapp", regWhatsapNo)
-            val partWebsite = MultiPartRequestHelper.createRequestBody("website", regWeb)
-            val partCategoryid = MultiPartRequestHelper.createRequestBody("categoryid", regCategoryId)
-            val partTransactionId = MultiPartRequestHelper.createRequestBody("transaction_id", ((100000..1000000).random()).toString())
-            val partAmount = MultiPartRequestHelper.createRequestBody("amount", "99")
-            val partLatitude = MultiPartRequestHelper.createRequestBody("latitude", regLatitude)
-            val partLongitude = MultiPartRequestHelper.createRequestBody("longitube", regLongitude)
-            val partArea = MultiPartRequestHelper.createRequestBody("areaname", regLocalArea)
-            val partLanguage = MultiPartRequestHelper.createRequestBody("language", AppPreferences.userLanguageId)
-            val partOffer = MultiPartRequestHelper.createRequestBody("offerpercentage", regOfferPerc)
-            val partFile = MultiPartRequestHelper.createFileRequestBody(regImage, "image", context)
+            try {
+                val partPhone = MultiPartRequestHelper.createRequestBody("phonenumber", regMob)
+                val partPassword = MultiPartRequestHelper.createRequestBody("password", regPass)
+                val partCusname = MultiPartRequestHelper.createRequestBody("cusname", regName)
+                val partEmail = MultiPartRequestHelper.createRequestBody("email", regEmail)
+                val partLocationPinut = MultiPartRequestHelper.createRequestBody("locationpinut", regPin)
+                val partBusinessNname= MultiPartRequestHelper.createRequestBody("businessname", regCmpny)
+                val partWhatsapp = MultiPartRequestHelper.createRequestBody("whatsapp", regWhatsapNo)
+                val partWebsite = MultiPartRequestHelper.createRequestBody("website", regWeb)
+                val partCategoryid = MultiPartRequestHelper.createRequestBody("categoryid", regCategoryId)
+                val partTransactionId = MultiPartRequestHelper.createRequestBody("transaction_id", ((100000..1000000).random()).toString())
+                val partAmount = MultiPartRequestHelper.createRequestBody("amount", "99")
+                val partLatitude = MultiPartRequestHelper.createRequestBody("latitude", regLatitude)
+                val partLongitude = MultiPartRequestHelper.createRequestBody("longitube", regLongitude)
+                val partArea = MultiPartRequestHelper.createRequestBody("areaname", regLocalArea)
+                val partLanguage = MultiPartRequestHelper.createRequestBody("language", AppPreferences.userLanguageId)
+                val partOffer = MultiPartRequestHelper.createRequestBody("offerpercentage", regOfferPerc)
+                val partFile = MultiPartRequestHelper.createFileRequestBody(regImage, "image", context)
 
-            profileUseCase.register(
-                partPhone,
-                partPassword,
-                partCusname,
-                partEmail,
-                partLocationPinut,
-                partBusinessNname,
-                partWhatsapp,
-                partWebsite,
-                partCategoryid,
-                partTransactionId,
-                partAmount,
-                partLatitude,
-                partLongitude,
-                partArea,
-                partLanguage,
-                partOffer,
-                partFile
-            )
-                .onStart { _registerResponseReceiver.value = Resource.loading() }
-                .collect {  apiResponse ->
-                    apiResponse.let {
-                        it.data?.let { resp ->
-                            CommonUtils.writeLogFile(context, "registerApp() -> Response: \n$resp")
-                            if (resp.isResponseSuccess() && resp.data != null && resp.data.isNotEmpty()) {
-                                CommonUtils.writeLogFile(context, "registerApp() -> Response: ResponseSuccess -> data:\n" + resp.data.toString())
-                                AppPreferences.userImageDisk = regImage
-                                _registerResponseReceiver.value = apiResponse
-                            }else if (resp.isResponseSuccess().not()){
-                                CommonUtils.writeLogFile(context, "registerApp() -> Response: ResponseFail:\n" + resp.message )
-                                _registerResponseReceiver.value = Resource.dataError(resp.message)
-                            }else{
-                                CommonUtils.writeLogFile(context, "registerApp() -> Response Error: unknown")
-                                _registerResponseReceiver.value = Resource.dataError("Failed to register! Try again.")
+                profileUseCase.register(
+                    partPhone,
+                    partPassword,
+                    partCusname,
+                    partEmail,
+                    partLocationPinut,
+                    partBusinessNname,
+                    partWhatsapp,
+                    partWebsite,
+                    partCategoryid,
+                    partTransactionId,
+                    partAmount,
+                    partLatitude,
+                    partLongitude,
+                    partArea,
+                    partLanguage,
+                    partOffer,
+                    partFile
+                )
+                    .onStart { _registerResponseReceiver.value = Resource.loading() }
+                    .collect {  apiResponse ->
+                        apiResponse.let {
+                            it.data?.let { resp ->
+                                CommonUtils.writeLogFile(context, "registerApp() -> Response: \n$resp")
+                                if (resp.isResponseSuccess() && resp.data != null && resp.data.isNotEmpty()) {
+                                    CommonUtils.writeLogFile(context, "registerApp() -> Response: ResponseSuccess -> data:\n" + resp.data.toString())
+                                    AppPreferences.userImageDisk = regImage
+                                    _registerResponseReceiver.value = apiResponse
+                                }else if (resp.isResponseSuccess().not()){
+                                    CommonUtils.writeLogFile(context, "registerApp() -> Response: ResponseFail:\n" + resp.message )
+                                    _registerResponseReceiver.value = Resource.dataError(resp.message)
+                                }else{
+                                    CommonUtils.writeLogFile(context, "registerApp() -> Response Error: unknown")
+                                    _registerResponseReceiver.value = Resource.dataError("Failed to register! Try again.")
+                                }
+                            }?: run {
+                                CommonUtils.writeLogFile(context, "registerApp() -> Response Null")
+                                _registerResponseReceiver.value = Resource.dataError("Invalid server response!")
                             }
-                        }?: run {
-                            CommonUtils.writeLogFile(context, "registerApp() -> Response Null")
-                            _registerResponseReceiver.value = Resource.dataError("Invalid server response!")
                         }
                     }
-                }
+            } catch (e: Exception) {
+                _registerResponseReceiver.value = Resource.dataError("Something went wrong! Please check your inputs")
+            }
 
         }
     }

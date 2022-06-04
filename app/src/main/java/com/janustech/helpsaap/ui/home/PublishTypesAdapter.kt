@@ -3,6 +3,7 @@ package com.janustech.helpsaap.ui.home
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.library.baseAdapters.BR
@@ -20,46 +21,58 @@ class PublishTypesAdapter internal constructor(private val context: Context, pri
                 setVariable(BR.model, obj)
                 executePendingBindings()
 
-//                btnPrice1.setTextColor(ContextCompat.getColor(context, R.color.white))
-//                btnPrice1.setBackgroundResource(R.drawable.rounded_rect_green_filled)
+                if (obj.isSelected > 0){
+                    when(obj.isSelected){
+                        1 -> {
+                            setViewSelector(isSelected = true, btnPrice1)
+                            setViewSelector(isSelected = false, btnPrice2)
+                            setViewSelector(isSelected = false, btnPrice3)
+                        }
+                        2 -> {
+                            setViewSelector(isSelected = true, btnPrice2)
+                            setViewSelector(isSelected = false, btnPrice1)
+                            setViewSelector(isSelected = false, btnPrice3)
+                        }
+                        3 -> {
+                            setViewSelector(isSelected = true, btnPrice3)
+                            setViewSelector(isSelected = false, btnPrice1)
+                            setViewSelector(isSelected = false, btnPrice2)
+                        }
+                    }
+                }else{
+                    setViewSelector(isSelected = false, btnPrice1)
+                    setViewSelector(isSelected = false, btnPrice2)
+                    setViewSelector(isSelected = false, btnPrice3)
+                }
 
                 btnPrice1.setOnClickListener { v->
-                    btnPrice1.setTextColor(ContextCompat.getColor(context, R.color.white))
-                    btnPrice1.setBackgroundResource(R.drawable.rounded_rect_green_filled)
-
-                    btnPrice2.setTextColor(ContextCompat.getColor(context, R.color.black))
-                    btnPrice2.setBackgroundResource(R.drawable.rounded_rect_grey_filled)
-
-                    btnPrice3.setTextColor(ContextCompat.getColor(context, R.color.black))
-                    btnPrice3.setBackgroundResource(R.drawable.rounded_rect_grey_filled)
+                    setViewSelector(isSelected = true, btnPrice1)
+                    setViewSelector(isSelected = false, btnPrice2)
+                    setViewSelector(isSelected = false, btnPrice3)
+                    obj.isSelected = 1
 
                     adsPackageSelectedListener(obj.publishTypeId, obj.publishTypeIdName, obj.packageList[0].packageId, obj.packageList[0].packagePrice, obj.packageList[0].packageDuration)
+                    notifyDataSetChanged()
                 }
 
                 btnPrice2.setOnClickListener {
-                    btnPrice2.setTextColor(ContextCompat.getColor(context, R.color.white))
-                    btnPrice2.setBackgroundResource(R.drawable.rounded_rect_green_filled)
-
-                    btnPrice1.setTextColor(ContextCompat.getColor(context, R.color.black))
-                    btnPrice1.setBackgroundResource(R.drawable.rounded_rect_grey_filled)
-
-                    btnPrice3.setTextColor(ContextCompat.getColor(context, R.color.black))
-                    btnPrice3.setBackgroundResource(R.drawable.rounded_rect_grey_filled)
+                    setViewSelector(isSelected = true, btnPrice2)
+                    setViewSelector(isSelected = false, btnPrice1)
+                    setViewSelector(isSelected = false, btnPrice3)
+                    obj.isSelected = 2
 
                     adsPackageSelectedListener(obj.publishTypeId, obj.publishTypeIdName, obj.packageList[1].packageId, obj.packageList[1].packagePrice, obj.packageList[1].packageDuration)
+                    notifyDataSetChanged()
                 }
 
                 btnPrice3.setOnClickListener {
-                    btnPrice3.setTextColor(ContextCompat.getColor(context, R.color.white))
-                    btnPrice3.setBackgroundResource(R.drawable.rounded_rect_green_filled)
-
-                    btnPrice1.setTextColor(ContextCompat.getColor(context, R.color.black))
-                    btnPrice1.setBackgroundResource(R.drawable.rounded_rect_grey_filled)
-
-                    btnPrice2.setTextColor(ContextCompat.getColor(context, R.color.black))
-                    btnPrice2.setBackgroundResource(R.drawable.rounded_rect_grey_filled)
+                    setViewSelector(isSelected = true, btnPrice3)
+                    setViewSelector(isSelected = false, btnPrice1)
+                    setViewSelector(isSelected = false, btnPrice2)
+                    obj.isSelected = 3
 
                     adsPackageSelectedListener(obj.publishTypeId, obj.publishTypeIdName, obj.packageList[2].packageId, obj.packageList[2].packagePrice, obj.packageList[2].packageDuration)
+                    notifyDataSetChanged()
                 }
             }
         }
@@ -84,5 +97,15 @@ class PublishTypesAdapter internal constructor(private val context: Context, pri
 
     override fun getItemCount(): Int {
         return mData.size
+    }
+
+    private fun setViewSelector(isSelected: Boolean, view: TextView){
+        if (isSelected){
+            view.setTextColor(ContextCompat.getColor(context, R.color.white))
+            view.setBackgroundResource(R.drawable.rounded_rect_green_filled)
+        }else{
+            view.setTextColor(ContextCompat.getColor(context, R.color.black))
+            view.setBackgroundResource(R.drawable.rounded_rect_grey_filled)
+        }
     }
 }

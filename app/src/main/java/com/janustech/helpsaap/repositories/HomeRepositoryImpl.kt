@@ -3,10 +3,7 @@ package com.janustech.helpsaap.repositories
 import com.janustech.helpsaap.network.HelpsAapApis
 import com.janustech.helpsaap.network.Resource
 import com.janustech.helpsaap.network.requests.*
-import com.janustech.helpsaap.network.response.ApiResponse
-import com.janustech.helpsaap.network.response.MultipartApiResponse
-import com.janustech.helpsaap.network.response.NotificationResponseData
-import com.janustech.helpsaap.network.response.PostedAdsResponseData
+import com.janustech.helpsaap.network.response.*
 import com.janustech.helpsaap.network.safeApiCall
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -74,7 +71,7 @@ class HomeRepositoryImpl(private val apiService: HelpsAapApis): HomeRepository {
         }.flowOn(Dispatchers.IO)
     }
 
-    override fun submitOffer(addOfferRequest: AddOfferRequest): Flow<Resource<ApiResponse<String>>> {
+    override fun submitOffer(addOfferRequest: AddOfferRequest): Flow<Resource<ApiResponse<CommonResponse>>> {
         return flow {
             emit(safeApiCall { apiService.submitOffer(
                 addOfferRequest

@@ -83,8 +83,8 @@ class AppHomeViewModel @Inject constructor(private val appIntroUseCase: AppIntro
     val notificationsListReceiver: LiveData<Resource<ApiResponse<List<NotificationResponseData>>>>
         get() = _notificationsListReceiver
 
-    var _offerSubmitStatusReceiver = MutableLiveData<Resource<ApiResponse<String>>>()
-    var offerSubmitStatusReceiver: LiveData<Resource<ApiResponse<String>>>? = null
+    var _offerSubmitStatusReceiver = MutableLiveData<Resource<ApiResponse<CommonResponse>>>()
+    var offerSubmitStatusReceiver: LiveData<Resource<ApiResponse<CommonResponse>>>? = null
         get() = _offerSubmitStatusReceiver
 
     var _editSubmitStatusReceiver_ = MutableLiveData<Resource<MultipartApiResponse>>()
@@ -202,34 +202,38 @@ class AppHomeViewModel @Inject constructor(private val appIntroUseCase: AppIntro
 
     fun postDeal(context: Context){
         viewModelScope.launch {
-            val partCusId = MultiPartRequestHelper.createRequestBody("cus_id", userData?.userId?:"")
-            val partStartDate = MultiPartRequestHelper.createRequestBody("start_date", selectedFromDealDate)
-            val partEndDate = MultiPartRequestHelper.createRequestBody("enddate", selectedToDealDate)
-            val partLocations = MultiPartRequestHelper.createRequestBody("locations", selectedDealLocations.joinToString(separator = ","))
-            val partFile = MultiPartRequestHelper.createFileRequestBody(dealOfDayImage, "image", context)
+            try {
+                val partCusId = MultiPartRequestHelper.createRequestBody("cus_id", userData?.userId?:"")
+                val partStartDate = MultiPartRequestHelper.createRequestBody("start_date", selectedFromDealDate)
+                val partEndDate = MultiPartRequestHelper.createRequestBody("enddate", selectedToDealDate)
+                val partLocations = MultiPartRequestHelper.createRequestBody("locations", selectedDealLocations.joinToString(separator = ","))
+                val partFile = MultiPartRequestHelper.createFileRequestBody(dealOfDayImage, "image", context)
 
-            homeUseCases.postDeal(
-                partCusId,
-                partStartDate,
-                partEndDate,
-                partLocations,
-                partFile
-            )
-                .onStart { _postDealResponseReceiver.value = Resource.loading() }
-                .collect {  apiResponse ->
-                    apiResponse.let {
-                    it.data?.let { resp ->
-                        if (resp.isResponseSuccess() && resp.data != null && resp.data.isNotEmpty()) {
-                            _postDealResponseReceiver.value = apiResponse
-                        }else if (resp.isResponseSuccess().not()){
-                            _postDealResponseReceiver.value = Resource.dataError(resp.message)
-                        }else{
-                            _postDealResponseReceiver.value = Resource.dataError("Failed to post deal! Try again.")
+                homeUseCases.postDeal(
+                    partCusId,
+                    partStartDate,
+                    partEndDate,
+                    partLocations,
+                    partFile
+                )
+                    .onStart { _postDealResponseReceiver.value = Resource.loading() }
+                    .collect {  apiResponse ->
+                        apiResponse.let {
+                        it.data?.let { resp ->
+                            if (resp.isResponseSuccess() && resp.data != null && resp.data.isNotEmpty()) {
+                                _postDealResponseReceiver.value = apiResponse
+                            }else if (resp.isResponseSuccess().not()){
+                                _postDealResponseReceiver.value = Resource.dataError(resp.message)
+                            }else{
+                                _postDealResponseReceiver.value = Resource.dataError("Failed to post deal! Try again.")
+                            }
+                        }?: run {
+                            _postDealResponseReceiver.value = Resource.dataError("Invalid server response!")
                         }
-                    }?: run {
-                        _postDealResponseReceiver.value = Resource.dataError("Invalid server response!")
-                    }
-                } }
+                    } }
+            } catch (e: Exception) {
+                _postDealResponseReceiver.value = Resource.dataError("Something went wrong! Please check your inputs")
+            }
         }
     }
 
@@ -269,42 +273,46 @@ class AppHomeViewModel @Inject constructor(private val appIntroUseCase: AppIntro
 
     fun postAds(context: Context){
         viewModelScope.launch {
-            val partCusId = MultiPartRequestHelper.createRequestBody("cus_id", userData?.userId?:"")
-            val partStartDate = MultiPartRequestHelper.createRequestBody("start_date", selectedFromAdsDate)
-            val partEndDate = MultiPartRequestHelper.createRequestBody("end_date", selectedToAdsDate)
-            val partTxId = MultiPartRequestHelper.createRequestBody("transaction_id", ((100000..1000000).random()).toString())
-            val partAmount = MultiPartRequestHelper.createRequestBody("amount", selectedAMount)
-            val partAdsName = MultiPartRequestHelper.createRequestBody("ads_name", "nil")
-            val partLocationType = MultiPartRequestHelper.createRequestBody("locationtype", selectedPublicLocationId)
-            val partPublishLocId = MultiPartRequestHelper.createRequestBody("publish_loc", selectedPublicLocationId)
-            val partFile = MultiPartRequestHelper.createFileRequestBody(adsImage, "image", context)
+            try {
+                val partCusId = MultiPartRequestHelper.createRequestBody("cus_id", userData?.userId?:"")
+                val partStartDate = MultiPartRequestHelper.createRequestBody("start_date", selectedFromAdsDate)
+                val partEndDate = MultiPartRequestHelper.createRequestBody("end_date", selectedToAdsDate)
+                val partTxId = MultiPartRequestHelper.createRequestBody("transaction_id", ((100000..1000000).random()).toString())
+                val partAmount = MultiPartRequestHelper.createRequestBody("amount", selectedAMount)
+                val partAdsName = MultiPartRequestHelper.createRequestBody("ads_name", "nil")
+                val partLocationType = MultiPartRequestHelper.createRequestBody("locationtype", selectedPublicLocationId)
+                val partPublishLocId = MultiPartRequestHelper.createRequestBody("publish_loc", selectedPublicLocationId)
+                val partFile = MultiPartRequestHelper.createFileRequestBody(adsImage, "image", context)
 
-            homeUseCases.postAds(
-                partCusId,
-                partStartDate,
-                partEndDate,
-                partTxId,
-                partAmount,
-                partAdsName,
-                partLocationType,
-                partPublishLocId,
-                partFile
-            )
-                .onStart { _publishAdsResponseReceiver.value = Resource.loading() }
-                .collect {  apiResponse ->
-                    apiResponse.let {
-                        it.data?.let { resp ->
-                            if (resp.isResponseSuccess() && resp.data != null && resp.data.isNotEmpty()) {
-                                _publishAdsResponseReceiver.value = apiResponse
-                            }else if (resp.isResponseSuccess().not()){
-                                _publishAdsResponseReceiver.value = Resource.dataError(resp.message)
-                            }else{
-                                _publishAdsResponseReceiver.value = Resource.dataError("Failed to post deal! Try again.")
+                homeUseCases.postAds(
+                    partCusId,
+                    partStartDate,
+                    partEndDate,
+                    partTxId,
+                    partAmount,
+                    partAdsName,
+                    partLocationType,
+                    partPublishLocId,
+                    partFile
+                )
+                    .onStart { _publishAdsResponseReceiver.value = Resource.loading() }
+                    .collect {  apiResponse ->
+                        apiResponse.let {
+                            it.data?.let { resp ->
+                                if (resp.isResponseSuccess() && resp.data != null && resp.data.isNotEmpty()) {
+                                    _publishAdsResponseReceiver.value = apiResponse
+                                }else if (resp.isResponseSuccess().not()){
+                                    _publishAdsResponseReceiver.value = Resource.dataError(resp.message)
+                                }else{
+                                    _publishAdsResponseReceiver.value = Resource.dataError("Failed to post deal! Try again.")
+                                }
+                            }?: run {
+                                _publishAdsResponseReceiver.value = Resource.dataError("Invalid server response!")
                             }
-                        }?: run {
-                            _publishAdsResponseReceiver.value = Resource.dataError("Invalid server response!")
-                        }
-                    } }
+                        } }
+            } catch (e: Exception) {
+                _publishAdsResponseReceiver.value = Resource.dataError("Something went wrong! Please check your inputs")
+            }
         }
     }
 
@@ -347,37 +355,42 @@ class AppHomeViewModel @Inject constructor(private val appIntroUseCase: AppIntro
 
     fun editProfile(context: Context){
         viewModelScope.launch {
-            val partCusId = MultiPartRequestHelper.createRequestBody("customer_id", editUserID)
-            val partCusname = MultiPartRequestHelper.createRequestBody("cusname", editUsername)
-            val partMob = MultiPartRequestHelper.createRequestBody("phone_number", editEditMob)
-            val partLanguage = MultiPartRequestHelper.createRequestBody("language", editLangId)
-            val partFile = MultiPartRequestHelper.createFileRequestBody(editProfImg, "image", context)
 
-            homeUseCases.editProfile(
-                partCusId, partCusname, partMob, partLanguage, partFile
-            )
-                .onStart { _editSubmitStatusReceiver.value = Resource.loading() }
-                .collect {  apiResponse ->
-                    apiResponse.let {
-                        it.data?.let { resp ->
-                            CommonUtils.writeLogFile(context, "editProfile() -> Response: \n$resp")
-                            if (resp.isResponseSuccess() && resp.data != null && resp.data.isNotEmpty()) {
-                                CommonUtils.writeLogFile(context, "editProfile() -> Response: ResponseSuccess -> data:\n" + resp.data.toString())
-                                AppPreferences.userImageDisk = editProfImg
-                                _editSubmitStatusReceiver_.value = apiResponse
-                            }else if (resp.isResponseSuccess().not()){
-                                CommonUtils.writeLogFile(context, "editProfile() -> Response: ResponseFail:\n" + resp.message )
-                                _editSubmitStatusReceiver.value = Resource.dataError(resp.message)
-                            }else{
-                                CommonUtils.writeLogFile(context, "editProfile() -> Response Error: unknown")
-                                _editSubmitStatusReceiver.value = Resource.dataError("Failed to register! Try again.")
+            try {
+                val partCusId = MultiPartRequestHelper.createRequestBody("customer_id", editUserID)
+                val partCusname = MultiPartRequestHelper.createRequestBody("cusname", editUsername)
+                val partMob = MultiPartRequestHelper.createRequestBody("phone_number", editEditMob)
+                val partLanguage = MultiPartRequestHelper.createRequestBody("language", editLangId)
+                val partFile = MultiPartRequestHelper.createFileRequestBody(editProfImg, "image", context)
+
+                homeUseCases.editProfile(
+                    partCusId, partCusname, partMob, partLanguage, partFile
+                )
+                    .onStart { _editSubmitStatusReceiver.value = Resource.loading() }
+                    .collect {  apiResponse ->
+                        apiResponse.let {
+                            it.data?.let { resp ->
+                                CommonUtils.writeLogFile(context, "editProfile() -> Response: \n$resp")
+                                if (resp.isResponseSuccess() && resp.data != null && resp.data.isNotEmpty()) {
+                                    CommonUtils.writeLogFile(context, "editProfile() -> Response: ResponseSuccess -> data:\n" + resp.data.toString())
+                                    AppPreferences.userImageDisk = editProfImg
+                                    _editSubmitStatusReceiver_.value = apiResponse
+                                }else if (resp.isResponseSuccess().not()){
+                                    CommonUtils.writeLogFile(context, "editProfile() -> Response: ResponseFail:\n" + resp.message )
+                                    _editSubmitStatusReceiver.value = Resource.dataError(resp.message)
+                                }else{
+                                    CommonUtils.writeLogFile(context, "editProfile() -> Response Error: unknown")
+                                    _editSubmitStatusReceiver.value = Resource.dataError("Failed to register! Try again.")
+                                }
+                            }?: run {
+                                CommonUtils.writeLogFile(context, "editProfile() -> Response Null")
+                                _editSubmitStatusReceiver_.value = Resource.dataError("Invalid server response!")
                             }
-                        }?: run {
-                            CommonUtils.writeLogFile(context, "editProfile() -> Response Null")
-                            _editSubmitStatusReceiver_.value = Resource.dataError("Invalid server response!")
                         }
                     }
-                }
+            } catch (e: Exception) {
+                _editSubmitStatusReceiver_.value = Resource.dataError("Something went wrong! Please check your inputs")
+            }
 
         }
     }

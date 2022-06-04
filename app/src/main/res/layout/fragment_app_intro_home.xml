@@ -74,7 +74,7 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="12dp"
                 android:id="@+id/btnProfileIco"
-                android:visibility="gone"
+                android:visibility="invisible"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:text="@={viewModel.userNameIc}"
@@ -199,6 +199,13 @@
                 app:layout_constraintTop_toBottomOf="@+id/rvAds"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"/>
+
+            <androidx.constraintlayout.widget.Group
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                app:constraint_referenced_ids="tvPromptRegister,btnRegister"
+                android:id="@+id/groupSignupPrompt" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

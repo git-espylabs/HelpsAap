@@ -15,26 +15,23 @@ object MultiPartRequestHelper {
 
     const val PREFIX = "stream2file"
     const val SUFFIX = ".tmp"
+    var placeHolderFile = "placeholder.png"
 
     fun createFileRequestBody(imageFile: String?, fileName: String, context: Context): MultipartBody.Part {
         var file: File? = null
         var inputStream: InputStream? = null
-        var placeHolderFile = "placeholder.png"
-        var fileExtn = imageFile?.substring(imageFile.lastIndexOf("."))
 
-        if ((imageFile != null && imageFile.isNotEmpty()) && fileExtn != SUFFIX) {
-            inputStream  = FileInputStream(imageFile);
-        } else {
-            val am = context.assets
-            try {
-                if (fileExtn == SUFFIX){
-                    placeHolderFile = "avatar.jpg"
-                }
-                inputStream = am.open("defaults/$placeHolderFile")
-            } catch (e: IOException) {
-                e.printStackTrace()
+        inputStream = if ((imageFile != null && imageFile.isNotEmpty())) {
+            val fileExtn =imageFile.substring(imageFile.lastIndexOf("."))
+            if (fileExtn !=SUFFIX) {
+                FileInputStream(imageFile)
+            } else {
+                getPlaceHolderFromAssets(context)
             }
+        } else {
+            getPlaceHolderFromAssets(context)
         }
+
         val bin = BufferedInputStream(inputStream)
         file = stream2file(bin)
 
@@ -42,6 +39,16 @@ object MultiPartRequestHelper {
 
 
         return createFormData(fileName, file.name, requestFile)
+    }
+
+    private fun getPlaceHolderFromAssets(context: Context): InputStream?{
+        return try {
+            val am = context.assets
+            am.open("defaults/$placeHolderFile")
+        } catch (e: IOException) {
+            e.printStackTrace()
+            return null
+        }
     }
 
     fun createFileRequestBody(imageFile: String, fileName: String): MultipartBody.Part{

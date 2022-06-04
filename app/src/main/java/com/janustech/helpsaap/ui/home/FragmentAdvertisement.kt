@@ -165,37 +165,43 @@ class FragmentAdvertisement: BaseFragmentWithBinding<FragmentAdvertisementBindin
         val publishList = arrayListOf<PublishTypeModel>()
         val statePacks = listOf(
             AdsPackageModel("1","₹ 99/Month", "99", 1 ),
-            AdsPackageModel("2","₹ 149/Month", "149", 2 ),
-            AdsPackageModel("3","₹ 199/Month", "199", 3 ),
+            AdsPackageModel("2","₹ 149/2 Months", "149", 2 ),
+            AdsPackageModel("3","₹ 199/3 Months", "199", 3 ),
         )
         val districtPacks = listOf(
             AdsPackageModel("1","₹ 89/Month", "89", 1 ),
-            AdsPackageModel("2","₹ 139/Month", "139", 2 ),
-            AdsPackageModel("3","₹ 189/Month", "189", 3 ),
+            AdsPackageModel("2","₹ 139/2 Months", "139", 2 ),
+            AdsPackageModel("3","₹ 189/3 Months", "189", 3 ),
         )
         val corporationPacks = listOf(
             AdsPackageModel("1","₹ 79/Month", "79", 1 ),
-            AdsPackageModel("2","₹ 129/Month", "129", 2 ),
-            AdsPackageModel("3","₹ 179/Month", "179", 3 ),
+            AdsPackageModel("2","₹ 129/2 Months", "129", 2 ),
+            AdsPackageModel("3","₹ 179/3 Months", "179", 3 ),
         )
         val municipalityPacks = listOf(
             AdsPackageModel("1","₹ 89/Month", "89", 1 ),
-            AdsPackageModel("2","₹ 139/Month", "139", 2 ),
-            AdsPackageModel("3","₹ 189/Month", "189", 3 ),
+            AdsPackageModel("2","₹ 139/2 Months", "139", 2 ),
+            AdsPackageModel("3","₹ 189/3 Months", "189", 3 ),
         )
         val panchayathPacks = listOf(
             AdsPackageModel("1","₹ 49/Month", "49", 1 ),
-            AdsPackageModel("2","₹ 99/Month", "99", 2 ),
-            AdsPackageModel("3","₹ 149/Month", "149", 3 ),
+            AdsPackageModel("2","₹ 99/2 Months", "99", 2 ),
+            AdsPackageModel("3","₹ 149/3 Months", "149", 3 ),
         )
-        publishList.add(PublishTypeModel("4", "State", statePacks))
-        publishList.add(PublishTypeModel("5", "District", districtPacks))
-        publishList.add(PublishTypeModel("3", "Corporation", corporationPacks))
-        publishList.add(PublishTypeModel("2", "Municipality", municipalityPacks))
-        publishList.add(PublishTypeModel("1", "Grama Panchayath", panchayathPacks))
+        publishList.add(PublishTypeModel("4", "State", statePacks, 0))
+        publishList.add(PublishTypeModel("5", "District", districtPacks, 0))
+        publishList.add(PublishTypeModel("3", "Corporation", corporationPacks, 0))
+        publishList.add(PublishTypeModel("2", "Municipality", municipalityPacks, 0))
+        publishList.add(PublishTypeModel("1", "Grama Panchayath", panchayathPacks, 0))
 
         binding.apply {
             publishTypesAdapter = PublishTypesAdapter(requireContext(), publishList){ packageTypeId, packageTypeName, _, packagePrice, packageDuration ->
+
+                publishList.forEachIndexed{ index, obj ->
+                    if (obj.isSelected > 0 && obj.publishTypeId!=packageTypeId){
+                        publishList[index].isSelected = 0
+                    }
+                }
                 appHomeViewModel.selectedPublicLocationId = packageTypeId
                 appHomeViewModel.selectedPublicLocationType = packageTypeName
                 appHomeViewModel.selectedAMount = packagePrice

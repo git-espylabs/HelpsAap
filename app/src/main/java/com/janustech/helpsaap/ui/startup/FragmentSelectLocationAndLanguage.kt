@@ -142,7 +142,7 @@ class FragmentSelectLocationAndLanguage: BaseFragmentWithBinding<FragmentSelectL
                     }
                     (activity as AppIntroActivity).hideKeyboard()
 
-                    if (appIntroViewModel.userLanguageId.isNotEmpty()) {
+                    if (AppPreferences.userLanguageId.isNotEmpty()) {
                         findNavController().navigate(FragmentSelectLocationAndLanguageDirections.actionSelectLocationFragmentToAppIntroHome())
                     }else{
                         showSelectionDialogue(2)
@@ -180,7 +180,7 @@ class FragmentSelectLocationAndLanguage: BaseFragmentWithBinding<FragmentSelectL
 
                 }
 
-                if (appIntroViewModel.userLocationId.isNotEmpty()){
+                if (AppPreferences.userLocationId.isNotEmpty()){
                     findNavController().navigate(FragmentSelectLocationAndLanguageDirections.actionSelectLocationFragmentToAppIntroHome())
                 }else{
                     showSelectionDialogue(1)

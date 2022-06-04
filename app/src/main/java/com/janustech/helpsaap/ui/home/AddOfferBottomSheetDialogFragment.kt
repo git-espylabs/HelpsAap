@@ -46,8 +46,8 @@ class AddOfferBottomSheetDialogFragment(private val viewModel: AppHomeViewModel)
             }
 
             btnSubmit.setOnClickListener {
-                if (etPercent.text.toString().isNotEmpty() && etPercent.text.toString().toInt() > 0){
-                    viewModel.submitOffer(etPercent.text.toString())
+                if (etPercent.text.toString().isNotEmpty() && etPercent.text.toString().toDouble() > 0){
+                    viewModel.submitOffer(etPercent.text.toString().toDouble().toString())
                     dismiss()
                 }else{
                     Toast.makeText(requireContext(), "Please provide a valid input", Toast.LENGTH_SHORT).show()

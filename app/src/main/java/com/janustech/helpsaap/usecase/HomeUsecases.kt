@@ -5,10 +5,7 @@ import com.janustech.helpsaap.network.requests.AddCategoriesRequest
 import com.janustech.helpsaap.network.requests.AddOfferRequest
 import com.janustech.helpsaap.network.requests.EditProfileRequest
 import com.janustech.helpsaap.network.requests.PostedListRequest
-import com.janustech.helpsaap.network.response.ApiResponse
-import com.janustech.helpsaap.network.response.MultipartApiResponse
-import com.janustech.helpsaap.network.response.NotificationResponseData
-import com.janustech.helpsaap.network.response.PostedAdsResponseData
+import com.janustech.helpsaap.network.response.*
 import com.janustech.helpsaap.repositories.HomeRepository
 import com.janustech.helpsaap.repositories.ProfileRepository
 import kotlinx.coroutines.Dispatchers
@@ -83,7 +80,7 @@ class HomeUsecases@Inject constructor(
         }.flowOn(Dispatchers.IO)
     }
 
-    suspend fun submitOffer(addOfferRequest: AddOfferRequest):Flow<Resource<ApiResponse<String>>>{
+    suspend fun submitOffer(addOfferRequest: AddOfferRequest):Flow<Resource<ApiResponse<CommonResponse>>>{
         return flow {
             homeRepository.submitOffer(addOfferRequest).collect { emit(it) }
         }.flowOn(Dispatchers.IO)

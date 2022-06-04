@@ -2,10 +2,7 @@ package com.janustech.helpsaap.repositories
 
 import com.janustech.helpsaap.network.Resource
 import com.janustech.helpsaap.network.requests.*
-import com.janustech.helpsaap.network.response.ApiResponse
-import com.janustech.helpsaap.network.response.MultipartApiResponse
-import com.janustech.helpsaap.network.response.NotificationResponseData
-import com.janustech.helpsaap.network.response.PostedAdsResponseData
+import com.janustech.helpsaap.network.response.*
 import kotlinx.coroutines.flow.Flow
 import okhttp3.MultipartBody
 
@@ -34,7 +31,7 @@ interface HomeRepository {
 
     fun getNotifications():Flow<Resource<ApiResponse<List<NotificationResponseData>>>>
 
-    fun submitOffer(addOfferRequest: AddOfferRequest):Flow<Resource<ApiResponse<String>>>
+    fun submitOffer(addOfferRequest: AddOfferRequest):Flow<Resource<ApiResponse<CommonResponse>>>
 
     fun editProfile(
         customer_id: MultipartBody.Part,

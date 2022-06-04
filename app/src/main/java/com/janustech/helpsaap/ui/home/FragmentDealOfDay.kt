@@ -111,7 +111,25 @@ class FragmentDealOfDay: BaseFragmentWithBinding<FragmentDealOfDayBinding>(R.lay
                 showPhotoPickOption()
             }
             R.id.btnPost -> {
-                appHomeViewModel.postDeal(requireContext())
+                if (appHomeViewModel.dealOfDayImage.isEmpty()){
+                    showAlertDialog("Please select an Image")
+                }else if (appHomeViewModel.selectedDealLocations.isEmpty()){
+                    showAlertDialog("Please select a Location")
+                }else if (appHomeViewModel.selectedFromDealDate.isEmpty()){
+                    showAlertDialog("Please select a deal start date")
+                }else{
+                    val curDateString = selectedDateFrom
+                    val currentDate = SimpleDateFormat(DATE_FORMAT_SERVER, Locale.US).parse(curDateString)
+                    val expDateCal = Calendar.getInstance().apply {
+                        time = currentDate as Date
+                        add(Calendar.DAY_OF_MONTH,7)
+                    }
+                    val expDateString = SimpleDateFormat(DATE_FORMAT_SERVER, Locale.US).format(expDateCal.time)
+
+                    selectedDateTo = expDateString
+                    appHomeViewModel.selectedToDealDate = expDateString
+                    appHomeViewModel.postDeal(requireContext())
+                }
             }
 
         }

@@ -1,6 +1,5 @@
 package com.janustech.helpsaap.ui.startup
 
-import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -32,6 +31,7 @@ import com.janustech.helpsaap.ui.home.EditLocationBottomSheetDialogFragment
 import com.janustech.helpsaap.ui.profile.LoginActivity
 import com.janustech.helpsaap.utils.EditLocationListener
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Runnable
 
 @AndroidEntryPoint
 class AppIntroHomeFragment: BaseFragmentWithBinding<FragmentAppIntroHomeBinding>(R.layout.fragment_app_intro_home), EditLocationListener {
@@ -66,11 +66,21 @@ class AppIntroHomeFragment: BaseFragmentWithBinding<FragmentAppIntroHomeBinding>
             }
 
             if (AppPreferences.userId.isNotEmpty()){
-                btnLogin.visibility = View.GONE
+                btnLogin.visibility = View.INVISIBLE
+                btnLogin.isEnabled = false
+
                 btnProfileIco.visibility = View.VISIBLE
+                btnProfileIco.isEnabled = true
+
+                groupSignupPrompt.visibility = View.GONE
             }else{
                 btnLogin.visibility = View.VISIBLE
-                btnProfileIco.visibility = View.GONE
+                btnLogin.isEnabled = true
+
+                btnProfileIco.visibility = View.INVISIBLE
+                btnProfileIco.isEnabled = false
+
+                groupSignupPrompt.visibility = View.VISIBLE
             }
         }
 
@@ -113,7 +123,7 @@ class AppIntroHomeFragment: BaseFragmentWithBinding<FragmentAppIntroHomeBinding>
                 }
                 else ->{
                     (activity as AppIntroActivity).hideProgress()
-                    (activity as AppIntroActivity).showAlertDialog(it.message?:"Invalid Server Response")
+//                    (activity as AppIntroActivity).showAlertDialog(it.message?:"Invalid Server Response")
                     setDealsOfDay(listOf())
                 }
             }
@@ -133,7 +143,7 @@ class AppIntroHomeFragment: BaseFragmentWithBinding<FragmentAppIntroHomeBinding>
                 }
                 else ->{
                     (activity as AppIntroActivity).hideProgress()
-                    (activity as AppIntroActivity).showAlertDialog(it.message?:"Invalid Server Response")
+//                    (activity as AppIntroActivity).showAlertDialog(it.message?:"Invalid Server Response")
                     setAdsList(listOf())
                 }
             }
@@ -161,7 +171,7 @@ class AppIntroHomeFragment: BaseFragmentWithBinding<FragmentAppIntroHomeBinding>
                     }
                     else ->{
                         (activity as AppIntroActivity).hideProgress()
-                        (activity as AppIntroActivity).showAlertDialog(it.message?:"Invalid Server Response")
+//                        (activity as AppIntroActivity).showAlertDialog(it.message?:"Invalid Server Response")
                     }
                 }
             }
@@ -262,8 +272,10 @@ class AppIntroHomeFragment: BaseFragmentWithBinding<FragmentAppIntroHomeBinding>
         popup.setOnMenuItemClickListener { menuItem ->
             when(menuItem.itemId){
                 R.id.actionLogout-> {
-                    AppPreferences.clearAll()
-                    findNavController().navigate(AppIntroHomeFragmentDirections.actionAppIntroHomeToSelectLocationFragment())
+                    Handler(Looper.getMainLooper()).post {
+                        AppPreferences.clearAll()
+                        findNavController().navigate(AppIntroHomeFragmentDirections.actionAppIntroHomeToSelectLocationFragment())
+                    }
                 }
                 R.id.actionProfile ->{
                     activity?.launchActivity<AppHomeActivity>()

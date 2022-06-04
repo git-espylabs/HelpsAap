@@ -154,6 +154,8 @@ class AppHomeActivity : BaseActivity<ActivityAppHomeBinding>(), View.OnClickList
                 }
             }
             R.id.dealOfDayFragment ->{
+                appHomeViewModel.selectedFromDealDateTv = ""
+                appHomeViewModel.selectedToDealDateTv = ""
                 binding?.apply {
                     btnHome.setImageTint(R.color.grey_disabled)
                     btnDeal.setImageTint(R.color.app_accent_color)
