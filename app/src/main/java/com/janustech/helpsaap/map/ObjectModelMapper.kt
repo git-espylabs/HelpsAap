@@ -20,7 +20,7 @@ internal fun LoginResponseData.toUserData() = UserData(
     long = long?:"",
     areaname = areaname?:"",
     language = language?:"",
-    businessname = businessname
+    businessname = businessname?:""
 
 )
 
