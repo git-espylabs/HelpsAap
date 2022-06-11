@@ -13,6 +13,7 @@ import android.widget.ArrayAdapter
 import androidx.appcompat.widget.PopupMenu
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import androidx.viewpager2.widget.ViewPager2
 import com.janustech.helpsaap.R
 import com.janustech.helpsaap.databinding.FragmentAppIntroHomeBinding
 import com.janustech.helpsaap.extension.launchActivity
@@ -31,7 +32,8 @@ import com.janustech.helpsaap.ui.home.EditLocationBottomSheetDialogFragment
 import com.janustech.helpsaap.ui.profile.LoginActivity
 import com.janustech.helpsaap.utils.EditLocationListener
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Runnable
+import java.util.*
+
 
 @AndroidEntryPoint
 class AppIntroHomeFragment: BaseFragmentWithBinding<FragmentAppIntroHomeBinding>(R.layout.fragment_app_intro_home), EditLocationListener {
@@ -44,6 +46,14 @@ class AppIntroHomeFragment: BaseFragmentWithBinding<FragmentAppIntroHomeBinding>
 
     private val TRIGGER_AUTO_COMPLETE = 100
     private val AUTO_COMPLETE_DELAY: Long = 300
+
+    private var timerAdsList: Timer? = null
+    private var currentPageAdsList: Int = 0
+    private val handlerAdsList = Handler(Looper.getMainLooper())
+
+    private var timerDeals: Timer? = null
+    private var currentPageDeals: Int = 0
+    private val handlerDeals = Handler(Looper.getMainLooper())
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -88,6 +98,23 @@ class AppIntroHomeFragment: BaseFragmentWithBinding<FragmentAppIntroHomeBinding>
         setSearchList()
     }
 
+    override fun onPause() {
+        super.onPause()
+
+        timerAdsList?.apply {
+            cancel()
+            purge()
+        }
+
+        timerDeals?.apply {
+            cancel()
+            purge()
+        }
+
+        timerAdsList = null
+        timerDeals = null
+    }
+
     override fun onResume() {
         super.onResume()
         if (appIntroViewModel.userSelectedCategory.isNotEmpty()){
@@ -123,7 +150,6 @@ class AppIntroHomeFragment: BaseFragmentWithBinding<FragmentAppIntroHomeBinding>
                 }
                 else ->{
                     (activity as AppIntroActivity).hideProgress()
-//                    (activity as AppIntroActivity).showAlertDialog(it.message?:"Invalid Server Response")
                     setDealsOfDay(listOf())
                 }
             }
@@ -143,7 +169,6 @@ class AppIntroHomeFragment: BaseFragmentWithBinding<FragmentAppIntroHomeBinding>
                 }
                 else ->{
                     (activity as AppIntroActivity).hideProgress()
-//                    (activity as AppIntroActivity).showAlertDialog(it.message?:"Invalid Server Response")
                     setAdsList(listOf())
                 }
             }
@@ -240,7 +265,14 @@ class AppIntroHomeFragment: BaseFragmentWithBinding<FragmentAppIntroHomeBinding>
             binding.apply {
                 tvPromptDeals.visibility = View.VISIBLE
                 rvDealOfDay.visibility = View.VISIBLE
-                dOdAdapter = DealOfDayAdapter(requireContext(), dOdList)
+                val slidingCallback = object : ViewPager2.OnPageChangeCallback() {
+                    override fun onPageSelected(position: Int) {
+                        currentPageDeals = position
+                    }
+                }
+                rvDealOfDay.adapter = DealsListPagerAdapter(requireContext(), dOdList)
+                rvDealOfDay.registerOnPageChangeCallback(slidingCallback)
+                startAutoSwipeDeals(dOdList.size)
             }
         }else{
             binding.apply {
@@ -255,14 +287,56 @@ class AppIntroHomeFragment: BaseFragmentWithBinding<FragmentAppIntroHomeBinding>
             binding.apply {
                 tvPromptAds.visibility = View.VISIBLE
                 rvAds.visibility = View.VISIBLE
-                adsListAdapter = AdsListAdapter(requireContext(), adsList)
+                val slidingCallback = object : ViewPager2.OnPageChangeCallback() {
+                    override fun onPageSelected(position: Int) {
+                        currentPageAdsList = position
+                    }
+                }
+                rvAds.adapter = AdsListPagerAdapter(requireContext(), adsList)
+                rvAds.registerOnPageChangeCallback(slidingCallback)
+                startAutoSwipeAds(adsList.size)
             }
+
         }else{
             binding.apply {
                 tvPromptAds.visibility = View.GONE
                 rvAds.visibility = View.GONE
             }
         }
+    }
+
+    private fun startAutoSwipeAds(pageSize:Int) {
+        val update = Runnable {
+            if (currentPageAdsList == pageSize) {
+                currentPageAdsList = 0
+            }
+
+            binding.rvAds.setCurrentItem(currentPageAdsList++, true)
+        }
+
+        timerAdsList = timerAdsList ?: Timer()
+        timerAdsList?.schedule(object : TimerTask() {
+            override fun run() {
+                handlerAdsList.post(update)
+            }
+        }, 2000L, 2000L)
+    }
+
+    private fun startAutoSwipeDeals(pageSize:Int) {
+        val update = Runnable {
+            if (currentPageDeals == pageSize) {
+                currentPageDeals = 0
+            }
+
+            binding.rvDealOfDay.setCurrentItem(currentPageDeals++, true)
+        }
+
+        timerDeals = timerDeals ?: Timer()
+        timerDeals?.schedule(object : TimerTask() {
+            override fun run() {
+                handlerDeals.post(update)
+            }
+        }, 2000L, 2000L)
     }
 
     private fun showPopup(v : View){

@@ -146,7 +146,7 @@ class ProfileViewModel @Inject constructor(
                 val partPassword = MultiPartRequestHelper.createRequestBody("password", regPass)
                 val partCusname = MultiPartRequestHelper.createRequestBody("cusname", regName)
                 val partEmail = MultiPartRequestHelper.createRequestBody("email", regEmail)
-                val partLocationPinut = MultiPartRequestHelper.createRequestBody("locationpinut", regPin)
+                val partLocationPinut = MultiPartRequestHelper.createRequestBody("locationpinout", regPin)
                 val partBusinessNname= MultiPartRequestHelper.createRequestBody("businessname", regCmpny)
                 val partWhatsapp = MultiPartRequestHelper.createRequestBody("whatsapp", regWhatsapNo)
                 val partWebsite = MultiPartRequestHelper.createRequestBody("website", regWeb)

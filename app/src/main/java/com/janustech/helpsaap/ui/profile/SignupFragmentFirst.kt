@@ -302,7 +302,7 @@ class SignupFragmentFirst : BaseFragmentWithBinding<FragmentRegisterBinding>(R.l
                         val locName = it.toString()
                         val locId = it.id
                         profileViewModel.apply {
-                            regPin = locName
+                            regPin = locId
                         }
                         AppPreferences.apply {
                             userLocation = locName
