@@ -86,7 +86,11 @@ class FragmentSelectLocationAndLanguage: BaseFragmentWithBinding<FragmentSelectL
                 }
                 else ->{
                     (activity as AppIntroActivity).hideProgress()
-                    (activity as AppIntroActivity).showAlertDialog(it.message?:"Invalid Server Response")
+                    if (AppPreferences.userLanguageId.isNotEmpty()) {
+                        (activity as AppIntroActivity).showAlertDialog(it.message?:"Invalid Server Response")
+                    } else {
+                        (activity as AppIntroActivity).showAlertDialog("Please select a language to search with.")
+                    }
                 }
             }
         }

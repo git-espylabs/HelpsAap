@@ -103,7 +103,7 @@ class AppIntroViewModel
 
     fun getLocationSuggestions(param: String){
         viewModelScope.launch {
-            appIntroUseCase.getLocationList(LocationListRequest(param))
+            appIntroUseCase.getLocationList(LocationListRequest(param, AppPreferences.userLanguageId))
                 .onStart { _locationListReceiver.value = Resource.loading() }
                 .collect { apiResponse ->
                     apiResponse.let{
@@ -151,7 +151,7 @@ class AppIntroViewModel
 
     fun getCategories(param: String){
         viewModelScope.launch {
-            appIntroUseCase.getCategories(CategoriesListRequest(param))
+            appIntroUseCase.getCategories(CategoriesListRequest(param, AppPreferences.userLanguageId))
                 .onStart {
                     _categoriesReceiver.value = Resource.loading()
                 }

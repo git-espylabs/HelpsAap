@@ -83,8 +83,8 @@ class ProfileViewModel @Inject constructor(
 
     init {
         if (BuildConfig.DEBUG){
-            userName = "tesjo@gmail.com"
-            password = "qwerty"
+            userName = "8848468233"
+            password = "test@1"
         }
     }
 
@@ -210,7 +210,7 @@ class ProfileViewModel @Inject constructor(
 
     fun getCategories(param: String){
         viewModelScope.launch {
-            appIntroUseCase.getCategories(CategoriesListRequest(param))
+            appIntroUseCase.getCategories(CategoriesListRequest(param, AppPreferences.userLanguageId))
                 .onStart { _categoriesReceiver.value = Resource.loading() }
                 .collect { apiResponse ->
                     apiResponse.let{
@@ -226,7 +226,7 @@ class ProfileViewModel @Inject constructor(
 
     fun getLocationSuggestions(param: String){
         viewModelScope.launch {
-            appIntroUseCase.getLocationList(LocationListRequest(param))
+            appIntroUseCase.getLocationList(LocationListRequest(param, AppPreferences.userLanguageId))
                 .onStart { _locationListReceiver.value = Resource.loading() }
                 .collect { apiResponse ->
                     apiResponse.let{

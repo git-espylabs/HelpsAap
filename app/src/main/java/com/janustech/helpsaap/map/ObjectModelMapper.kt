@@ -58,9 +58,7 @@ internal fun AdsResponseData.toAdsDataModel() = AdsDataModel(
 
 internal fun CategoryResponseData.toCategoryDataModel() = CategoryDataModel(
     id = id,
-    category = category,
-    category_hindi = category_hindi?:"",
-    category_mal = category_mal?:""
+    category = category
 )
 
 internal fun CompanyResponseData.toCompanyDataModel() = CompanyDataModel(

@@ -186,7 +186,7 @@ class AppHomeViewModel @Inject constructor(private val appIntroUseCase: AppIntro
 
     fun getLocationSuggestions(param: String){
         viewModelScope.launch {
-            appIntroUseCase.getLocationList(LocationListRequest(param))
+            appIntroUseCase.getLocationList(LocationListRequest(param, AppPreferences.userLanguageId))
                 .onStart { _locationListReceiver.value = Resource.loading() }
                 .collect { apiResponse ->
                     apiResponse.let{
@@ -239,7 +239,7 @@ class AppHomeViewModel @Inject constructor(private val appIntroUseCase: AppIntro
 
     fun getCategories(param: String){
         viewModelScope.launch {
-            appIntroUseCase.getCategories(CategoriesListRequest(param))
+            appIntroUseCase.getCategories(CategoriesListRequest(param, AppPreferences.userLanguageId))
                 .onStart { _categoriesReceiver.value = Resource.loading() }
                 .collect { apiResponse ->
                     apiResponse.let{
