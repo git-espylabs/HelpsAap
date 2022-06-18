@@ -9,7 +9,8 @@ import com.janustech.helpsaap.model.AdsDataModel
 
 class AdsListPagerAdapter(
     private val context: Context,
-    private val slides: List<AdsDataModel>
+    private val slides: List<AdsDataModel>,
+    val adsCLickListener: (userId: String?) -> Unit
 ) : RecyclerView.Adapter<AdsListPagerAdapter.PageHolder>() {
 
     inner class PageHolder(val binding: ItemAdsListBinding) :
@@ -23,6 +24,9 @@ class AdsListPagerAdapter(
 
     override fun onBindViewHolder(holder: PageHolder, position: Int) {
         holder.binding.model = slides[position]
+        holder.itemView.setOnClickListener {
+            adsCLickListener(slides[position].cus_id)
+        }
     }
 
     override fun getItemCount(): Int = slides.size

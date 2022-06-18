@@ -7,10 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.janustech.helpsaap.databinding.ItemDealOfDayBinding
 import com.janustech.helpsaap.model.DealOfDayDataModel
 
-class DealsListPagerAdapter(
-    private val context: Context,
-    private val slides: List<DealOfDayDataModel>
-) : RecyclerView.Adapter<DealsListPagerAdapter.PageHolder>() {
+class DealsListPagerAdapter(private val context: Context, private val slides: List<DealOfDayDataModel>, val dealCLickListener: (userId: String?) -> Unit) : RecyclerView.Adapter<DealsListPagerAdapter.PageHolder>() {
 
     inner class PageHolder(val binding: ItemDealOfDayBinding) :
         RecyclerView.ViewHolder(binding.root)
@@ -26,6 +23,9 @@ class DealsListPagerAdapter(
 
     override fun onBindViewHolder(holder: PageHolder, position: Int) {
         holder.binding.model = slides[position]
+        holder.itemView.setOnClickListener {
+            dealCLickListener(slides[position].cus_id)
+        }
     }
 
     override fun getItemCount(): Int = slides.size

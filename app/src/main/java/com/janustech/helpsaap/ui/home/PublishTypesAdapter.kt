@@ -46,30 +46,51 @@ class PublishTypesAdapter internal constructor(private val context: Context, pri
                 }
 
                 btnPrice1.setOnClickListener { v->
-                    setViewSelector(isSelected = true, btnPrice1)
-                    setViewSelector(isSelected = false, btnPrice2)
-                    setViewSelector(isSelected = false, btnPrice3)
-                    obj.isSelected = 1
+                    if (obj.isSelected != 1) {
+                        setViewSelector(isSelected = true, btnPrice1)
+                        setViewSelector(isSelected = false, btnPrice2)
+                        setViewSelector(isSelected = false, btnPrice3)
+                        obj.isSelected = 1
+                    } else {
+                        setViewSelector(isSelected = false, btnPrice1)
+                        setViewSelector(isSelected = false, btnPrice2)
+                        setViewSelector(isSelected = false, btnPrice3)
+                        obj.isSelected = 0
+                    }
 
                     adsPackageSelectedListener(obj.publishTypeId, obj.publishTypeIdName, obj.packageList[0].packageId, obj.packageList[0].packagePrice, obj.packageList[0].packageDuration)
                     notifyDataSetChanged()
                 }
 
                 btnPrice2.setOnClickListener {
-                    setViewSelector(isSelected = true, btnPrice2)
-                    setViewSelector(isSelected = false, btnPrice1)
-                    setViewSelector(isSelected = false, btnPrice3)
-                    obj.isSelected = 2
+                    if (obj.isSelected != 2) {
+                        setViewSelector(isSelected = true, btnPrice2)
+                        setViewSelector(isSelected = false, btnPrice1)
+                        setViewSelector(isSelected = false, btnPrice3)
+                        obj.isSelected = 2
+                    } else {
+                        setViewSelector(isSelected = false, btnPrice2)
+                        setViewSelector(isSelected = false, btnPrice1)
+                        setViewSelector(isSelected = false, btnPrice3)
+                        obj.isSelected = 0
+                    }
 
                     adsPackageSelectedListener(obj.publishTypeId, obj.publishTypeIdName, obj.packageList[1].packageId, obj.packageList[1].packagePrice, obj.packageList[1].packageDuration)
                     notifyDataSetChanged()
                 }
 
                 btnPrice3.setOnClickListener {
-                    setViewSelector(isSelected = true, btnPrice3)
-                    setViewSelector(isSelected = false, btnPrice1)
-                    setViewSelector(isSelected = false, btnPrice2)
-                    obj.isSelected = 3
+                    if (obj.isSelected != 3) {
+                        setViewSelector(isSelected = true, btnPrice3)
+                        setViewSelector(isSelected = false, btnPrice1)
+                        setViewSelector(isSelected = false, btnPrice2)
+                        obj.isSelected = 3
+                    } else {
+                        setViewSelector(isSelected = false, btnPrice3)
+                        setViewSelector(isSelected = false, btnPrice1)
+                        setViewSelector(isSelected = false, btnPrice2)
+                        obj.isSelected = 0
+                    }
 
                     adsPackageSelectedListener(obj.publishTypeId, obj.publishTypeIdName, obj.packageList[2].packageId, obj.packageList[2].packagePrice, obj.packageList[2].packageDuration)
                     notifyDataSetChanged()

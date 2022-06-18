@@ -270,7 +270,9 @@ class AppIntroHomeFragment: BaseFragmentWithBinding<FragmentAppIntroHomeBinding>
                         currentPageDeals = position
                     }
                 }
-                rvDealOfDay.adapter = DealsListPagerAdapter(requireContext(), dOdList)
+                rvDealOfDay.adapter = DealsListPagerAdapter(requireContext(), dOdList){ userId ->
+                    findNavController().navigate(AppIntroHomeFragmentDirections.actionAppIntroHomeToDealOrAdOwnerDetailsFragment(userId?:"0"))
+                }
                 rvDealOfDay.registerOnPageChangeCallback(slidingCallback)
                 startAutoSwipeDeals(dOdList.size)
             }
@@ -292,7 +294,9 @@ class AppIntroHomeFragment: BaseFragmentWithBinding<FragmentAppIntroHomeBinding>
                         currentPageAdsList = position
                     }
                 }
-                rvAds.adapter = AdsListPagerAdapter(requireContext(), adsList)
+                rvAds.adapter = AdsListPagerAdapter(requireContext(), adsList){ userId ->
+                    findNavController().navigate(AppIntroHomeFragmentDirections.actionAppIntroHomeToDealOrAdOwnerDetailsFragment(userId?:"0"))
+                }
                 rvAds.registerOnPageChangeCallback(slidingCallback)
                 startAutoSwipeAds(adsList.size)
             }

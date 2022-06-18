@@ -33,6 +33,10 @@
             android:id="@+id/action_appIntroHome_to_selectLocationFragment"
             app:destination="@id/selectLocationFragment">
         </action>
+        <action
+            android:id="@+id/action_appIntroHome_to_dealOrAdOwnerDetailsFragment"
+            app:destination="@id/dealOrAdOwnerDetailsFragment">
+        </action>
 
     </fragment>
 
@@ -44,6 +48,18 @@
             android:id="@+id/action_appIntroSearchList_to_selectLocationFragment"
             app:destination="@id/selectLocationFragment">
         </action>
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/dealOrAdOwnerDetailsFragment"
+        android:name="com.janustech.helpsaap.ui.startup.DealOrAdOwnerDetailsFragment"
+        tools:layout="@layout/fragment_deal_or_ad_owner_details">
+
+        <argument
+            android:name="id"
+            app:argType="string"
+            android:defaultValue="0" />
 
     </fragment>
 
