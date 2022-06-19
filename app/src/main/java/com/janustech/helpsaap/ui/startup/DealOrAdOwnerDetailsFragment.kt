@@ -18,6 +18,7 @@ import com.janustech.helpsaap.map.toProfileViewDataModel
 import com.janustech.helpsaap.model.ProfileViewDataModel
 import com.janustech.helpsaap.network.Status
 import com.janustech.helpsaap.ui.base.BaseFragmentWithBinding
+import com.janustech.helpsaap.utils.CommonUtils
 import java.util.*
 
 class DealOrAdOwnerDetailsFragment: BaseFragmentWithBinding<FragmentDealOrAdOwnerDetailsBinding>(R.layout.fragment_deal_or_ad_owner_details) {
@@ -67,7 +68,11 @@ class DealOrAdOwnerDetailsFragment: BaseFragmentWithBinding<FragmentDealOrAdOwne
     private fun showProfileData(obj: ProfileViewDataModel){
         binding.apply {
             ivLogo.also {
-                Glide.with(it).load(BuildConfig.IMAGE_URL + obj.photo).into(it)
+                if (obj.photo.isNotEmpty()) {
+                    Glide.with(it).load(BuildConfig.IMAGE_URL + obj.photo).into(it)
+                } else {
+                    Glide.with(it).load(R.drawable.avatar).into(it)
+                }
             }
             tvName.text = obj.cus_name
             tvBName.text = obj.businessname
@@ -100,7 +105,12 @@ class DealOrAdOwnerDetailsFragment: BaseFragmentWithBinding<FragmentDealOrAdOwne
             }
 
             if (obj.whatsapp.isNotEmpty()) {
-                tvWhatsap.text = getUnderlinedString(obj.whatsapp)
+                tvWhatsap.also {
+                    it.text = getUnderlinedString(obj.whatsapp)
+                    it.setOnClickListener {
+                        openWhatsap(obj.whatsapp)
+                    }
+                }
             }else{
                 tvLocation.text = "Whatsap Available"
             }
@@ -133,5 +143,19 @@ class DealOrAdOwnerDetailsFragment: BaseFragmentWithBinding<FragmentDealOrAdOwne
         val uri: String = java.lang.String.format(Locale.ENGLISH, "geo:%f,%f", latitude, longitude)
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(uri))
         requireContext().startActivity(intent)
+    }
+
+    private fun openWhatsap(phnoe: String){
+        when {
+            CommonUtils.isAppInstalled(requireContext(), "com.whatsapp.w4b") -> {
+                CommonUtils.openWhatsApp(requireContext(), phnoe, "com.whatsapp.w4b")
+            }
+            CommonUtils.isAppInstalled(requireContext(), "com.whatsapp") -> {
+                CommonUtils.openWhatsApp(requireContext(), phnoe, "com.whatsapp")
+            }
+            else -> {
+                showAlertDialog("whatsApp is not installed")
+            }
+        }
     }
 }
