@@ -62,4 +62,12 @@ class AppIntroUseCase @Inject constructor(
             }
         }.flowOn(Dispatchers.IO)
     }
+
+    suspend fun getProfileData(profileDataRequest: ProfileDataRequest): Flow<Resource<ApiResponse<List<ProfileViewResponseData>>>> {
+        return flow {
+            appIntroRepository.getProfileData(profileDataRequest).collect {
+                emit(it)
+            }
+        }.flowOn(Dispatchers.IO)
+    }
 }

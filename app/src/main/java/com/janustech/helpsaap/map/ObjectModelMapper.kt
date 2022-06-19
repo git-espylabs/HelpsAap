@@ -108,3 +108,22 @@ internal fun PostedAdsResponseData.toPostedAdDataModel() = PostedAdDataModel(
     state = state?:""
 )
 
+internal fun ProfileViewResponseData.toProfileViewDataModel() = ProfileViewDataModel(
+    id = id,
+    cus_name = cus_name?:"",
+    phone_number = phone_number?:"",
+    password = password?:"",
+    location_id = location_id?:"",
+    businessname = businessname?:"",
+    whatsapp = whatsapp?:"",
+    website = website?:"",
+    current_location = current_location?:"",
+    photo = photo?:"",
+    email = email?:"",
+    offerpercentage = offerpercentage?:"",
+    areaname = areaname?:"",
+    lat = lat?:"",
+    long = long?:"",
+    language = language?:""
+)
+

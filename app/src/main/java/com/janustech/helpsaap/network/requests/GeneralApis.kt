@@ -35,4 +35,9 @@ interface GeneralApis {
     suspend fun getCompanyList(
         @Body companyListRequest: CompanyListRequest
     ): ApiResponse<List<CompanyResponseData>>
+
+    @POST(HttpEndPoints.PROFILE_VIEW)
+    suspend fun getProfileData(
+        @Body profileDataRequest: ProfileDataRequest
+    ): ApiResponse<List<ProfileViewResponseData>>
 }

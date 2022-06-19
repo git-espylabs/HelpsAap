@@ -56,6 +56,10 @@ class AppIntroViewModel
     val companyListReceiver: LiveData<Resource<ApiResponse<List<CompanyResponseData>>>>
         get() = _companyListReceiver
 
+    private val _profileDataReceiver = MutableLiveData<Resource<ApiResponse<List<ProfileViewResponseData>>>>()
+    val profileDataReceiver: LiveData<Resource<ApiResponse<List<ProfileViewResponseData>>>>
+        get() = _profileDataReceiver
+
     init {
         userLocationName = AppPreferences.userLocation
         userLocationId = AppPreferences.userLocationId
@@ -177,6 +181,22 @@ class AppIntroViewModel
                             _companyListReceiver.value = apiResponse
                         }?: run {
                             _companyListReceiver.value = Resource.dataError("Invalid server response!")
+                        }
+                    }
+                }
+        }
+    }
+
+    fun getProfileData(userId: String){
+        viewModelScope.launch {
+            appIntroUseCase.getProfileData(ProfileDataRequest(userId))
+                .onStart { _profileDataReceiver.value = Resource.loading() }
+                .collect { apiResponse ->
+                    apiResponse.let{
+                        it.data?.let{
+                            _profileDataReceiver.value = apiResponse
+                        }?: run {
+                            _profileDataReceiver.value = Resource.dataError("Invalid server response!")
                         }
                     }
                 }

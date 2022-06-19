@@ -46,4 +46,10 @@ class AppIntroRepositoryImpl(private val apiService: GeneralApis): AppIntroRepos
             emit(safeApiCall { apiService.getCompanyList(companyListRequest) })
         }.flowOn(Dispatchers.IO)
     }
+
+    override fun getProfileData(profileDataRequest: ProfileDataRequest): Flow<Resource<ApiResponse<List<ProfileViewResponseData>>>> {
+        return flow {
+            emit(safeApiCall { apiService.getProfileData(profileDataRequest) })
+        }.flowOn(Dispatchers.IO)
+    }
 }

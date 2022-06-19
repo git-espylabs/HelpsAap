@@ -9,10 +9,234 @@
             type="com.janustech.helpsaap.ui.startup.AppIntroViewModel"/>
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.janustech.helpsaap.utils.CustomCircleImageview
+                android:id="@+id/ivLogo"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginTop="8dp"
+                android:src="@drawable/avatar"
+                app:layout_constraintVertical_bias="0.02"
+                android:layout_width="96dp"
+                android:layout_height="96dp"/>
+
+            <TextView
+                android:id="@+id/promptName"
+                android:layout_marginTop="24dp"
+                android:layout_marginLeft="16dp"
+                app:layout_constraintTop_toBottomOf="@+id/ivLogo"
+                app:layout_constraintStart_toStartOf="parent"
+                android:textSize="14sp"
+                android:textColor="@color/grey_100"
+                android:fontFamily="@font/segoui"
+                android:text="Name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:id="@+id/tvName"
+                android:layout_marginTop="5dp"
+                app:layout_constraintTop_toBottomOf="@+id/promptName"
+                app:layout_constraintStart_toStartOf="@+id/promptName"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginRight="16dp"
+                android:textSize="14sp"
+                android:textColor="@color/black"
+                android:fontFamily="@font/segoui"
+                android:background="@drawable/rounded_rect_grey_filled"
+                android:gravity="center|left"
+                android:paddingHorizontal="5dp"
+                android:layout_width="0dp"
+                android:layout_height="32dp"/>
+
+            <TextView
+                android:id="@+id/promptBName"
+                android:layout_marginTop="18dp"
+                android:layout_marginLeft="16dp"
+                app:layout_constraintTop_toBottomOf="@+id/tvName"
+                app:layout_constraintStart_toStartOf="parent"
+                android:textSize="14sp"
+                android:textColor="@color/grey_100"
+                android:fontFamily="@font/segoui"
+                android:text="Buisness Name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:id="@+id/tvBName"
+                android:layout_marginTop="5dp"
+                app:layout_constraintTop_toBottomOf="@+id/promptBName"
+                app:layout_constraintStart_toStartOf="@+id/promptBName"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginRight="16dp"
+                android:textSize="14sp"
+                android:textColor="@color/black"
+                android:fontFamily="@font/segoui"
+                android:background="@drawable/rounded_rect_grey_filled"
+                android:gravity="center|left"
+                android:paddingHorizontal="5dp"
+                android:layout_width="0dp"
+                android:layout_height="32dp"/>
+
+            <TextView
+                android:id="@+id/promptAreaName"
+                android:layout_marginTop="18dp"
+                android:layout_marginLeft="16dp"
+                app:layout_constraintTop_toBottomOf="@+id/tvBName"
+                app:layout_constraintStart_toStartOf="parent"
+                android:textSize="14sp"
+                android:textColor="@color/grey_100"
+                android:fontFamily="@font/segoui"
+                android:text="Area"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:id="@+id/tvAreaBName"
+                android:layout_marginTop="5dp"
+                app:layout_constraintTop_toBottomOf="@+id/promptAreaName"
+                app:layout_constraintStart_toStartOf="@+id/promptAreaName"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginRight="16dp"
+                android:textSize="14sp"
+                android:textColor="@color/black"
+                android:fontFamily="@font/segoui"
+                android:background="@drawable/rounded_rect_grey_filled"
+                android:gravity="center|left"
+                android:paddingHorizontal="5dp"
+                android:layout_width="0dp"
+                android:layout_height="32dp"/>
+
+            <TextView
+                android:id="@+id/tvPhone"
+                android:layout_marginTop="18dp"
+                android:layout_marginLeft="16dp"
+                app:layout_constraintTop_toBottomOf="@+id/tvAreaBName"
+                app:layout_constraintStart_toStartOf="parent"
+                android:textSize="14sp"
+                android:drawableLeft="@drawable/ic_phone_call"
+                android:drawablePadding="7dp"
+                android:drawableTint="@color/black"
+                android:textColor="@color/black"
+                android:fontFamily="@font/segoui"
+                android:text=""
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:id="@+id/tvEmail"
+                android:layout_marginTop="18dp"
+                android:layout_marginLeft="16dp"
+                app:layout_constraintTop_toBottomOf="@+id/tvPhone"
+                app:layout_constraintStart_toStartOf="parent"
+                android:textSize="14sp"
+                android:drawableLeft="@drawable/ic_email_24"
+                android:drawablePadding="7dp"
+                android:drawableTint="@color/black"
+                android:textColor="@color/black"
+                android:fontFamily="@font/segoui"
+                android:text=""
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:id="@+id/tvWhatsap"
+                android:layout_marginTop="12dp"
+                android:layout_marginLeft="16dp"
+                app:layout_constraintTop_toBottomOf="@+id/tvEmail"
+                app:layout_constraintStart_toStartOf="parent"
+                android:textSize="14sp"
+                android:drawableLeft="@drawable/ic_whatsapp"
+                android:drawablePadding="7dp"
+                android:drawableTint="@color/black"
+                android:textColor="@color/black"
+                android:fontFamily="@font/segoui"
+                android:text=""
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:id="@+id/tvWeb"
+                android:layout_marginTop="12dp"
+                android:layout_marginLeft="16dp"
+                app:layout_constraintTop_toBottomOf="@+id/tvWhatsap"
+                app:layout_constraintStart_toStartOf="parent"
+                android:textSize="14sp"
+                android:drawableLeft="@drawable/ic_web"
+                android:drawablePadding="7dp"
+                android:drawableTint="@color/black"
+                android:textColor="@color/black"
+                android:fontFamily="@font/segoui"
+                android:text=""
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:id="@+id/tvLocation"
+                android:layout_marginTop="12dp"
+                android:layout_marginLeft="16dp"
+                app:layout_constraintTop_toBottomOf="@+id/tvWeb"
+                app:layout_constraintStart_toStartOf="parent"
+                android:textSize="14sp"
+                android:drawableLeft="@drawable/ic_location"
+                android:drawablePadding="7dp"
+                android:drawableTint="@color/black"
+                android:textColor="@color/black"
+                android:fontFamily="@font/segoui"
+                android:text=""
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:id="@+id/promptOffer"
+                android:layout_marginLeft="16dp"
+                app:layout_constraintTop_toTopOf="@+id/tvOffer"
+                app:layout_constraintBottom_toBottomOf="@+id/tvOffer"
+                app:layout_constraintStart_toStartOf="parent"
+                android:textSize="14sp"
+                android:drawablePadding="7dp"
+                android:textColor="@color/grey_100"
+                android:fontFamily="@font/segoui"
+                android:text="Offer: "
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:id="@+id/tvOffer"
+                android:layout_marginTop="5dp"
+                app:layout_constraintTop_toBottomOf="@+id/tvLocation"
+                app:layout_constraintStart_toEndOf="@+id/promptOffer"
+                android:layout_marginLeft="5dp"
+                android:textSize="14sp"
+                android:textColor="@color/black"
+                android:fontFamily="@font/segoui"
+                android:background="@drawable/rounded_rect_grey_filled"
+                android:gravity="center"
+                android:text="0%"
+                android:paddingHorizontal="5dp"
+                android:layout_width="56dp"
+                android:layout_height="32dp"/>
+
+            <View
+                app:layout_constraintTop_toBottomOf="@+id/tvOffer"
+                android:layout_width="match_parent"
+                android:layout_height="24dp"/>
+
+
+
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
 
 </layout>
