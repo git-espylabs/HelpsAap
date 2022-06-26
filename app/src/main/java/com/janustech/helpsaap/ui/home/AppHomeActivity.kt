@@ -2,12 +2,12 @@ package com.janustech.helpsaap.ui.home
 
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.view.Menu
+import android.view.LayoutInflater
 import android.view.MenuInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.PopupMenu
 import androidx.appcompat.widget.Toolbar
 import androidx.navigation.NavController
@@ -20,11 +20,13 @@ import com.janustech.helpsaap.databinding.ActivityAppHomeBinding
 import com.janustech.helpsaap.extension.launchActivity
 import com.janustech.helpsaap.extension.setImageTint
 import com.janustech.helpsaap.model.LocationDataModel
+import com.janustech.helpsaap.network.Status
 import com.janustech.helpsaap.preference.AppPreferences
 import com.janustech.helpsaap.ui.base.BaseActivity
 import com.janustech.helpsaap.ui.startup.AppIntroActivity
 import com.janustech.helpsaap.utils.EditLocationListener
 import dagger.hilt.android.AndroidEntryPoint
+
 
 @AndroidEntryPoint
 class AppHomeActivity : BaseActivity<ActivityAppHomeBinding>(), View.OnClickListener, NavController.OnDestinationChangedListener, EditLocationListener {
@@ -42,6 +44,7 @@ class AppHomeActivity : BaseActivity<ActivityAppHomeBinding>(), View.OnClickList
 
         setLayoutBinding(R.layout.activity_app_home)
         setToolbarProperties(false, null)
+        setObserver()
 
         binding?.apply {
             viewModel = appHomeViewModel
@@ -204,6 +207,30 @@ class AppHomeActivity : BaseActivity<ActivityAppHomeBinding>(), View.OnClickList
         }
     }
 
+    private fun setObserver(){
+        appHomeViewModel.aboutUsRespReceiver.observe(this){ res->
+            try {
+                res?.let {
+                    when(it.status){
+                        Status.SUCCESS ->{
+                            hideProgress()
+                            it.data?.data?.let { it1 -> showAboutPopup(it1?.about) }
+                        }
+                        Status.LOADING -> {
+                            showProgress()
+                        }
+                        else ->{
+                            hideProgress()
+                            showToast(it.message?:"Invalid Server Response")
+                        }
+                    }
+                }
+            } catch (e: Exception) {
+            }
+
+        }
+    }
+
     private fun showPopup(v : View){
         val popup = PopupMenu(this, v)
         val inflater: MenuInflater = popup.menuInflater
@@ -217,10 +244,21 @@ class AppHomeActivity : BaseActivity<ActivityAppHomeBinding>(), View.OnClickList
                     }
                     this.finish()
                 }
+                R.id.actionAbout-> {
+                    appHomeViewModel.getAboutUs()
+                }
             }
             true
         }
         popup.show()
+    }
+
+    private fun showAboutPopup(text: String){
+        val bun = Bundle()
+        bun.putString("aboutus",text)
+        findNavController(R.id.fragmentContainerView).apply {
+            navigate(R.id.aboutUsFragment, bun, getNavOptions())
+        }
     }
 
     private fun getNavOptions(): NavOptions {

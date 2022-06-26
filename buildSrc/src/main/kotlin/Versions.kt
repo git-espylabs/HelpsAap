@@ -42,4 +42,5 @@ object Versions {
     const val cardView = "1.0.0"
     const val hdodenhof = "3.1.0"
     const val otp_view = "1.4.4"
+    const val justified_textview = "1.1.0"
 }

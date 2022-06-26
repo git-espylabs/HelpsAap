@@ -17,18 +17,19 @@
             type="com.janustech.helpsaap.ui.startup.AdsListAdapter" />
     </data>
 
-    <ScrollView
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:fillViewport="true">
+        android:layout_height="match_parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/helplineLay"
             android:focusable="true"
             android:focusableInTouchMode="true"
             android:background="@color/white"
             android:layout_marginHorizontal="12dp"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="0dp">
 
             <TextView
                 android:id="@+id/tvLocation"
@@ -142,58 +143,87 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
-            <TextView
+            <Button
+                android:id="@+id/btnProfile"
+                style="@style/HelpAapButtonStyle"
                 android:visibility="gone"
-                android:id="@+id/tvPromptDeals"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="16dp"
+                app:layout_constraintTop_toBottomOf="@+id/actSearch"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:text="My Profile"
+                android:textSize="16sp"
+                android:textAllCaps="false"
+                android:paddingHorizontal="24dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <ScrollView
                 app:layout_constraintTop_toBottomOf="@+id/btnRegister"
-                app:layout_constraintStart_toStartOf="parent"
-                android:textSize="18sp"
-                android:textColor="@color/black"
-                android:textStyle="bold"
-                android:fontFamily="@font/segoeui_heavy"
-                android:textFontWeight="500"
-                android:text="Deals for the Day"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-
-            <androidx.viewpager2.widget.ViewPager2
-                android:id="@+id/rvDealOfDay"
-                android:visibility="gone"
-                android:layout_marginTop="16dp"
-                app:layout_constraintTop_toBottomOf="@+id/tvPromptDeals"
-                android:orientation="horizontal"
+                app:layout_constraintBottom_toBottomOf="parent"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="0dp">
 
-            <TextView
-                android:visibility="gone"
-                android:id="@+id/tvPromptAds"
-                android:layout_marginTop="18dp"
-                app:layout_constraintTop_toBottomOf="@+id/rvDealOfDay"
-                app:layout_constraintStart_toStartOf="parent"
-                android:textSize="18sp"
-                android:textColor="@color/black"
-                android:textStyle="bold"
-                android:fontFamily="@font/segoeui_heavy"
-                android:textFontWeight="500"
-                android:text="Advertisement"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
-            <androidx.viewpager2.widget.ViewPager2
-                android:id="@+id/rvAds"
-                android:visibility="gone"
-                android:layout_marginTop="16dp"
-                app:layout_constraintTop_toBottomOf="@+id/tvPromptAds"
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                    <TextView
+                        android:visibility="gone"
+                        android:id="@+id/tvPromptDeals"
+                        android:layout_marginTop="24dp"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        android:textSize="18sp"
+                        android:textColor="@color/black"
+                        android:textStyle="bold"
+                        android:fontFamily="@font/segoeui_heavy"
+                        android:textFontWeight="500"
+                        android:text="Deals for the Day"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
 
-            <View
-                app:layout_constraintTop_toBottomOf="@+id/rvAds"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"/>
+                    <androidx.viewpager2.widget.ViewPager2
+                        android:id="@+id/rvDealOfDay"
+                        android:visibility="gone"
+                        android:layout_marginTop="16dp"
+                        app:layout_constraintTop_toBottomOf="@+id/tvPromptDeals"
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+
+                    <TextView
+                        android:visibility="gone"
+                        android:id="@+id/tvPromptAds"
+                        android:layout_marginTop="18dp"
+                        app:layout_constraintTop_toBottomOf="@+id/rvDealOfDay"
+                        app:layout_constraintStart_toStartOf="parent"
+                        android:textSize="18sp"
+                        android:textColor="@color/black"
+                        android:textStyle="bold"
+                        android:fontFamily="@font/segoeui_heavy"
+                        android:textFontWeight="500"
+                        android:text="Advertisement"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                    <androidx.viewpager2.widget.ViewPager2
+                        android:id="@+id/rvAds"
+                        android:visibility="gone"
+                        android:layout_marginTop="16dp"
+                        app:layout_constraintTop_toBottomOf="@+id/tvPromptAds"
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+
+                    <View
+                        app:layout_constraintTop_toBottomOf="@+id/rvAds"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"/>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </ScrollView>
 
             <androidx.constraintlayout.widget.Group
                 android:layout_width="wrap_content"
@@ -204,6 +234,60 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-    </ScrollView>
+        <View
+            app:layout_constraintTop_toTopOf="@+id/helpline"
+            app:layout_constraintBottom_toBottomOf="@+id/helpline"
+            android:background="@color/grey_10"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"/>
+
+        <TextView
+            android:id="@+id/helpline"
+            android:paddingVertical="7dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintVertical_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/helpCall"
+            android:letterSpacing="0.1"
+            android:text="HelpLine: 9207777133"
+            android:fontFamily="@font/dincond_bold_opentype"
+            android:textColor="@color/app_accent_color"
+            android:textSize="18sp"
+            android:layout_marginLeft="16dp"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <ImageView
+            android:id="@+id/helpCall"
+            app:layout_constraintTop_toTopOf="@+id/helpline"
+            app:layout_constraintBottom_toBottomOf="@+id/helpline"
+            app:layout_constraintStart_toEndOf="@+id/helpline"
+            app:layout_constraintEnd_toStartOf="@+id/helpWhatsap"
+            android:layout_marginLeft="9dp"
+            android:src="@drawable/ic_phone_call"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <ImageView
+            android:id="@+id/helpWhatsap"
+            app:layout_constraintTop_toTopOf="@+id/helpline"
+            app:layout_constraintBottom_toBottomOf="@+id/helpline"
+            app:layout_constraintStart_toEndOf="@+id/helpCall"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginLeft="9dp"
+            android:src="@drawable/ic_whatsapp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <View
+            android:id="@+id/helplineLay"
+            app:layout_constraintTop_toTopOf="@+id/helpline"
+            app:layout_constraintBottom_toBottomOf="@+id/helpline"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

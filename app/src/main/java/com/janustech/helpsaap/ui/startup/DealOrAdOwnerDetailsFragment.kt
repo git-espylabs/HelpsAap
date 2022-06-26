@@ -89,19 +89,22 @@ class DealOrAdOwnerDetailsFragment: BaseFragmentWithBinding<FragmentDealOrAdOwne
                     }
                 }
             }else{
-                tvLocation.text = "Phone Number Not Available"
+                tvPhone.text = "Phone Number Not Available"
             }
 
             if (obj.email.isNotEmpty()) {
                 tvEmail.text = obj.email
             }else{
-                tvLocation.text = "Email Not Available"
+                tvEmail.text = "Email Not Available"
             }
 
             if (obj.website.isNotEmpty()) {
                 tvWeb.text = obj.website
+                tvWeb.setOnClickListener {
+                    openWeb(obj.website)
+                }
             }else{
-                tvLocation.text = "Website Not Available"
+                tvWeb.text = "Website Not Available"
             }
 
             if (obj.whatsapp.isNotEmpty()) {
@@ -112,7 +115,7 @@ class DealOrAdOwnerDetailsFragment: BaseFragmentWithBinding<FragmentDealOrAdOwne
                     }
                 }
             }else{
-                tvLocation.text = "Whatsap Available"
+                tvWhatsap.text = "Whatsap Not Available"
             }
             if (obj.offerpercentage.isNotEmpty() && obj.offerpercentage.isNumeric() && obj.offerpercentage.toDouble() > 0) {
                 tvOffer.text = obj.offerpercentage +"%"
@@ -140,9 +143,26 @@ class DealOrAdOwnerDetailsFragment: BaseFragmentWithBinding<FragmentDealOrAdOwne
     }
 
     private fun openMap(latitude: Double, longitude: Double){
-        val uri: String = java.lang.String.format(Locale.ENGLISH, "geo:%f,%f", latitude, longitude)
-        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(uri))
-        requireContext().startActivity(intent)
+        try {
+            val uri: String = java.lang.String.format(Locale.ENGLISH, "geo:%f,%f", latitude, longitude)
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(uri))
+            requireContext().startActivity(intent)
+        }catch (e: Exception){
+        }
+    }
+
+    private fun openWeb(url:String){
+        try {
+            if (url.isNotEmpty()){
+                val i = Intent(Intent.ACTION_VIEW)
+                i.data = Uri.parse("http://$url")
+                startActivity(i)
+            }else{
+                showToast("No website found!")
+            }
+        }catch (e: Exception){
+            showToast("No website found!")
+        }
     }
 
     private fun openWhatsap(phnoe: String){

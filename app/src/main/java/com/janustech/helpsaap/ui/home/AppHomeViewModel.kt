@@ -99,9 +99,17 @@ class AppHomeViewModel @Inject constructor(private val appIntroUseCase: AppIntro
     var addCatgoriesResponseStatus: LiveData<Resource<ApiResponse<String>>>? = null
         get() = _addCatgoriesResponseStatus
 
-    private val _postedAdsListReceiver = MutableLiveData<Resource<ApiResponse<List<PostedAdsResponseData>>>>()
-    val postedAdsListReceiver: LiveData<Resource<ApiResponse<List<PostedAdsResponseData>>>>
+    var _postedAdsListReceiver = MutableLiveData<Resource<ApiResponse<List<PostedAdsResponseData>>>>()
+    var postedAdsListReceiver: LiveData<Resource<ApiResponse<List<PostedAdsResponseData>>>>? = null
         get() = _postedAdsListReceiver
+
+    private var _aboutUsRespReceiver = MutableLiveData<Resource<ApiResponse<AboutUsResponse>>>()
+    val aboutUsRespReceiver: LiveData<Resource<ApiResponse<AboutUsResponse>>>
+        get() = _aboutUsRespReceiver
+
+    var _tncRespReceiver = MutableLiveData<Resource<ApiResponse<TNCResponse>>>()
+    var tncRespReceiver: LiveData<Resource<ApiResponse<TNCResponse>>>? = null
+        get() = _tncRespReceiver
 
     init {
         userLocationName = AppPreferences.userLocation
@@ -280,7 +288,7 @@ class AppHomeViewModel @Inject constructor(private val appIntroUseCase: AppIntro
                 val partTxId = MultiPartRequestHelper.createRequestBody("transaction_id", ((100000..1000000).random()).toString())
                 val partAmount = MultiPartRequestHelper.createRequestBody("amount", selectedAMount)
                 val partAdsName = MultiPartRequestHelper.createRequestBody("ads_name", "nil")
-                val partLocationType = MultiPartRequestHelper.createRequestBody("locationtype", selectedPublicLocationId)
+                val partLocationType = MultiPartRequestHelper.createRequestBody("locationtype", selectedPublicLocationType)
                 val partPublishLocId = MultiPartRequestHelper.createRequestBody("publish_loc", selectedPublicLocationId)
                 val partFile = MultiPartRequestHelper.createFileRequestBody(adsImage, "image", context)
 
@@ -440,6 +448,40 @@ class AppHomeViewModel @Inject constructor(private val appIntroUseCase: AppIntro
                             _postedAdsListReceiver.value = apiResponse
                         }?: run {
                             _postedAdsListReceiver.value = Resource.dataError("Invalid server response!")
+                        }
+                    }
+                }
+
+        }
+    }
+
+    fun getAboutUs(){
+        viewModelScope.launch {
+            homeUseCases.getAboutUs()
+                .onStart { _aboutUsRespReceiver.value = Resource.loading() }
+                .collect { apiResponse ->
+                    apiResponse.let {
+                        it.data?.let {
+                            _aboutUsRespReceiver.value = apiResponse
+                        }?: run {
+                            _aboutUsRespReceiver.value = Resource.dataError("Invalid server response!")
+                        }
+                    }
+                }
+
+        }
+    }
+
+    fun getTnc(){
+        viewModelScope.launch {
+            homeUseCases.getTnc()
+                .onStart { _tncRespReceiver.value = Resource.loading() }
+                .collect { apiResponse ->
+                    apiResponse.let {
+                        it.data?.let {
+                            _tncRespReceiver.value = apiResponse
+                        }?: run {
+                            _tncRespReceiver.value = Resource.dataError("Invalid server response!")
                         }
                     }
                 }

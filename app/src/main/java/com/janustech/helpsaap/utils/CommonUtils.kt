@@ -55,12 +55,22 @@ object CommonUtils {
     fun getDrawable(context: Context, @DrawableRes drawableRes: Int) =
         ContextCompat.getDrawable(context, drawableRes)
 
-    fun scaleDownImage(realImage: Bitmap): Bitmap {
+    private fun scaleDownImage(realImage: Bitmap): Bitmap {
         val maxImageSize = 300f
         val ratio = min(maxImageSize / realImage.width, maxImageSize / realImage.height)
         val width = (ratio * realImage.width).roundToInt()
         val height = (ratio * realImage.height).roundToInt()
         return Bitmap.createScaledBitmap(realImage, width, height, true)
+    }
+
+    fun scaleDownCameraImage(captured: Bitmap, path: String, actualPath: String): Bitmap {
+        val rotatedImg = getClearExifBitmap(path, actualPath) ?: captured
+        return scaleDownImage(rotatedImg)
+    }
+
+    fun scaleDownGalleryImage(choosen: Bitmap, context: Context, uri: Uri): Bitmap {
+        val rotatedImg = getClearExifBitmap(context, uri)?:choosen
+        return scaleDownImage(rotatedImg)
     }
 
     fun compressAndSaveImage(context: Context, realImage: Bitmap, fileName: String): File {
@@ -166,7 +176,7 @@ object CommonUtils {
         ctx.startActivity(Intent.createChooser(intent, "Share using.."))
     }
 
-    fun getClearExifBitmap(currentPhotoPath: String, absolutePath: String): Bitmap?{
+    private fun getClearExifBitmap(currentPhotoPath: String, absolutePath: String): Bitmap?{
         val exif = ExifInterface(currentPhotoPath)
         var image = BitmapFactory.decodeFile(absolutePath)
 
@@ -190,34 +200,37 @@ object CommonUtils {
         return image
     }
 
-    fun getClearExifBitmap(context: Context, uri: Uri, absolutePath: String): Bitmap?{
-        var image = BitmapFactory.decodeFile(absolutePath)
+    private fun getClearExifBitmap(context: Context, uri: Uri): Bitmap?{
+        var outImage: Bitmap? = null
+        var image = getBitmapFromUri(context, uri)
+        image?.let { img->
 
-        val parcelFileDescriptor: ParcelFileDescriptor? =
-            context.contentResolver.openFileDescriptor(uri, "r")
-        val fileDescriptor = parcelFileDescriptor?.fileDescriptor
-        fileDescriptor?.let {
-            val exif = ExifInterface(it)
+            val parcelFileDescriptor: ParcelFileDescriptor? =
+                context.contentResolver.openFileDescriptor(uri, "r")
+            val fileDescriptor = parcelFileDescriptor?.fileDescriptor
+            fileDescriptor?.let {
+                val exif = ExifInterface(it)
 
-            val matrix = Matrix()
-            when(exif.getAttribute(ExifInterface.TAG_ORIENTATION)){
-                ExifInterface.ORIENTATION_ROTATE_90.toString() -> {
-                    matrix.postRotate(90F)
+                val matrix = Matrix()
+                when(exif.getAttribute(ExifInterface.TAG_ORIENTATION)){
+                    ExifInterface.ORIENTATION_ROTATE_90.toString() -> {
+                        matrix.postRotate(90F)
+                    }
+                    ExifInterface.ORIENTATION_ROTATE_180.toString() -> {
+                        matrix.postRotate(180F)
+                    }
+                    ExifInterface.ORIENTATION_ROTATE_270.toString() -> {
+                        matrix.postRotate(270F)
+                    }
+                    else ->{
+                        matrix.postRotate(0F)
+                    }
                 }
-                ExifInterface.ORIENTATION_ROTATE_180.toString() -> {
-                    matrix.postRotate(180F)
-                }
-                ExifInterface.ORIENTATION_ROTATE_270.toString() -> {
-                    matrix.postRotate(270F)
-                }
-                else ->{
-                    matrix.postRotate(0F)
-                }
+                outImage = Bitmap.createBitmap(img , 0, 0, img.width, img.height, matrix, true)
             }
-            image = Bitmap.createBitmap(image , 0, 0, image.width, image.height, matrix, true)
         }
 
-        return image
+        return outImage
     }
 
 
@@ -243,6 +256,19 @@ object CommonUtils {
             e.printStackTrace()
         } catch (e: java.lang.Exception) {
             e.printStackTrace()
+        }
+    }
+
+    fun getRealPathFromURI(context: Context, contentUri: Uri?): String? {
+        var cursor: Cursor? = null
+        return try {
+            val proj = arrayOf(MediaStore.Images.Media.DATA)
+            cursor = context.contentResolver.query(contentUri!!, proj, null, null, null)
+            val column_index = cursor!!.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+            cursor.moveToFirst()
+            cursor.getString(column_index)
+        } finally {
+            cursor?.close()
         }
     }
 }

@@ -21,5 +21,7 @@ internal class HttpEndPoints {
         const val ADDON_CATEGORIES = "addoncategory"
         const val POSTED_ADS = "customerads"
         const val PROFILE_VIEW = "profileview"
+        const val ABOUT_US = "about"
+        const val TNC = "terms"
     }
 }

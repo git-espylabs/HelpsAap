@@ -172,13 +172,36 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
+            <AutoCompleteTextView
+                android:paddingHorizontal="8dp"
+                android:id="@+id/actLocation"
+                app:layout_constraintTop_toBottomOf="@+id/tvPublishLocations"
+                android:background="@drawable/rounded_rect_grey_filled"
+                android:drawableStart="@drawable/ic_search"
+                android:drawablePadding="7dp"
+                android:layout_marginTop="8dp"
+                android:hint="Select Publishing Location"
+                android:layout_width="match_parent"
+                android:layout_height="41dp"/>
+
+            <ImageView
+                android:id="@+id/ivClearSearch"
+                app:layout_constraintTop_toTopOf="@+id/actLocation"
+                app:layout_constraintBottom_toBottomOf="@+id/actLocation"
+                app:layout_constraintEnd_toEndOf="@+id/actLocation"
+                android:layout_marginRight="5dp"
+                android:src="@drawable/ic_close_24"
+                android:visibility="gone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvPublishTypes"
                 tools:listitem="@layout/item_publish_location"
                 android:adapter="@{publishTypesAdapter}"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 android:orientation="vertical"
-                app:layout_constraintTop_toBottomOf="@+id/tvPublishLocations"
+                app:layout_constraintTop_toBottomOf="@+id/actLocation"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 

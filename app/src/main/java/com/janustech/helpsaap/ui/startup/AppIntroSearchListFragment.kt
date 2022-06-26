@@ -24,6 +24,7 @@ import com.janustech.helpsaap.ui.profile.LoginActivity
 import com.janustech.helpsaap.utils.CommonUtils
 import com.janustech.helpsaap.utils.CommonUtils.isAppInstalled
 import com.janustech.helpsaap.utils.EditLocationListener
+import java.util.*
 
 
 class AppIntroSearchListFragment: BaseFragmentWithBinding<FragmentAppIntroSearchListBinding>(R.layout.fragment_app_intro_search_list),
@@ -123,10 +124,39 @@ class AppIntroSearchListFragment: BaseFragmentWithBinding<FragmentAppIntroSearch
                             }
                         }
                     }
+                    "loc" ->{
+                        openMap(model.lat.toDouble(), model.long.toDouble())
+                    }
+                    "web" ->{
+                        openWeb(model.website)
+                    }
                 }
             }
         }else{
             showAlertDialog("No companies found!")
+        }
+    }
+
+    private fun openMap(latitude: Double, longitude: Double){
+        try {
+            val uri: String = java.lang.String.format(Locale.ENGLISH, "geo:%f,%f", latitude, longitude)
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(uri))
+            requireContext().startActivity(intent)
+        }catch (e: Exception){
+        }
+    }
+
+    private fun openWeb(url:String){
+        try {
+            if (url.isNotEmpty()){
+                val i = Intent(Intent.ACTION_VIEW)
+                i.data = Uri.parse("http://$url")
+                startActivity(i)
+            }else{
+                showToast("No website found!")
+            }
+        }catch (e: Exception){
+            showToast("No website found!")
         }
     }
 

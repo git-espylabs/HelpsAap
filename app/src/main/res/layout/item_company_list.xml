@@ -60,6 +60,7 @@
 
                 <TextView
                     android:id="@+id/tvAddress"
+                    android:visibility="gone"
                     app:layout_constraintTop_toBottomOf="@+id/tvCompanyName"
                     app:layout_constraintStart_toStartOf="@+id/tvCompanyName"
                     android:layout_marginTop="7dp"
@@ -75,7 +76,7 @@
                     android:id="@+id/tvLocation"
                     app:layout_constraintTop_toBottomOf="@+id/tvAddress"
                     app:layout_constraintStart_toStartOf="@+id/tvCompanyName"
-                    android:layout_marginTop="7dp"
+                    android:layout_marginTop="10dp"
                     android:text="@{model.address}"
                     android:textSize="16sp"
                     android:textColor="@color/black"
@@ -87,38 +88,64 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
 
+                <TextView
+                    android:id="@+id/tvOffer"
+                    app:layout_constraintTop_toBottomOf="@+id/tvLocation"
+                    app:layout_constraintStart_toStartOf="@+id/tvCompanyName"
+                    android:layout_marginTop="10dp"
+                    android:text="@{`Offer: ` + model.offerpercentage + `%`}"
+                    android:textSize="16sp"
+                    android:textColor="@color/black"
+                    android:fontFamily="@font/segoui"
+                    android:textStyle="bold"
+                    android:drawablePadding="7dp"
+                    android:textFontWeight="700"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
                 <ImageView
                     android:id="@+id/ivShare"
-                    android:layout_marginTop="5dp"
+                    android:layout_marginTop="8dp"
                     android:layout_marginRight="7dp"
                     android:src="@drawable/ic_share"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/tvLocation"
+                    app:layout_constraintTop_toBottomOf="@+id/tvOffer"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
 
                 <ImageView
                     android:id="@+id/ivCall"
-                    android:layout_marginTop="5dp"
+                    android:layout_marginTop="8dp"
                     android:layout_marginRight="12dp"
                     android:src="@drawable/ic_phone_call"
                     app:layout_constraintEnd_toStartOf="@+id/ivShare"
-                    app:layout_constraintTop_toBottomOf="@+id/tvLocation"
+                    app:layout_constraintTop_toBottomOf="@+id/tvOffer"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
 
                 <ImageView
                     android:id="@+id/ivWhatsap"
-                    android:layout_marginTop="5dp"
+                    android:layout_marginTop="8dp"
                     android:layout_marginRight="12dp"
                     android:src="@drawable/ic_whatsapp"
                     app:layout_constraintEnd_toStartOf="@+id/ivCall"
-                    app:layout_constraintTop_toBottomOf="@+id/tvLocation"
+                    app:layout_constraintTop_toBottomOf="@+id/tvOffer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <ImageView
+                    android:id="@+id/ivWeb"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginRight="12dp"
+                    android:src="@drawable/ic_web"
+                    app:tint="@color/app_accent_color"
+                    app:layout_constraintEnd_toStartOf="@+id/ivWhatsap"
+                    app:layout_constraintTop_toBottomOf="@+id/tvOffer"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
 
                 <View
-                    app:layout_constraintTop_toBottomOf="@+id/ivShare"
+                    app:layout_constraintTop_toBottomOf="@+id/tvOffer"
                     android:layout_width="match_parent"
                     android:layout_height="7dp"/>
 

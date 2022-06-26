@@ -37,17 +37,48 @@
             android:id="@+id/ivProfileBg"
             android:src="@drawable/bg_profile_home_title"
             app:layout_constraintTop_toBottomOf="@+id/tvWelcome"
+            app:layout_constraintEnd_toStartOf="@+id/sep"
+            app:layout_constraintStart_toStartOf="parent"
             android:layout_marginTop="28dp"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:scaleType="fitXY"
-            android:layout_height="89dp"/>
+            android:layout_height="135dp"/>
 
         <TextView
             android:id="@+id/tvProfilePrompt"
             app:layout_constraintStart_toStartOf="@+id/ivProfileBg"
             app:layout_constraintTop_toTopOf="@+id/ivProfileBg"
             app:layout_constraintBottom_toBottomOf="@+id/ivProfileBg"
-            android:text="My Helps App Profile"
+            android:text="My\nHelps App\nProfile"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:fontFamily="@font/segoeui_heavy"
+            android:textFontWeight="700"
+            android:textStyle="bold"
+            app:layout_constraintVertical_bias="0.8"
+            android:layout_marginLeft="16dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+
+        <com.google.android.material.imageview.ShapeableImageView
+            app:shapeAppearanceOverlay="@style/roundedCornersImageView"
+            android:id="@+id/ivNeedsBg"
+            android:src="@drawable/bg_profile_home_title"
+            app:layout_constraintTop_toBottomOf="@+id/tvWelcome"
+            app:layout_constraintStart_toEndOf="@+id/sep"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="28dp"
+            android:layout_width="0dp"
+            android:scaleType="fitXY"
+            android:layout_height="135dp"/>
+
+        <TextView
+            android:id="@+id/tvNeedsPrompt"
+            app:layout_constraintStart_toStartOf="@+id/ivNeedsBg"
+            app:layout_constraintTop_toTopOf="@+id/ivNeedsBg"
+            app:layout_constraintBottom_toBottomOf="@+id/ivNeedsBg"
+            android:text="Find\nYour Needs"
             android:textColor="@color/white"
             android:textSize="16sp"
             android:fontFamily="@font/segoeui_heavy"

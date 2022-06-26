@@ -40,7 +40,8 @@ object Libs {
         "com.google.android.gms:play-services-maps:${Versions.play_services_maps}",
         "androidx.cardview:cardview:${Versions.cardView}",
         "de.hdodenhof:circleimageview:${Versions.hdodenhof}",
-        "io.github.chaosleung:pinview:${Versions.otp_view}"
+        "io.github.chaosleung:pinview:${Versions.otp_view}",
+        "com.codesgood:justifiedtextview:${Versions.justified_textview}"
     )
 
     val testImplementations = listOf(

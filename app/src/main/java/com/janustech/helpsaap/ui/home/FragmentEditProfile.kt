@@ -21,6 +21,7 @@ import android.widget.ImageView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.FileProvider
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.janustech.helpsaap.BuildConfig
 import com.janustech.helpsaap.R
@@ -110,6 +111,9 @@ class FragmentEditProfile  : BaseFragmentWithBinding<FragmentEditProfileBinding>
                     "AddOfferBottomSheetDialogFragment"
                 )
             }
+            tvPromptTnc.setOnClickListener {
+                appHomeViewModel.getTnc()
+            }
         }
 
         populatePercentage()
@@ -137,6 +141,7 @@ class FragmentEditProfile  : BaseFragmentWithBinding<FragmentEditProfileBinding>
         appHomeViewModel._editSubmitStatusReceiver_.value = null
         appHomeViewModel._editSubmitStatusReceiver.value = null
         appHomeViewModel._offerSubmitStatusReceiver.value = null
+        appHomeViewModel._tncRespReceiver.value = null
     }
 
     override fun onTakePhotoSelected() {
@@ -289,6 +294,32 @@ class FragmentEditProfile  : BaseFragmentWithBinding<FragmentEditProfileBinding>
                                 appHomeViewModel.updateUserDataWithOfferPercentage()
                                 populatePercentage()
                                 (activity as AppHomeActivity).showAlertDialog("Offer added successfully!")
+                            } else {
+                                (activity as AppHomeActivity).showAlertDialog("Error occurred! Please try again")
+                            }
+                        }
+                        Status.LOADING -> {
+                            (activity as AppHomeActivity).showProgress()
+                        }
+                        else ->{
+                            (activity as AppHomeActivity).hideProgress()
+                            (activity as AppHomeActivity).showToast(it.message?:"Invalid Server Response")
+                        }
+                    }
+                }
+            } catch (e: Exception) {
+            }
+        }
+
+        appHomeViewModel.tncRespReceiver?.observe(viewLifecycleOwner){ res->
+            try {
+                res?.let {
+                    when(it.status){
+                        Status.SUCCESS ->{
+                            (activity as AppHomeActivity).hideProgress()
+                            if (it.data?.isResponseSuccess() == true) {
+                                val tnc = it.data.data.description
+                                findNavController().navigate(FragmentEditProfileDirections.actionEditProfileFragmentToTncFragment(tnc))
                             } else {
                                 (activity as AppHomeActivity).showAlertDialog("Error occurred! Please try again")
                             }
@@ -460,7 +491,12 @@ class FragmentEditProfile  : BaseFragmentWithBinding<FragmentEditProfileBinding>
     }
 
     private fun scaleDownImage(image: Bitmap) {
-        with(CommonUtils.scaleDownImage(image)) {
+        val scaledImage = if (isCameraImage){
+            CommonUtils.scaleDownCameraImage(image, currentPhotoPath, photoFile?.absolutePath?:"")
+        }else{
+            CommonUtils.scaleDownGalleryImage(image, requireContext(), galleryImgUri)
+        }
+        with(scaledImage) {
             CommonUtils.compressAndSaveImage(requireContext(), this, "USER").also {
                 actualPath = it.absolutePath
                 appHomeViewModel.editProfImg = actualPath
@@ -470,11 +506,7 @@ class FragmentEditProfile  : BaseFragmentWithBinding<FragmentEditProfileBinding>
     }
 
     private fun setImage(path: String){
-        val image = if (isCameraImage) {
-            CommonUtils.getClearExifBitmap(currentPhotoPath, path)
-        } else {
-            CommonUtils.getClearExifBitmap(requireContext(), galleryImgUri, path)
-        }
+        val image = BitmapFactory.decodeFile(path)
         image?.let {
             binding.ivLogo.apply {
                 setImageBitmap(image)

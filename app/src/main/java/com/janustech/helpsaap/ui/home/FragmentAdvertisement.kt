@@ -7,8 +7,14 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.provider.MediaStore
+import android.text.Editable
+import android.text.TextUtils
+import android.text.TextWatcher
 import android.view.View
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.ImageView
 import androidx.activity.result.contract.ActivityResultContracts
@@ -18,7 +24,9 @@ import androidx.fragment.app.activityViewModels
 import com.janustech.helpsaap.R
 import com.janustech.helpsaap.databinding.FragmentAdvertisementBinding
 import com.janustech.helpsaap.databinding.FragmentAdvertisementBindingImpl
+import com.janustech.helpsaap.map.toLocationDataModel
 import com.janustech.helpsaap.model.AdsPackageModel
+import com.janustech.helpsaap.model.LocationDataModel
 import com.janustech.helpsaap.model.PublishTypeModel
 import com.janustech.helpsaap.network.Status
 import com.janustech.helpsaap.ui.base.BaseFragmentWithBinding
@@ -28,6 +36,7 @@ import com.janustech.helpsaap.utils.PhotoOptionListener
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
 import java.io.IOException
+import java.net.URI
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -50,6 +59,13 @@ class FragmentAdvertisement: BaseFragmentWithBinding<FragmentAdvertisementBindin
     var selectedDateTo = "";
     var selectedPackageDuration = 0
     private lateinit var publishListAdapter: ArrayAdapter<PublishTypeModel>
+
+    lateinit var locationsListAdapter: ArrayAdapter<Any>
+    private var locationSuggestionList = listOf<LocationDataModel>()
+    private var autoCompleteTextHandler: Handler? = null
+
+    private val TRIGGER_AUTO_COMPLETE = 100
+    private val AUTO_COMPLETE_DELAY: Long = 300
 
 
     private var cameraLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -79,7 +95,7 @@ class FragmentAdvertisement: BaseFragmentWithBinding<FragmentAdvertisementBindin
 
         setPublishLocations()
         setObserver()
-
+        setLocationDropdown()
     }
 
     override fun onStop() {
@@ -158,6 +174,88 @@ class FragmentAdvertisement: BaseFragmentWithBinding<FragmentAdvertisementBindin
             } catch (e: Exception) {
             }
         }
+
+        appHomeViewModel.locationListReceiver.observe(viewLifecycleOwner){
+            when(it.status){
+                Status.SUCCESS ->{
+                    (activity as AppHomeActivity).hideProgress()
+                    val locationList = it.data?.data
+                    locationSuggestionList = locationList?.map { locData -> locData.toLocationDataModel() } ?: listOf()
+                    locationsListAdapter = ArrayAdapter(
+                        requireContext(),
+                        android.R.layout.simple_spinner_dropdown_item,
+                        locationSuggestionList
+                    )
+                    binding.actLocation.apply {
+                        setAdapter(locationsListAdapter)
+                        showDropDown()
+                    }
+                }
+                Status.LOADING -> {
+                    (activity as AppHomeActivity).showProgress()
+                }
+                else ->{
+                    (activity as AppHomeActivity).hideProgress()
+                    (activity as AppHomeActivity).showAlertDialog(it.message?:"Invalid Server Response")
+                }
+            }
+        }
+    }
+
+    private fun setLocationDropdown(){
+
+        binding.ivClearSearch.setOnClickListener {
+            binding.actLocation.setText("")
+        }
+
+        binding.actLocation.apply {
+            addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(
+                    s: CharSequence,
+                    start: Int,
+                    count: Int,
+                    after: Int
+                ) {
+                }
+
+                override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+                }
+
+                override fun afterTextChanged(s: Editable) {
+                    binding.apply {
+                        if (s.toString().isNotEmpty()){
+                            binding.ivClearSearch.visibility = View.VISIBLE
+                        }else{
+                            binding.ivClearSearch.visibility = View.GONE
+                        }
+                    }
+                    autoCompleteTextHandler?.removeMessages(TRIGGER_AUTO_COMPLETE)
+                    autoCompleteTextHandler?.sendEmptyMessageDelayed(TRIGGER_AUTO_COMPLETE, AUTO_COMPLETE_DELAY)
+                }
+            })
+
+            onItemClickListener =
+                AdapterView.OnItemClickListener { _, _, pos, _ ->
+                    val locationData = (locationsListAdapter.getItem(pos) as LocationDataModel)
+
+                    locationData.let {
+                        val locName = it.toString()
+                        val locId = it.id
+                        appHomeViewModel.selectedPublicLocationId = locId
+                    }
+                    (activity as AppHomeActivity).hideKeyboard()
+
+                }
+
+            autoCompleteTextHandler = Handler(Looper.getMainLooper()) { msg ->
+                if (msg.what == TRIGGER_AUTO_COMPLETE) {
+                    if (!TextUtils.isEmpty(text)) {
+                        appHomeViewModel.getLocationSuggestions(text.toString())
+                    }
+                }
+                false
+            }
+        }
     }
 
 
@@ -202,8 +300,7 @@ class FragmentAdvertisement: BaseFragmentWithBinding<FragmentAdvertisementBindin
                         publishList[index].isSelected = 0
                     }
                 }
-                appHomeViewModel.selectedPublicLocationId = packageTypeId
-                appHomeViewModel.selectedPublicLocationType = packageTypeName
+                appHomeViewModel.selectedPublicLocationType = packageTypeId
                 appHomeViewModel.selectedAMount = packagePrice
                 selectedPackageDuration = packageDuration
             }
@@ -297,7 +394,12 @@ class FragmentAdvertisement: BaseFragmentWithBinding<FragmentAdvertisementBindin
     }
 
     private fun scaleDownImage(image: Bitmap) {
-        with(CommonUtils.scaleDownImage(image)) {
+        val scaledImage = if (isCameraImage){
+            CommonUtils.scaleDownCameraImage(image, currentPhotoPath, photoFile?.absolutePath?:"")
+        }else{
+            CommonUtils.scaleDownGalleryImage(image, requireContext(), galleryImgUri)
+        }
+        with(scaledImage) {
             CommonUtils.compressAndSaveImage(requireContext(), this, "USER").also {
                 actualPath = it.absolutePath
                 appHomeViewModel.adsImage = actualPath
@@ -307,11 +409,7 @@ class FragmentAdvertisement: BaseFragmentWithBinding<FragmentAdvertisementBindin
     }
 
     private fun setImage(path: String){
-        val image = if (isCameraImage) {
-            CommonUtils.getClearExifBitmap(currentPhotoPath, path)
-        } else {
-            CommonUtils.getClearExifBitmap(requireContext(), galleryImgUri, path)
-        }
+        val image = BitmapFactory.decodeFile(path)
         image?.let {
             binding.ivUpload.apply {
                 setImageBitmap(image)
@@ -340,6 +438,7 @@ class FragmentAdvertisement: BaseFragmentWithBinding<FragmentAdvertisementBindin
         setPublishLocations()
         binding.apply {
             ivUpload.setImageResource(R.drawable.ic_upload)
+            actLocation.setText("")
         }
     }
 }

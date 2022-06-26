@@ -16,5 +16,8 @@ data class CompanyResponseData(
     val photo: String = "",
     val panchayath: String = "",
     val district: String = "",
-    val state: String = ""
+    val state: String = "",
+    val lat: String = "",
+    val long: String = "",
+    val offerpercentage: String = ""
 )

@@ -64,5 +64,13 @@ interface HelpsAapApis {
         @Body postedListRequest: PostedListRequest
     ): ApiResponse<List<PostedAdsResponseData>>
 
+    @GET(HttpEndPoints.ABOUT_US)
+    suspend fun getAboutUs(
+    ): ApiResponse<AboutUsResponse>
+
+    @GET(HttpEndPoints.TNC)
+    suspend fun getTNC(
+    ): ApiResponse<TNCResponse>
+
 
 }

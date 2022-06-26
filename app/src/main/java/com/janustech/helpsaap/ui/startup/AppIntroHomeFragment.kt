@@ -30,6 +30,7 @@ import com.janustech.helpsaap.ui.base.BaseFragmentWithBinding
 import com.janustech.helpsaap.ui.home.AppHomeActivity
 import com.janustech.helpsaap.ui.home.EditLocationBottomSheetDialogFragment
 import com.janustech.helpsaap.ui.profile.LoginActivity
+import com.janustech.helpsaap.ui.profile.PhotoOptionBottomSheetDialogFragment
 import com.janustech.helpsaap.utils.EditLocationListener
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
@@ -83,6 +84,7 @@ class AppIntroHomeFragment: BaseFragmentWithBinding<FragmentAppIntroHomeBinding>
                 btnProfileIco.isEnabled = true
 
                 groupSignupPrompt.visibility = View.GONE
+                btnProfile.visibility = View.VISIBLE
             }else{
                 btnLogin.visibility = View.VISIBLE
                 btnLogin.isEnabled = true
@@ -91,7 +93,21 @@ class AppIntroHomeFragment: BaseFragmentWithBinding<FragmentAppIntroHomeBinding>
                 btnProfileIco.isEnabled = false
 
                 groupSignupPrompt.visibility = View.VISIBLE
+                btnProfile.visibility = View.GONE
             }
+
+            helplineLay.setOnClickListener {
+                HelplineContactBottomSheetFragment().show(
+                    childFragmentManager,
+                    "HelpLineContactFragment"
+                )
+            }
+
+            btnProfile.setOnClickListener {
+                activity?.launchActivity<AppHomeActivity>()
+                activity?.finish()
+            }
+
         }
 
         setObserver()
@@ -144,6 +160,7 @@ class AppIntroHomeFragment: BaseFragmentWithBinding<FragmentAppIntroHomeBinding>
                     (activity as AppIntroActivity).hideProgress()
                     val dataList = it.data?.data
                     setDealsOfDay(dataList?.map { dOd -> dOd.toDealsOfDayDataModel() } ?: listOf())
+                    appIntroViewModel.getAdsList(appIntroViewModel.userSelectedCategory)
                 }
                 Status.LOADING -> {
                     (activity as AppIntroActivity).showProgress()
@@ -151,10 +168,9 @@ class AppIntroHomeFragment: BaseFragmentWithBinding<FragmentAppIntroHomeBinding>
                 else ->{
                     (activity as AppIntroActivity).hideProgress()
                     setDealsOfDay(listOf())
+                    appIntroViewModel.getAdsList(appIntroViewModel.userSelectedCategory)
                 }
             }
-
-            appIntroViewModel.getAdsList(appIntroViewModel.userSelectedCategory)
         }
 
         appIntroViewModel.adsListReceiver.observe(viewLifecycleOwner){

@@ -19,5 +19,7 @@
     <color name="bg_grey_a">#F4F4F4</color>
     <color name="light_green">#EBFFF2</color>
     <color name="grey_disabled">#E8E9E8</color>
+    <color name="red100">#EC493D</color>
+    <color name="grey_10">#E8E6E5</color>
 
 </resources>

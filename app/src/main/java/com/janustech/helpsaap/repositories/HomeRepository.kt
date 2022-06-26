@@ -45,4 +45,8 @@ interface HomeRepository {
 
     fun getPostedAds(postedListRequest: PostedListRequest):Flow<Resource<ApiResponse<List<PostedAdsResponseData>>>>
 
+    fun getAbotUs():Flow<Resource<ApiResponse<AboutUsResponse>>>
+
+    fun getTnc():Flow<Resource<ApiResponse<TNCResponse>>>
+
 }

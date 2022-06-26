@@ -26,8 +26,12 @@ class CompanyListAdapter internal constructor(private val mData: List<CompanyDat
                 viewClickListener(obj as CompanyDataModel, "share")
             }
 
-            itemCompanyListBinding?.ivWhatsap?.setOnClickListener {
-                viewClickListener(obj as CompanyDataModel, "whatsap")
+            itemCompanyListBinding?.tvLocation?.setOnClickListener {
+                viewClickListener(obj as CompanyDataModel, "loc")
+            }
+
+            itemCompanyListBinding?.ivWeb?.setOnClickListener {
+                viewClickListener(obj as CompanyDataModel, "web")
             }
         }
 

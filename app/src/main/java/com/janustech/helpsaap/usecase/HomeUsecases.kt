@@ -114,4 +114,16 @@ class HomeUsecases@Inject constructor(
         }.flowOn(Dispatchers.IO)
     }
 
+    suspend fun getAboutUs():Flow<Resource<ApiResponse<AboutUsResponse>>>{
+        return flow {
+            homeRepository.getAbotUs().collect { emit(it) }
+        }.flowOn(Dispatchers.IO)
+    }
+
+    suspend fun getTnc():Flow<Resource<ApiResponse<TNCResponse>>>{
+        return flow {
+            homeRepository.getTnc().collect { emit(it) }
+        }.flowOn(Dispatchers.IO)
+    }
+
 }

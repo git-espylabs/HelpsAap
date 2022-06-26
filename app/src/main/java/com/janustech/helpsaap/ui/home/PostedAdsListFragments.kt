@@ -32,24 +32,34 @@ class PostedAdsListFragments: BaseFragmentWithBinding<FragmentPostedAdsListBindi
     }
 
     private fun setObserver(){
-        appHomeViewModel.postedAdsListReceiver.observe(viewLifecycleOwner){
-            when(it.status){
-                Status.SUCCESS ->{
-                    (activity as AppHomeActivity).hideProgress()
-                    if (it.data?.isResponseSuccess() == true && it.data.data != null){
-                        postedList = it.data.data.map { dat -> dat.toPostedAdDataModel() }
-                        setList()
+        appHomeViewModel.postedAdsListReceiver?.observe(viewLifecycleOwner){ res ->
+            try {
+                res?.let {
+                    when(it.status){
+                        Status.SUCCESS ->{
+                            (activity as AppHomeActivity).hideProgress()
+                            if (it.data?.isResponseSuccess() == true && it.data.data != null){
+                                postedList = it.data.data.map { dat -> dat.toPostedAdDataModel() }
+                                setList()
+                            }
+                        }
+                        Status.LOADING -> {
+                            (activity as AppHomeActivity).showProgress()
+                        }
+                        else ->{
+                            (activity as AppHomeActivity).hideProgress()
+                            (activity as AppHomeActivity).showAlertDialog(it.message?:"Invalid Server Response")
+                        }
                     }
                 }
-                Status.LOADING -> {
-                    (activity as AppHomeActivity).showProgress()
-                }
-                else ->{
-                    (activity as AppHomeActivity).hideProgress()
-                    (activity as AppHomeActivity).showAlertDialog(it.message?:"Invalid Server Response")
-                }
+            } catch (e: Exception) {
             }
         }
+    }
+
+    override fun onStop() {
+        appHomeViewModel._postedAdsListReceiver.value = null
+        super.onStop()
     }
 
     private fun setList(){

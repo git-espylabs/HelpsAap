@@ -262,7 +262,12 @@ class SignupFragmentSecond : BaseFragmentWithBinding<FragmentRegisterSecondBindi
     }
 
     private fun scaleDownImage(image: Bitmap) {
-        with(CommonUtils.scaleDownImage(image)) {
+        val scaledImage = if (isCameraImage){
+            CommonUtils.scaleDownCameraImage(image, currentPhotoPath, photoFile?.absolutePath?:"")
+        }else{
+            CommonUtils.scaleDownGalleryImage(image, requireContext(), galleryImgUri)
+        }
+        with(scaledImage) {
             CommonUtils.compressAndSaveImage(requireContext(), this, "USER").also {
                 actualPath = it.absolutePath
                 profileViewModel.regImage = actualPath
@@ -272,11 +277,7 @@ class SignupFragmentSecond : BaseFragmentWithBinding<FragmentRegisterSecondBindi
     }
 
     private fun setImage(path: String){
-        val image = if (isCameraImage) {
-            CommonUtils.getClearExifBitmap(currentPhotoPath, path)
-        } else {
-            CommonUtils.getClearExifBitmap(requireContext(), galleryImgUri, path)
-        }
+        val image = BitmapFactory.decodeFile(path)
         image?.let {
             binding.ivUpload.apply {
                 setImageBitmap(image)

@@ -106,4 +106,16 @@ class HomeRepositoryImpl(private val apiService: HelpsAapApis): HomeRepository {
             emit(safeApiCall { apiService.getPostedAds(postedListRequest) })
         }.flowOn(Dispatchers.IO)
     }
+
+    override fun getAbotUs(): Flow<Resource<ApiResponse<AboutUsResponse>>> {
+        return flow {
+            emit(safeApiCall { apiService.getAboutUs() })
+        }.flowOn(Dispatchers.IO)
+    }
+
+    override fun getTnc(): Flow<Resource<ApiResponse<TNCResponse>>> {
+        return flow {
+            emit(safeApiCall { apiService.getTNC() })
+        }.flowOn(Dispatchers.IO)
+    }
 }

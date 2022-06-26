@@ -13,5 +13,9 @@ data class CompanyDataModel(
     val photo: String = "",
     val panc: String = "",
     val dist: String = "",
-    val address: String = ""
+    val address: String = "",
+    val state: String = "",
+    val lat: String = "",
+    val long: String = "",
+    val offerpercentage: String = "0",
 )

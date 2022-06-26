@@ -74,14 +74,26 @@ internal fun CompanyResponseData.toCompanyDataModel() = CompanyDataModel(
     photo = photo?:"",
     panc = panchayath?:"",
     dist = district?:"",
-    address = if (panchayath != null && district !=null){
-        "$panchayath, $district"
-    }else if (panchayath != null){
-        panchayath
-    }else{
-        "--"
-    }
+    address = getAddressWithData(panchayath, district, state),
+    lat = lat?:"",
+    long = long?:"",
+    offerpercentage = offerpercentage?:""
 )
+
+fun getAddressWithData(panch: String, dist: String, state: String): String{
+    var addr = ""
+    if (panch != null && panch.isNotEmpty()){
+        addr += panch
+    }
+    if (dist != null && dist.isNotEmpty()){
+        addr = "$addr, $dist"
+    }
+    if (state != null && state.isNotEmpty()){
+        addr  = "$addr, $state"
+    }
+
+    return addr;
+}
 
 internal fun String.toProfileCategoryModel() = ProfileCategorySubmitRequest(
      categoryid = this
