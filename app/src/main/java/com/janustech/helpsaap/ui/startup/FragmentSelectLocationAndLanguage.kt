@@ -48,21 +48,31 @@ class FragmentSelectLocationAndLanguage: BaseFragmentWithBinding<FragmentSelectL
         setLocationDropdown()
     }
 
+    override fun onStop() {
+        super.onStop()
+        appIntroViewModel._languageListReceiver.value = null
+    }
+
     private fun setObserver(){
-        appIntroViewModel.languageListReceiver.observe(viewLifecycleOwner){
-            when(it.status){
-                Status.SUCCESS ->{
-                    (activity as AppIntroActivity).hideProgress()
-                    val languageList = it.data?.data
-                    setLanguageList(languageList)
+        appIntroViewModel.languageListReceiver?.observe(viewLifecycleOwner){ res->
+            try {
+                res?.let {
+                    when(it.status){
+                        Status.SUCCESS ->{
+                            (activity as AppIntroActivity).hideProgress()
+                            val languageList = it.data?.data
+                            setLanguageList(languageList)
+                        }
+                        Status.LOADING -> {
+                            (activity as AppIntroActivity).showProgress()
+                        }
+                        else ->{
+                            (activity as AppIntroActivity).hideProgress()
+                            (activity as AppIntroActivity).showAlertDialog(it.message?:"Invalid Server Response")
+                        }
+                    }
                 }
-                Status.LOADING -> {
-                    (activity as AppIntroActivity).showProgress()
-                }
-                else ->{
-                    (activity as AppIntroActivity).hideProgress()
-                    (activity as AppIntroActivity).showAlertDialog(it.message?:"Invalid Server Response")
-                }
+            } catch (e: Exception) {
             }
         }
         appIntroViewModel.locationListReceiver.observe(viewLifecycleOwner){
@@ -173,10 +183,7 @@ class FragmentSelectLocationAndLanguage: BaseFragmentWithBinding<FragmentSelectL
                 model.let {
                     val lanName = it.lang
                     val lanId = it.id
-                    appIntroViewModel.apply {
-                        userLanguage = lanName
-                        userLanguageId = lanId
-                    }
+                    appIntroViewModel.updateLanguageSelection(it)
                     AppPreferences.apply {
                         userLanguage = lanName
                         userLanguageId = lanId

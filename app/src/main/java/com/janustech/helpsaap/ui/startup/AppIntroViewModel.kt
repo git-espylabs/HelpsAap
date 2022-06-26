@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
+import com.janustech.helpsaap.model.LanguageDataModel
 import com.janustech.helpsaap.model.UserData
 import com.janustech.helpsaap.network.Resource
 import com.janustech.helpsaap.network.requests.*
@@ -12,6 +13,7 @@ import com.janustech.helpsaap.network.response.*
 import com.janustech.helpsaap.preference.AppPreferences
 import com.janustech.helpsaap.usecase.AppIntroUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
@@ -32,8 +34,8 @@ class AppIntroViewModel
     var userNameIc = ""
     var userName = ""
 
-    private val _languageListReceiver = MutableLiveData<Resource<ApiResponse<List<LanguageListResponseData>>>>()
-    val languageListReceiver: LiveData<Resource<ApiResponse<List<LanguageListResponseData>>>>
+    var _languageListReceiver = MutableLiveData<Resource<ApiResponse<List<LanguageListResponseData>>>>()
+    var languageListReceiver: LiveData<Resource<ApiResponse<List<LanguageListResponseData>>>>? = null
         get() = _languageListReceiver
 
     private val _locationListReceiver = MutableLiveData<Resource<ApiResponse<List<LocationListResponseData>>>>()
@@ -59,6 +61,12 @@ class AppIntroViewModel
     private val _profileDataReceiver = MutableLiveData<Resource<ApiResponse<List<ProfileViewResponseData>>>>()
     val profileDataReceiver: LiveData<Resource<ApiResponse<List<ProfileViewResponseData>>>>
         get() = _profileDataReceiver
+
+    var _languageEditListReceiver = MutableLiveData<Resource<ApiResponse<List<LanguageListResponseData>>>>()
+    var languageEditListReceiver: LiveData<Resource<ApiResponse<List<LanguageListResponseData>>>>? = null
+        get() = _languageEditListReceiver
+
+    var _langugaeUpdatedFlow = MutableSharedFlow<LanguageDataModel>()
 
     init {
         userLocationName = AppPreferences.userLocation
@@ -98,6 +106,23 @@ class AppIntroViewModel
                             _languageListReceiver.value = apiResponse
                         }?: run {
                             _languageListReceiver.value = Resource.dataError("Invalid server response!")
+                        }
+                    }
+                }
+
+        }
+    }
+
+    fun getEditLanguages(){
+        viewModelScope.launch {
+            appIntroUseCase.getLanguages()
+                .onStart { _languageEditListReceiver.value = Resource.loading() }
+                .collect { apiResponse ->
+                    apiResponse.let {
+                        it.data?.let {
+                            _languageEditListReceiver.value = apiResponse
+                        }?: run {
+                            _languageEditListReceiver.value = Resource.dataError("Invalid server response!")
                         }
                     }
                 }
@@ -200,6 +225,14 @@ class AppIntroViewModel
                         }
                     }
                 }
+        }
+    }
+
+    fun updateLanguageSelection(obj: LanguageDataModel){
+        viewModelScope.launch {
+            userLanguage = obj.lang
+            userLanguageId = obj.id
+            _langugaeUpdatedFlow.emit(obj)
         }
     }
 }

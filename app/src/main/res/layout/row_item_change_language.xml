@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="model"
+            type="com.janustech.helpsaap.model.LanguageDataModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingVertical="12dp">
+
+        <TextView
+            android:id="@+id/tvPhone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:text="@{model.lang}"
+            android:drawableTint="@color/app_accent_color"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_size_custom_18"
+            android:fontFamily="@font/segoeui_heavy"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+        <View
+            app:layout_constraintTop_toBottomOf="@+id/tvPhone"
+            android:layout_marginTop="4dp"
+            android:background="@color/grey_50"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

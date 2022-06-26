@@ -4,14 +4,17 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.text.Editable
+import android.text.SpannableString
 import android.text.TextUtils
 import android.text.TextWatcher
+import android.text.style.UnderlineSpan
 import android.view.MenuInflater
 import android.view.View
 import android.widget.AdapterView.OnItemClickListener
 import android.widget.ArrayAdapter
 import androidx.appcompat.widget.PopupMenu
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
 import com.janustech.helpsaap.R
@@ -20,10 +23,8 @@ import com.janustech.helpsaap.extension.launchActivity
 import com.janustech.helpsaap.map.toAdsDataModel
 import com.janustech.helpsaap.map.toCategoryDataModel
 import com.janustech.helpsaap.map.toDealsOfDayDataModel
-import com.janustech.helpsaap.model.AdsDataModel
-import com.janustech.helpsaap.model.CategoryDataModel
-import com.janustech.helpsaap.model.DealOfDayDataModel
-import com.janustech.helpsaap.model.LocationDataModel
+import com.janustech.helpsaap.map.toLanguageDataModel
+import com.janustech.helpsaap.model.*
 import com.janustech.helpsaap.network.Status
 import com.janustech.helpsaap.preference.AppPreferences
 import com.janustech.helpsaap.ui.base.BaseFragmentWithBinding
@@ -33,6 +34,8 @@ import com.janustech.helpsaap.ui.profile.LoginActivity
 import com.janustech.helpsaap.ui.profile.PhotoOptionBottomSheetDialogFragment
 import com.janustech.helpsaap.utils.EditLocationListener
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import java.util.*
 
 
@@ -108,6 +111,16 @@ class AppIntroHomeFragment: BaseFragmentWithBinding<FragmentAppIntroHomeBinding>
                 activity?.finish()
             }
 
+            tvLangName.also {
+                val str = appIntroViewModel.userLanguage
+                val content = SpannableString(str)
+                content.setSpan(UnderlineSpan(), 0, str.length, 0)
+                it.text = content
+                it.setOnClickListener {
+                    appIntroViewModel.getEditLanguages()
+                }
+            }
+
         }
 
         setObserver()
@@ -141,6 +154,7 @@ class AppIntroHomeFragment: BaseFragmentWithBinding<FragmentAppIntroHomeBinding>
     override fun onStop() {
         super.onStop()
         appIntroViewModel._categoriesReceiver.value = null
+        appIntroViewModel._languageEditListReceiver.value = null
         (activity as AppIntroActivity).hideProgress()
     }
 
@@ -152,7 +166,24 @@ class AppIntroHomeFragment: BaseFragmentWithBinding<FragmentAppIntroHomeBinding>
         }
     }
 
+    private fun setLanguage(languageModel: LanguageDataModel){
+        binding.apply {
+            tvLangName.also {
+                val str = languageModel.lang
+                val content = SpannableString(str)
+                content.setSpan(UnderlineSpan(), 0, str.length, 0)
+                it.text = content
+            }
+        }
+    }
+
     private fun setObserver(){
+
+        lifecycleScope.launch {
+            appIntroViewModel._langugaeUpdatedFlow.collect {
+                setLanguage(it)
+            }
+        }
 
         appIntroViewModel.dealsOfDay.observe(viewLifecycleOwner){
             when(it.status){
@@ -213,6 +244,32 @@ class AppIntroHomeFragment: BaseFragmentWithBinding<FragmentAppIntroHomeBinding>
                     else ->{
                         (activity as AppIntroActivity).hideProgress()
 //                        (activity as AppIntroActivity).showAlertDialog(it.message?:"Invalid Server Response")
+                    }
+                }
+            }
+        }
+
+        appIntroViewModel.languageEditListReceiver?.observe(viewLifecycleOwner){ result ->
+            result?.let {
+                when(it.status){
+                    Status.SUCCESS ->{
+                        (activity as AppIntroActivity).hideProgress()
+                        val dataList = it.data?.data?.map { lang -> lang.toLanguageDataModel() }
+                        dataList?.let { languageDataList ->
+                            if (languageDataList.isNotEmpty()){
+                                ChangeLanguageBottomSheetFragment(appIntroViewModel, languageDataList).show(
+                                    childFragmentManager,
+                                    "ChangeLanguageFragment"
+                                )
+                            }
+                        }
+
+                    }
+                    Status.LOADING -> {
+                        (activity as AppIntroActivity).showProgress()
+                    }
+                    else ->{
+                        (activity as AppIntroActivity).hideProgress()
                     }
                 }
             }
