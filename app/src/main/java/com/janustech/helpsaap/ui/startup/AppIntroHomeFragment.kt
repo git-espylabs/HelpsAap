@@ -86,7 +86,7 @@ class AppIntroHomeFragment: BaseFragmentWithBinding<FragmentAppIntroHomeBinding>
                 btnProfileIco.visibility = View.VISIBLE
                 btnProfileIco.isEnabled = true
 
-                groupSignupPrompt.visibility = View.GONE
+                groupSignupPrompt.visibility = View.INVISIBLE
                 btnProfile.visibility = View.VISIBLE
             }else{
                 btnLogin.visibility = View.VISIBLE
@@ -96,7 +96,7 @@ class AppIntroHomeFragment: BaseFragmentWithBinding<FragmentAppIntroHomeBinding>
                 btnProfileIco.isEnabled = false
 
                 groupSignupPrompt.visibility = View.VISIBLE
-                btnProfile.visibility = View.GONE
+                btnProfile.visibility = View.INVISIBLE
             }
 
             helplineLay.setOnClickListener {

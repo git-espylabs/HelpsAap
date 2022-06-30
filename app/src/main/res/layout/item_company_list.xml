@@ -5,6 +5,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+        <import type="android.text.TextUtils"/>
+        <import type="android.view.View"/>
         <variable
             name="model"
             type="com.janustech.helpsaap.model.CompanyDataModel" />
@@ -60,26 +62,41 @@
 
                 <TextView
                     android:id="@+id/tvAddress"
-                    android:visibility="gone"
+                    android:visibility="visible"
                     app:layout_constraintTop_toBottomOf="@+id/tvCompanyName"
                     app:layout_constraintStart_toStartOf="@+id/tvCompanyName"
                     android:layout_marginTop="7dp"
-                    android:textSize="14sp"
-                    android:textColor="@color/grey_100"
+                    android:textSize="15sp"
+                    android:textColor="@color/grey_150"
                     android:fontFamily="@font/segoui"
                     android:textFontWeight="400"
-                    android:text="@{model.website}"
+                    android:text="@{model.areaname}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <TextView
+                    android:id="@+id/tvAddressMore"
+                    android:visibility="visible"
+                    app:layout_constraintTop_toBottomOf="@+id/tvAddress"
+                    app:layout_constraintStart_toStartOf="@+id/tvCompanyName"
+                    android:layout_marginTop="7dp"
+                    android:textSize="15sp"
+                    android:textColor="@color/grey_150"
+                    android:fontFamily="@font/segoui"
+                    android:textFontWeight="400"
+                    android:text="@{model.address}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
 
                 <TextView
                     android:id="@+id/tvLocation"
-                    app:layout_constraintTop_toBottomOf="@+id/tvAddress"
+                    app:layout_constraintTop_toBottomOf="@+id/tvAddressMore"
                     app:layout_constraintStart_toStartOf="@+id/tvCompanyName"
                     android:layout_marginTop="10dp"
-                    android:text="@{model.address}"
+                    android:text="@string/view_map"
+                    android:visibility="@{(TextUtils.isEmpty(model.lat) || TextUtils.isEmpty(model.longi)) ? View.GONE : View.VISIBLE}"
                     android:textSize="16sp"
-                    android:textColor="@color/black"
+                    android:textColor="@color/purple_700"
                     android:fontFamily="@font/segoui"
                     android:textStyle="bold"
                     android:drawableStart="@drawable/ic_location"

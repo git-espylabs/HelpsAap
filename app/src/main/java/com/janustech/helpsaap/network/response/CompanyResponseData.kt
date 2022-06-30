@@ -19,5 +19,7 @@ data class CompanyResponseData(
     val state: String = "",
     val lat: String = "",
     val long: String = "",
-    val offerpercentage: String = ""
+    val offerpercentage: String = "",
+    val areaname: String = "",
+    val language: String = ""
 )

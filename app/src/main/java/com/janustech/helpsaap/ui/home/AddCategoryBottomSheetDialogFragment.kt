@@ -33,6 +33,8 @@ class AddCategoryBottomSheetDialogFragment(private val viewModel: AppHomeViewMod
     private val TRIGGER_AUTO_COMPLETE = 100
     private val AUTO_COMPLETE_DELAY: Long = 300
 
+    private var isDropDownItemSelected = false;
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setStyle(DialogFragment.STYLE_NORMAL, R.style.DialogStyle)
@@ -80,15 +82,17 @@ class AddCategoryBottomSheetDialogFragment(private val viewModel: AppHomeViewMod
                 Status.SUCCESS ->{
                     (activity as AppHomeActivity).hideProgress()
                     val dataList = it.data?.data
-                    categoriesSuggestionList = dataList?.map { dat -> dat.toCategoryDataModel() } ?: listOf()
-                    categoriesListAdapter = ArrayAdapter(
-                        requireContext(),
-                        android.R.layout.simple_spinner_dropdown_item,
-                        categoriesSuggestionList
-                    )
-                    binding.tvDropdownLocation.apply {
-                        setAdapter(categoriesListAdapter)
-                        showDropDown()
+                    if (isDropDownItemSelected.not()) {
+                        categoriesSuggestionList = dataList?.map { dat -> dat.toCategoryDataModel() } ?: listOf()
+                        categoriesListAdapter = ArrayAdapter(
+                            requireContext(),
+                            android.R.layout.simple_spinner_dropdown_item,
+                            categoriesSuggestionList
+                        )
+                        binding.tvDropdownLocation.apply {
+                            setAdapter(categoriesListAdapter)
+                            showDropDown()
+                        }
                     }
                 }
                 Status.LOADING -> {
@@ -121,6 +125,7 @@ class AddCategoryBottomSheetDialogFragment(private val viewModel: AppHomeViewMod
                 }
 
                 override fun afterTextChanged(s: Editable) {
+                    isDropDownItemSelected = false;
                     if (s.toString().isNotEmpty()){
                         binding.ivClearSearch.visibility = View.VISIBLE
                     }else{
@@ -133,6 +138,7 @@ class AddCategoryBottomSheetDialogFragment(private val viewModel: AppHomeViewMod
 
             onItemClickListener =
                 AdapterView.OnItemClickListener { _, _, pos, _ ->
+                    isDropDownItemSelected = true;
                     val catData = (categoriesListAdapter.getItem(pos) as CategoryDataModel)
 
                     catData.let {

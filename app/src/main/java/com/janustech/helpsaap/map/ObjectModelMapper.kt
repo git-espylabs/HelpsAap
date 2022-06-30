@@ -76,8 +76,10 @@ internal fun CompanyResponseData.toCompanyDataModel() = CompanyDataModel(
     dist = district?:"",
     address = getAddressWithData(panchayath, district, state),
     lat = lat?:"",
-    long = long?:"",
-    offerpercentage = offerpercentage?:""
+    longi = long?:"",
+    offerpercentage = offerpercentage?:"",
+    areaname = areaname?:"",
+    language = language?:""
 )
 
 fun getAddressWithData(panch: String, dist: String, state: String): String{

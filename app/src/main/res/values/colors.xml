@@ -11,6 +11,7 @@
     <color name="border_color2">#DFDFDF</color>
     <color name="app_accent_color">#23D563</color>
     <color name="colorTransparent">#80000000</color>
+    <color name="grey_150">#7C7A79</color>
     <color name="grey_100">#9A928F</color>
     <color name="grey_50">#CAC2C0</color>
     <color name="grey_25">#DAD6D5</color>

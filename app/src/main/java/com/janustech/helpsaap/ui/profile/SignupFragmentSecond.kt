@@ -63,6 +63,8 @@ class SignupFragmentSecond : BaseFragmentWithBinding<FragmentRegisterSecondBindi
     private var selectedCategory = ""
     private var isCameraImage = true
 
+    private var isDropDownItemSelected = false;
+
 
     private var cameraLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
@@ -174,15 +176,17 @@ class SignupFragmentSecond : BaseFragmentWithBinding<FragmentRegisterSecondBindi
                 Status.SUCCESS ->{
                     (activity as SignupActivity).hideProgress()
                     val dataList = it.data?.data
-                    categoriesSuggestionList = dataList?.map { dat -> dat.toCategoryDataModel() } ?: listOf()
-                    categoriesListAdapter = ArrayAdapter(
-                        requireContext(),
-                        android.R.layout.simple_spinner_dropdown_item,
-                        categoriesSuggestionList
-                    )
-                    binding.categorySpinner.apply {
-                        setAdapter(categoriesListAdapter)
-                        showDropDown()
+                    if (isDropDownItemSelected.not()) {
+                        categoriesSuggestionList = dataList?.map { dat -> dat.toCategoryDataModel() } ?: listOf()
+                        categoriesListAdapter = ArrayAdapter(
+                            requireContext(),
+                            android.R.layout.simple_spinner_dropdown_item,
+                            categoriesSuggestionList
+                        )
+                        binding.categorySpinner.apply {
+                            setAdapter(categoriesListAdapter)
+                            showDropDown()
+                        }
                     }
                 }
                 Status.LOADING -> {
@@ -316,6 +320,7 @@ class SignupFragmentSecond : BaseFragmentWithBinding<FragmentRegisterSecondBindi
                 }
 
                 override fun afterTextChanged(s: Editable) {
+                    isDropDownItemSelected = false;
                     binding.apply {
                         if (s.toString().isNotEmpty()){
                             binding.ivClearSearch.visibility = View.VISIBLE
@@ -330,13 +335,14 @@ class SignupFragmentSecond : BaseFragmentWithBinding<FragmentRegisterSecondBindi
 
             onItemClickListener =
                 AdapterView.OnItemClickListener { _, _, pos, _ ->
+                    isDropDownItemSelected = true;
                     val catData = (categoriesListAdapter.getItem(pos) as CategoryDataModel)
 
                     catData.let {
                         selectedCategory = it.id
                         profileViewModel.regCategoryId = it.id
-                        (activity as SignupActivity).hideKeyboard()
                     }
+                    (activity as SignupActivity).hideKeyboard()
                 }
 
             autoCompleteTextHandler = Handler(Looper.getMainLooper()) { msg ->

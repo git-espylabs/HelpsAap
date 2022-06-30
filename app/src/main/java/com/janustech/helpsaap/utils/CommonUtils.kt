@@ -163,9 +163,8 @@ object CommonUtils {
         }
     }
 
-    fun share(ctx: Context){
+    fun share(ctx: Context, shareBody: String){
         val intent = Intent(Intent.ACTION_SEND)
-        val shareBody = "Here is the share content body"
         intent.type = "text/plain"
         intent.putExtra(
             Intent.EXTRA_SUBJECT,

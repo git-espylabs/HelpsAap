@@ -223,7 +223,8 @@ class FragmentEditProfile  : BaseFragmentWithBinding<FragmentEditProfileBinding>
                             (activity as AppHomeActivity).hideProgress()
                             if (it.data?.isResponseSuccess() == true) {
                                 appHomeViewModel.updateUserDataWithEditSuccess()
-                                AppPreferences.userLanguageId = appHomeViewModel.editLangId;
+                                AppPreferences.userLanguageId = appHomeViewModel.editLangId
+                                AppPreferences.userLanguage = appHomeViewModel.editLangName
                                 (activity as AppHomeActivity).showAlertDialog("Profile edited successfully!")
                             } else {
                                 (activity as AppHomeActivity).showAlertDialog("Edit profile failed! Please try again")
@@ -356,6 +357,7 @@ class FragmentEditProfile  : BaseFragmentWithBinding<FragmentEditProfileBinding>
             }
             setOnItemClickListener { _, _, position, _ ->
                 appHomeViewModel.editLangId = list[position].id
+                appHomeViewModel.editLangName = list[position].lang
             }
             setAdapter(langListAdapter)
         }

@@ -109,7 +109,7 @@ class AppIntroSearchListFragment: BaseFragmentWithBinding<FragmentAppIntroSearch
                         }
                     }
                     "share" ->{
-                        CommonUtils.share(requireContext())
+                        CommonUtils.share(requireContext(), createShareContent(model))
                     }
                     "whatsap" ->{
                         when {
@@ -125,7 +125,11 @@ class AppIntroSearchListFragment: BaseFragmentWithBinding<FragmentAppIntroSearch
                         }
                     }
                     "loc" ->{
-                        openMap(model.lat.toDouble(), model.long.toDouble())
+                        if (model.lat.isNotEmpty() && model.longi.isNotEmpty()) {
+                            var markerName = model.businessname.ifEmpty { model.cus_name }
+                            markerName = markerName + ", " + model.areaname
+                            gotToLocation(markerName, model.lat.toFloat(), model.longi.toFloat())
+                        }
                     }
                     "web" ->{
                         openWeb(model.website)
@@ -137,12 +141,48 @@ class AppIntroSearchListFragment: BaseFragmentWithBinding<FragmentAppIntroSearch
         }
     }
 
+    private fun createShareContent(obj: CompanyDataModel): String{
+        var name = obj.businessname.ifEmpty { obj.cus_name }
+        var area = obj.areaname
+
+        var data = name + " - " + appIntroViewModel.userSelectedCategoryName + "\n"
+        if (area.isNotEmpty()){
+            data =  data + area +"\n"
+        }
+        if (obj.address.isNotEmpty()){
+            data = data + obj.address + "\n"
+        }
+        if (obj.phone_number.isNotEmpty()){
+            data = data + "Phone: " + obj.phone_number + "\n"
+        }
+        if (obj.website.isNotEmpty()){
+            data = data + "Website: " + obj.website
+        }
+
+        return data
+    }
+
     private fun openMap(latitude: Double, longitude: Double){
         try {
             val uri: String = java.lang.String.format(Locale.ENGLISH, "geo:%f,%f", latitude, longitude)
             val intent = Intent(Intent.ACTION_VIEW, Uri.parse(uri))
             requireContext().startActivity(intent)
         }catch (e: Exception){
+        }
+    }
+
+    private fun gotToLocation(markerName: String?, latitude: Float?, longitude: Float?) {
+        val uri = java.lang.String.format(
+            Locale.ENGLISH,
+            "geo:0,0?q=%f,%f(%s)",
+            latitude,
+            longitude,
+            markerName
+        )
+        val mapIntent = Intent(Intent.ACTION_VIEW, Uri.parse(uri))
+        mapIntent.setPackage("com.google.android.apps.maps")
+        if (mapIntent.resolveActivity(activity!!.packageManager) != null) {
+            startActivity(mapIntent)
         }
     }
 

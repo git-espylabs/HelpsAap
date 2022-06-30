@@ -50,6 +50,7 @@ class AppHomeViewModel @Inject constructor(private val appIntroUseCase: AppIntro
     var editProfImg = ""
     var addedCategories = arrayListOf<String>()
     var editLangId = ""
+    var editLangName = ""
     var editOfferPercent = "0"
 
     var selectedFromAdsDate = ""
