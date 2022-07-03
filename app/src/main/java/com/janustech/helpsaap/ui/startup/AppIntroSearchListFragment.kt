@@ -5,6 +5,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.MenuInflater
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.widget.PopupMenu
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -112,16 +113,20 @@ class AppIntroSearchListFragment: BaseFragmentWithBinding<FragmentAppIntroSearch
                         CommonUtils.share(requireContext(), createShareContent(model))
                     }
                     "whatsap" ->{
-                        when {
-                            isAppInstalled(requireContext(), "com.whatsapp.w4b") -> {
-                                CommonUtils.openWhatsApp(requireContext(), model.phone_number, "com.whatsapp.w4b")
+                        if (model.phone_number.isValidPhoneNumber()){
+                            when {
+                                isAppInstalled(requireContext(), "com.whatsapp.w4b") -> {
+                                    CommonUtils.openWhatsApp(requireContext(), model.phone_number, "com.whatsapp.w4b")
+                                }
+                                isAppInstalled(requireContext(), "com.whatsapp") -> {
+                                    CommonUtils.openWhatsApp(requireContext(), model.phone_number, "com.whatsapp")
+                                }
+                                else -> {
+                                    showAlertDialog("whatsApp is not installed")
+                                }
                             }
-                            isAppInstalled(requireContext(), "com.whatsapp") -> {
-                                CommonUtils.openWhatsApp(requireContext(), model.phone_number, "com.whatsapp")
-                            }
-                            else -> {
-                                showAlertDialog("whatsApp is not installed")
-                            }
+                        }else{
+                            Toast.makeText(requireContext(), "Not a valid number", Toast.LENGTH_SHORT).show()
                         }
                     }
                     "loc" ->{

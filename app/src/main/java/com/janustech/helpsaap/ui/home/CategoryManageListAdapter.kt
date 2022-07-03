@@ -12,8 +12,9 @@ import com.janustech.helpsaap.databinding.ItemCategoryListBinding
 import com.janustech.helpsaap.databinding.ItemCategoryManageListBinding
 import com.janustech.helpsaap.model.CategoryDataModel
 import com.janustech.helpsaap.model.CompanyDataModel
+import com.janustech.helpsaap.model.UserCategoriesDataModel
 
-class CategoryManageListAdapter internal constructor(private val context: Context, private val mData: List<CategoryDataModel>, val viewClickListener: (model: CategoryDataModel, position: Int) -> Unit): RecyclerView.Adapter<CategoryManageListAdapter.ViewHolder>() {
+class CategoryManageListAdapter internal constructor(private val context: Context, private val mData: List<UserCategoriesDataModel>, val viewClickListener: (model: UserCategoriesDataModel, position: Int) -> Unit): RecyclerView.Adapter<CategoryManageListAdapter.ViewHolder>() {
 
     inner class ViewHolder(itemCategoryManageListBinding: ItemCategoryManageListBinding) : RecyclerView.ViewHolder(itemCategoryManageListBinding.root) {
         private var itemCategoryManageListBinding: ItemCategoryManageListBinding? = null
@@ -22,11 +23,11 @@ class CategoryManageListAdapter internal constructor(private val context: Contex
             itemCategoryManageListBinding?.executePendingBindings()
 
             itemCategoryManageListBinding?.itemRemove?.setOnClickListener {
-                viewClickListener(obj as CategoryDataModel, position)
+                viewClickListener(obj as UserCategoriesDataModel, position)
             }
 
             itemCategoryManageListBinding?.bgView?.apply {
-                if ((obj as CategoryDataModel).type == "0"){
+                if ((obj as UserCategoriesDataModel).type == "0"){
                     setBackgroundResource(R.drawable.rounded_rect_green_filled_less_radii)
                 }else{
                     setBackgroundResource(R.drawable.rounded_rect_orange_filled_less_radii)

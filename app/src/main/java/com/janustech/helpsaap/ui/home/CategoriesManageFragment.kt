@@ -18,7 +18,9 @@ import com.janustech.helpsaap.R
 import com.janustech.helpsaap.databinding.FragmentAppHomeBinding
 import com.janustech.helpsaap.databinding.FragmentManageCategoriesBinding
 import com.janustech.helpsaap.map.toCategoryDataModel
+import com.janustech.helpsaap.map.toUserCategoryDataModel
 import com.janustech.helpsaap.model.CategoryDataModel
+import com.janustech.helpsaap.model.UserCategoriesDataModel
 import com.janustech.helpsaap.network.Status
 import com.janustech.helpsaap.ui.base.BaseFragmentWithBinding
 
@@ -29,15 +31,15 @@ class CategoriesManageFragment: BaseFragmentWithBinding<FragmentManageCategories
     lateinit var categoriesListAdapter: ArrayAdapter<Any>
     private var categoriesSuggestionList = listOf<CategoryDataModel>()
     private var autoCompleteTextHandler: Handler? = null
-    var categoryList = arrayListOf<CategoryDataModel>()
-    var categoryServerList = arrayListOf<CategoryDataModel>()
-    var categoryAddNewList = arrayListOf<CategoryDataModel>()
+    var categoryList = arrayListOf<UserCategoriesDataModel>()
+    var categoryServerList = arrayListOf<UserCategoriesDataModel>()
+    var categoryAddNewList = arrayListOf<UserCategoriesDataModel>()
 
     private val TRIGGER_AUTO_COMPLETE = 100
     private val AUTO_COMPLETE_DELAY: Long = 300
 
     private var isDropDownItemSelected = false;
-    private var itemRemove: CategoryDataModel? = null
+    private var itemRemove: UserCategoriesDataModel? = null
     private var itemRemovePos = -1;
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -48,11 +50,12 @@ class CategoriesManageFragment: BaseFragmentWithBinding<FragmentManageCategories
                 itemRemovePos = pos
                 itemRemove = obj
 
-                if (categoryServerList.any { it.id == itemRemove?.id }){
+                if (categoryServerList.any { it.categoryid == itemRemove?.categoryid }){
                     showDeleteWarning(obj.id)
                 }else{
                     categoryList.removeAt(itemRemovePos)
                     binding.catListAdapter?.notifyItemRemoved(itemRemovePos)
+                    binding.catListAdapter?.notifyItemRangeChanged(itemRemovePos, categoryList.size);
                 }
             }
 
@@ -147,13 +150,14 @@ class CategoriesManageFragment: BaseFragmentWithBinding<FragmentManageCategories
                     when(it.status){
                         Status.SUCCESS ->{
                             (activity as AppHomeActivity).hideProgress()
-                            val catList = it.data?.data?.map { obj -> obj.toCategoryDataModel() }?: listOf()
+                            val catList = it.data?.data?.map { obj -> obj.toUserCategoryDataModel() }?: listOf()
                             if (catList.isNotEmpty()) {
                                 categoryServerList.clear()
                                 categoryServerList.addAll(catList)
                                 categoryList.clear()
                                 categoryList.addAll(catList)
                                 binding.catListAdapter?.notifyItemInserted(categoryList.size - 1)
+                                binding.catListAdapter?.notifyDataSetChanged()
                             }else{
                                 binding.apply {
                                     title.visibility = View.GONE
@@ -186,6 +190,7 @@ class CategoriesManageFragment: BaseFragmentWithBinding<FragmentManageCategories
                             if (it.data?.isResponseSuccess() == true) {
                                 categoryList.removeAt(itemRemovePos)
                                 binding.catListAdapter?.notifyItemRemoved(itemRemovePos)
+                                binding.catListAdapter?.notifyItemRangeChanged(itemRemovePos, categoryList.size)
                             } else {
                                 showAlertDialog("Operation failed! Cannot delete. Please contact admin")
                             }
@@ -238,9 +243,10 @@ class CategoriesManageFragment: BaseFragmentWithBinding<FragmentManageCategories
                 AdapterView.OnItemClickListener { _, _, pos, _ ->
                     isDropDownItemSelected = true;
                     (activity as AppHomeActivity).hideKeyboard()
-                    val catData = (categoriesListAdapter.getItem(pos) as CategoryDataModel)
+                    val catData = (categoriesListAdapter.getItem(pos) as CategoryDataModel).toUserCategoryDataModel()
 
-                    if (categoryList.any { it.id == catData.id }) {
+
+                    if (categoryList.any { it.categoryid == catData.categoryid }) {
                         showAlertDialog("You have already added this category! Please select a different one")
                     } else {
                         catData.let {
@@ -251,7 +257,7 @@ class CategoriesManageFragment: BaseFragmentWithBinding<FragmentManageCategories
                             categoryList.add(it)
                             categoryAddNewList.add(it)
                             it.type = "1"
-                            appHomeViewModel.addedCategories.add(it.id)
+                            appHomeViewModel.addedCategories.add(it.categoryid)
                             binding.catListAdapter?.notifyItemInserted(categoryList.size - 1)
                             binding.rvLocation.scrollToPosition(categoryList.size - 1)
                         }

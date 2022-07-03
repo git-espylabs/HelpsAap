@@ -148,3 +148,19 @@ internal fun UserCategoriesResponse.toCategoryDataModel() = CategoryDataModel(
     type = "0"
 )
 
+internal fun UserCategoriesResponse.toUserCategoryDataModel() = UserCategoriesDataModel(
+    id = id,
+    customer_id = customer_id?:"",
+    categoryid = categoryid?:"",
+    cat = cat?:"",
+    type = "0"
+)
+
+internal fun CategoryDataModel.toUserCategoryDataModel() = UserCategoriesDataModel(
+    id = id,
+    customer_id = "",
+    categoryid = id?:"",
+    cat = category?:"",
+    type = "1"
+)
+

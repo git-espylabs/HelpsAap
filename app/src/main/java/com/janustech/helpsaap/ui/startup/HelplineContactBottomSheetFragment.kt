@@ -53,16 +53,20 @@ class HelplineContactBottomSheetFragment : BottomSheetDialogFragment() {
             dismiss()
         }
         binding.tvWhats.setOnClickListener {
-            when {
-                CommonUtils.isAppInstalled(requireContext(), "com.whatsapp.w4b") -> {
-                    CommonUtils.openWhatsApp(requireContext(), helplineNum, "com.whatsapp.w4b")
+            if (helplineNum.isValidPhoneNumber()){
+                when {
+                    CommonUtils.isAppInstalled(requireContext(), "com.whatsapp.w4b") -> {
+                        CommonUtils.openWhatsApp(requireContext(), helplineNum, "com.whatsapp.w4b")
+                    }
+                    CommonUtils.isAppInstalled(requireContext(), "com.whatsapp") -> {
+                        CommonUtils.openWhatsApp(requireContext(), helplineNum, "com.whatsapp")
+                    }
+                    else -> {
+                        Toast.makeText(requireContext(), "WhatsApp is not installed", Toast.LENGTH_SHORT).show()
+                    }
                 }
-                CommonUtils.isAppInstalled(requireContext(), "com.whatsapp") -> {
-                    CommonUtils.openWhatsApp(requireContext(), helplineNum, "com.whatsapp")
-                }
-                else -> {
-                    Toast.makeText(requireContext(), "WhatsApp is not installed", Toast.LENGTH_SHORT).show()
-                }
+            }else{
+                Toast.makeText(requireContext(), "Not a valid number", Toast.LENGTH_SHORT).show()
             }
             dismiss()
         }

@@ -150,9 +150,10 @@ object CommonUtils {
 
     fun openWhatsApp(ctx: Context, phone: String, packageWhatsap: String) {
         try {
+            val validPhone = phone.substring(phone.length - 10);
             val packageManager: PackageManager = ctx.packageManager
             val i = Intent(Intent.ACTION_VIEW)
-            val url = "https://api.whatsapp.com/send?phone=$phone"
+            val url = "https://api.whatsapp.com/send?phone=+91$validPhone"
             i.setPackage(packageWhatsap)
             i.data = Uri.parse(url)
             if (i.resolveActivity(packageManager) != null) {

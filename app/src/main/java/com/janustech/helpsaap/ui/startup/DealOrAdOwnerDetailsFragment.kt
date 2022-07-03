@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.text.SpannableString
 import android.text.style.UnderlineSpan
 import android.view.View
+import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
@@ -166,16 +167,20 @@ class DealOrAdOwnerDetailsFragment: BaseFragmentWithBinding<FragmentDealOrAdOwne
     }
 
     private fun openWhatsap(phnoe: String){
-        when {
-            CommonUtils.isAppInstalled(requireContext(), "com.whatsapp.w4b") -> {
-                CommonUtils.openWhatsApp(requireContext(), phnoe, "com.whatsapp.w4b")
+        if (phnoe.isValidPhoneNumber()) {
+            when {
+                CommonUtils.isAppInstalled(requireContext(), "com.whatsapp.w4b") -> {
+                    CommonUtils.openWhatsApp(requireContext(), phnoe, "com.whatsapp.w4b")
+                }
+                CommonUtils.isAppInstalled(requireContext(), "com.whatsapp") -> {
+                    CommonUtils.openWhatsApp(requireContext(), phnoe, "com.whatsapp")
+                }
+                else -> {
+                    showAlertDialog("whatsApp is not installed")
+                }
             }
-            CommonUtils.isAppInstalled(requireContext(), "com.whatsapp") -> {
-                CommonUtils.openWhatsApp(requireContext(), phnoe, "com.whatsapp")
-            }
-            else -> {
-                showAlertDialog("whatsApp is not installed")
-            }
+        } else {
+            Toast.makeText(requireContext(), "Not a valid number", Toast.LENGTH_SHORT).show()
         }
     }
 }

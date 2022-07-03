@@ -7,7 +7,7 @@
     <data>
         <variable
             name="model"
-            type="com.janustech.helpsaap.model.CategoryDataModel" />
+            type="com.janustech.helpsaap.model.UserCategoriesDataModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -35,7 +35,7 @@
             android:fontFamily="@font/segoui"
             android:textFontWeight="700"
             android:textStyle="bold"
-            android:text="@{model.category}"
+            android:text="@{model.cat}"
             tools:text="Temp Category Temp Category"
             android:layout_marginHorizontal="3dp"
             android:paddingVertical="5dp"
