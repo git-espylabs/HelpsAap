@@ -72,5 +72,15 @@ interface HelpsAapApis {
     suspend fun getTNC(
     ): ApiResponse<TNCResponse>
 
+    @POST(HttpEndPoints.USER_CATS)
+    suspend fun getUserCategories(
+        @Body userCategoriesRequest: UserCategoriesRequest
+    ): ApiResponse<List<UserCategoriesResponse>>
+
+    @POST(HttpEndPoints.USER_CATS_DEL)
+    suspend fun removeUserCategory(
+        @Body deleteCategoryRequest: DeleteCategoryRequest
+    ): ApiResponse<String>
+
 
 }

@@ -2,6 +2,7 @@ package com.janustech.helpsaap.map
 
 import com.janustech.helpsaap.model.*
 import com.janustech.helpsaap.network.requests.ProfileCategorySubmitRequest
+import com.janustech.helpsaap.network.requests.UserCategoriesResponse
 import com.janustech.helpsaap.network.response.*
 
 internal fun LoginResponseData.toUserData() = UserData(
@@ -139,5 +140,11 @@ internal fun ProfileViewResponseData.toProfileViewDataModel() = ProfileViewDataM
     lat = lat?:"",
     long = long?:"",
     language = language?:""
+)
+
+internal fun UserCategoriesResponse.toCategoryDataModel() = CategoryDataModel(
+    id = categoryid,
+    category = cat?:"",
+    type = "0"
 )
 

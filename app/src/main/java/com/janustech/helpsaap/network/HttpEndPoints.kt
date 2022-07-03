@@ -23,5 +23,7 @@ internal class HttpEndPoints {
         const val PROFILE_VIEW = "profileview"
         const val ABOUT_US = "about"
         const val TNC = "terms"
+        const val USER_CATS = "usercategory"
+        const val USER_CATS_DEL = "deletecategory"
     }
 }

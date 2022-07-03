@@ -70,8 +70,8 @@ class AppHomeViewModel @Inject constructor(private val appIntroUseCase: AppIntro
     var postDealResponseReceiver: LiveData<Resource<MultipartApiResponse>>? = null
         get() = _postDealResponseReceiver
 
-    private val _categoriesReceiver = MutableLiveData<Resource<ApiResponse<List<CategoryResponseData>>>>()
-    val categoriesReceiver: LiveData<Resource<ApiResponse<List<CategoryResponseData>>>>
+    var _categoriesReceiver = MutableLiveData<Resource<ApiResponse<List<CategoryResponseData>>>>()
+    var categoriesReceiver: LiveData<Resource<ApiResponse<List<CategoryResponseData>>>>? = null
         get() = _categoriesReceiver
 
     var _editSubmitStatusReceiver = MutableLiveData<Resource<ApiResponse<String>>>()
@@ -113,6 +113,14 @@ class AppHomeViewModel @Inject constructor(private val appIntroUseCase: AppIntro
     var _tncRespReceiver = MutableLiveData<Resource<ApiResponse<TNCResponse>>>()
     var tncRespReceiver: LiveData<Resource<ApiResponse<TNCResponse>>>? = null
         get() = _tncRespReceiver
+
+    var _userCatsListReceiver = MutableLiveData<Resource<ApiResponse<List<UserCategoriesResponse>>>>()
+    var userCatsListReceiver: LiveData<Resource<ApiResponse<List<UserCategoriesResponse>>>>? = null
+        get() = _userCatsListReceiver
+
+    var _userCatRemoveReceiver = MutableLiveData<Resource<ApiResponse<String>>>()
+    var userCatRemoveReceiver: LiveData<Resource<ApiResponse<String>>>? = null
+        get() = _userCatRemoveReceiver
 
     init {
         userLocationName = AppPreferences.userLocation
@@ -485,6 +493,40 @@ class AppHomeViewModel @Inject constructor(private val appIntroUseCase: AppIntro
                             _tncRespReceiver.value = apiResponse
                         }?: run {
                             _tncRespReceiver.value = Resource.dataError("Invalid server response!")
+                        }
+                    }
+                }
+
+        }
+    }
+
+    fun getUserCategories(){
+        viewModelScope.launch {
+            homeUseCases.getUserCategories(UserCategoriesRequest(AppPreferences.userId))
+                .onStart { _userCatsListReceiver.value = Resource.loading() }
+                .collect { apiResponse ->
+                    apiResponse.let {
+                        it.data?.let {
+                            _userCatsListReceiver.value = apiResponse
+                        }?: run {
+                            _userCatsListReceiver.value = Resource.dataError("Invalid server response!")
+                        }
+                    }
+                }
+
+        }
+    }
+
+    fun removeUserCat(catid: String){
+        viewModelScope.launch {
+            homeUseCases.removeCategory(DeleteCategoryRequest(catid))
+                .onStart { _userCatRemoveReceiver.value = Resource.loading() }
+                .collect { apiResponse ->
+                    apiResponse.let {
+                        it.data?.let {
+                            _userCatRemoveReceiver.value = apiResponse
+                        }?: run {
+                            _userCatRemoveReceiver.value = Resource.dataError("Invalid server response!")
                         }
                     }
                 }

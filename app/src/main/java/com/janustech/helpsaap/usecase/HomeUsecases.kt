@@ -1,10 +1,7 @@
 package com.janustech.helpsaap.usecase
 
 import com.janustech.helpsaap.network.Resource
-import com.janustech.helpsaap.network.requests.AddCategoriesRequest
-import com.janustech.helpsaap.network.requests.AddOfferRequest
-import com.janustech.helpsaap.network.requests.EditProfileRequest
-import com.janustech.helpsaap.network.requests.PostedListRequest
+import com.janustech.helpsaap.network.requests.*
 import com.janustech.helpsaap.network.response.*
 import com.janustech.helpsaap.repositories.HomeRepository
 import com.janustech.helpsaap.repositories.ProfileRepository
@@ -123,6 +120,18 @@ class HomeUsecases@Inject constructor(
     suspend fun getTnc():Flow<Resource<ApiResponse<TNCResponse>>>{
         return flow {
             homeRepository.getTnc().collect { emit(it) }
+        }.flowOn(Dispatchers.IO)
+    }
+
+    suspend fun getUserCategories(userCategoriesRequest: UserCategoriesRequest):Flow<Resource<ApiResponse<List<UserCategoriesResponse>>>>{
+        return flow {
+            homeRepository.getUserCategories(userCategoriesRequest).collect { emit(it) }
+        }.flowOn(Dispatchers.IO)
+    }
+
+    suspend fun removeCategory(deleteCategoryRequest: DeleteCategoryRequest):Flow<Resource<ApiResponse<String>>>{
+        return flow {
+            homeRepository.deleteUserCategory(deleteCategoryRequest).collect { emit(it) }
         }.flowOn(Dispatchers.IO)
     }
 

@@ -49,6 +49,10 @@
             android:id="@+id/action_editProfileFragment_to_tncFragment"
             app:destination="@id/tncFragment">
         </action>
+        <action
+            android:id="@+id/action_editProfileFragment_to_categoriesManagefragment"
+            app:destination="@id/categoriesManagefragment">
+        </action>
 
     </fragment>
 
@@ -89,6 +93,13 @@
             android:name="tnc"
             app:argType="string"
             android:defaultValue="" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/categoriesManagefragment"
+        android:name="com.janustech.helpsaap.ui.home.CategoriesManageFragment"
+        tools:layout="@layout/fragment_manage_categories">
 
     </fragment>
 

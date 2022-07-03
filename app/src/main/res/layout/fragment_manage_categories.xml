@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data >
+        <variable
+            name="viewModel"
+            type="com.janustech.helpsaap.ui.home.AppHomeViewModel"/>
+
+        <variable
+            name="catListAdapter"
+            type="com.janustech.helpsaap.ui.home.CategoryManageListAdapter" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:background="@color/white"
+        android:layout_marginHorizontal="12dp"
+        android:layout_marginVertical="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <AutoCompleteTextView
+            android:paddingHorizontal="5dp"
+            android:id="@+id/actSearch"
+            app:layout_constraintTop_toTopOf="parent"
+            android:background="@drawable/rounded_rect_grey_filled"
+            android:drawableStart="@drawable/ic_search"
+            android:drawablePadding="7dp"
+            android:layout_marginTop="16dp"
+            android:hint="Search Category"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"/>
+
+        <ImageView
+            android:id="@+id/ivClearSearch"
+            app:layout_constraintTop_toTopOf="@+id/actSearch"
+            app:layout_constraintBottom_toBottomOf="@+id/actSearch"
+            app:layout_constraintEnd_toEndOf="@+id/actSearch"
+            android:layout_marginRight="3dp"
+            android:src="@drawable/ic_close_24"
+            android:visibility="gone"
+            android:layout_width="28dp"
+            android:layout_height="28dp"/>
+
+        <Button
+            android:id="@+id/btnSubmit"
+            style="@style/HelpAapButtonStyle"
+            app:layout_constraintTop_toBottomOf="@+id/actSearch"
+            android:layout_marginTop="24dp"
+            android:layout_marginHorizontal="24dp"
+            android:text="Submit"
+            android:paddingHorizontal="24dp"
+            android:textAllCaps="false"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/custom_dimen_56"
+            android:layout_marginBottom="24dp"/>
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@+id/btnSubmit"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginLeft="8dp"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:fontFamily="@font/avenir_heavy"
+            android:text="My Categories"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvLocation"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="8dp"
+            android:adapter="@{catListAdapter}"
+            android:orientation="vertical"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintTop_toBottomOf="@+id/title"
+            app:layout_constraintBottom_toBottomOf="parent"
+            tools:listitem="@layout/item_category_manage_list" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

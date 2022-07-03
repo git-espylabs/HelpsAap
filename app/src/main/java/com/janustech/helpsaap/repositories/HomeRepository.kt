@@ -49,4 +49,8 @@ interface HomeRepository {
 
     fun getTnc():Flow<Resource<ApiResponse<TNCResponse>>>
 
+    fun getUserCategories(userCategoriesRequest: UserCategoriesRequest):Flow<Resource<ApiResponse<List<UserCategoriesResponse>>>>
+
+    fun deleteUserCategory(deleteCategoryRequest: DeleteCategoryRequest):Flow<Resource<ApiResponse<String>>>
+
 }

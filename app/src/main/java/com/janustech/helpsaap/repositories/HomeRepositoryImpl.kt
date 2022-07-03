@@ -118,4 +118,18 @@ class HomeRepositoryImpl(private val apiService: HelpsAapApis): HomeRepository {
             emit(safeApiCall { apiService.getTNC() })
         }.flowOn(Dispatchers.IO)
     }
+
+    override fun getUserCategories(userCategoriesRequest: UserCategoriesRequest): Flow<Resource<ApiResponse<List<UserCategoriesResponse>>>> {
+        return flow {
+            emit(safeApiCall { apiService.getUserCategories(userCategoriesRequest) })
+        }.flowOn(Dispatchers.IO)
+    }
+
+    override fun deleteUserCategory(deleteCategoryRequest: DeleteCategoryRequest): Flow<Resource<ApiResponse<String>>> {
+        return flow {
+            emit(safeApiCall {
+                apiService.removeUserCategory(deleteCategoryRequest)
+            })
+        }.flowOn(Dispatchers.IO)
+    }
 }

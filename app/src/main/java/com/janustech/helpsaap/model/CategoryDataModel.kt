@@ -4,7 +4,8 @@ import com.janustech.helpsaap.preference.AppPreferences
 
 data class CategoryDataModel(
     val id: String = "",
-    val category: String = ""
+    val category: String = "",
+    var type: String = "0"
 ){
     override fun toString(): String {
         return category

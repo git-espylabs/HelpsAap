@@ -97,10 +97,7 @@ class FragmentEditProfile  : BaseFragmentWithBinding<FragmentEditProfileBinding>
         binding.apply {
             viewModel = appHomeViewModel
             tvPromptAddCategs.setOnClickListener {
-                AddCategoryBottomSheetDialogFragment(appHomeViewModel).show(
-                    childFragmentManager,
-                    "AddCategoryFragment"
-                )
+                findNavController().navigate(FragmentEditProfileDirections.actionEditProfileFragmentToCategoriesManagefragment())
             }
             btnContinue.setOnClickListener {
                 appHomeViewModel.editProfile(requireContext())
@@ -164,7 +161,7 @@ class FragmentEditProfile  : BaseFragmentWithBinding<FragmentEditProfileBinding>
 
 
     private fun setObserver(){
-        appHomeViewModel.categoriesReceiver.observe(viewLifecycleOwner){
+        /*appHomeViewModel.categoriesReceiver.observe(viewLifecycleOwner){
             when(it.status){
                 Status.SUCCESS ->{
                     (activity as AppHomeActivity).hideProgress()
@@ -188,7 +185,7 @@ class FragmentEditProfile  : BaseFragmentWithBinding<FragmentEditProfileBinding>
                     (activity as AppHomeActivity).showToast(it.message?:"Invalid Server Response")
                 }
             }
-        }
+        }*/
 
         appHomeViewModel.editSubmitStatusReceiver?.observe(viewLifecycleOwner){ res ->
             try {
@@ -260,7 +257,7 @@ class FragmentEditProfile  : BaseFragmentWithBinding<FragmentEditProfileBinding>
             }
         }
 
-        appHomeViewModel.addCatgoriesResponseStatus?.observe(viewLifecycleOwner){ res->
+        /*appHomeViewModel.addCatgoriesResponseStatus?.observe(viewLifecycleOwner){ res->
             try {
                 res?.let {
                     when(it.status){
@@ -283,7 +280,7 @@ class FragmentEditProfile  : BaseFragmentWithBinding<FragmentEditProfileBinding>
                 }
             } catch (e: Exception) {
             }
-        }
+        }*/
 
         appHomeViewModel.offerSubmitStatusReceiver?.observe(viewLifecycleOwner){ res->
             try {

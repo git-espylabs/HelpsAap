@@ -75,33 +75,43 @@ class AddCategoryBottomSheetDialogFragment(private val viewModel: AppHomeViewMod
         }
     }
 
+    override fun onStop() {
+        super.onStop()
+        viewModel._categoriesReceiver.value = null
+    }
+
     private fun setObserver(){
 
-        viewModel.categoriesReceiver.observe(viewLifecycleOwner){
-            when(it.status){
-                Status.SUCCESS ->{
-                    (activity as AppHomeActivity).hideProgress()
-                    val dataList = it.data?.data
-                    if (isDropDownItemSelected.not()) {
-                        categoriesSuggestionList = dataList?.map { dat -> dat.toCategoryDataModel() } ?: listOf()
-                        categoriesListAdapter = ArrayAdapter(
-                            requireContext(),
-                            android.R.layout.simple_spinner_dropdown_item,
-                            categoriesSuggestionList
-                        )
-                        binding.tvDropdownLocation.apply {
-                            setAdapter(categoriesListAdapter)
-                            showDropDown()
+        viewModel.categoriesReceiver?.observe(viewLifecycleOwner){ res ->
+            try {
+                res?.let {
+                    when(it.status){
+                        Status.SUCCESS ->{
+                            (activity as AppHomeActivity).hideProgress()
+                            val dataList = it.data?.data
+                            if (isDropDownItemSelected.not()) {
+                                categoriesSuggestionList = dataList?.map { dat -> dat.toCategoryDataModel() } ?: listOf()
+                                categoriesListAdapter = ArrayAdapter(
+                                    requireContext(),
+                                    android.R.layout.simple_spinner_dropdown_item,
+                                    categoriesSuggestionList
+                                )
+                                binding.tvDropdownLocation.apply {
+                                    setAdapter(categoriesListAdapter)
+                                    showDropDown()
+                                }
+                            }
+                        }
+                        Status.LOADING -> {
+                            (activity as AppHomeActivity).showProgress()
+                        }
+                        else ->{
+                            (activity as AppHomeActivity).hideProgress()
+                            (activity as AppHomeActivity).showToast(it.message?:"Invalid Server Response")
                         }
                     }
                 }
-                Status.LOADING -> {
-                    (activity as AppHomeActivity).showProgress()
-                }
-                else ->{
-                    (activity as AppHomeActivity).hideProgress()
-                    (activity as AppHomeActivity).showToast(it.message?:"Invalid Server Response")
-                }
+            } catch (e: Exception) {
             }
         }
     }
