@@ -89,7 +89,7 @@
                 android:textSize="16sp"
                 android:fontFamily="@font/segoui"
                 android:textFontWeight="400"
-                android:text="Add photo or business Logo/Visiting Card Etc..."
+                android:text="Add Photos Or Posters"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"/>
 
@@ -180,7 +180,7 @@
                 android:drawableStart="@drawable/ic_search"
                 android:drawablePadding="7dp"
                 android:layout_marginTop="8dp"
-                android:hint="Select Publishing Location"
+                android:hint="Post Publishing Location"
                 android:layout_width="match_parent"
                 android:layout_height="41dp"/>
 

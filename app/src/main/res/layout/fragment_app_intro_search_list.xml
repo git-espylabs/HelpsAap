@@ -28,7 +28,7 @@
             android:layout_height="wrap_content"
             android:textSize="16sp"
             android:layout_marginRight="5dp"
-            android:textColor="@color/black"
+            android:textColor="@color/app_accent_color"
             android:text="@={viewModel.userLocationName}"
             android:textFontWeight="200"
             android:fontFamily="@font/segoeui_heavy"

@@ -165,6 +165,7 @@
                     app:hintEnabled="false">
 
                     <com.google.android.material.textfield.TextInputEditText
+                        android:enabled="false"
                         android:id="@+id/etMobNo"
                         android:layout_width="match_parent"
                         android:padding="1dp"
@@ -174,8 +175,7 @@
                         android:layout_height="@dimen/custom_dimen_48"
                         android:background="@drawable/rounded_rect_grey_filled"
                         android:hint="@string/text_hint_mob"
-                        android:imeOptions="actionNext"
-                        android:inputType="textPhonetic"
+                        android:inputType="none"
                         android:text="@={viewModel.editEditMob}"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -298,9 +298,22 @@
                     android:layout_marginBottom="24dp"/>
 
                 <com.codesgood.views.JustifiedTextView
-                    android:id="@+id/tvPromptTnc"
+                    android:id="@+id/tvPrivacy"
                     android:layout_marginTop="9dp"
                     app:layout_constraintTop_toBottomOf="@+id/btnContinue"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:textSize="16sp"
+                    android:textColor="@color/purple_500"
+                    android:fontFamily="@font/avenir_medium_oblique"
+                    android:text="@string/prompt_pp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <com.codesgood.views.JustifiedTextView
+                    android:id="@+id/tvPromptTnc"
+                    android:layout_marginTop="9dp"
+                    app:layout_constraintTop_toBottomOf="@+id/tvPrivacy"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     android:textSize="16sp"

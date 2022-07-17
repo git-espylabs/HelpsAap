@@ -27,7 +27,7 @@
             android:layout_marginStart="12dp"
             android:layout_marginEnd="5dp"
             android:textSize="16sp"
-            android:textColor="@color/black"
+            android:textColor="@color/app_accent_color"
             android:text="@={viewModel.userLocationName}"
             android:onClick="@{(view) -> viewParent.onClick(view)}"
             android:textFontWeight="200"

@@ -111,6 +111,9 @@ class FragmentEditProfile  : BaseFragmentWithBinding<FragmentEditProfileBinding>
             tvPromptTnc.setOnClickListener {
                 appHomeViewModel.getTnc()
             }
+            tvPrivacy.setOnClickListener {
+                findNavController().navigate(FragmentEditProfileDirections.actionEditProfileFragmentToPpFragment())
+            }
         }
 
         populatePercentage()

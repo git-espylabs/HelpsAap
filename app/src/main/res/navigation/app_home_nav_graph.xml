@@ -53,6 +53,10 @@
             android:id="@+id/action_editProfileFragment_to_categoriesManagefragment"
             app:destination="@id/categoriesManagefragment">
         </action>
+        <action
+            android:id="@+id/action_editProfileFragment_to_ppFragment"
+            app:destination="@id/ppFragment">
+        </action>
 
     </fragment>
 
@@ -100,6 +104,13 @@
         android:id="@+id/categoriesManagefragment"
         android:name="com.janustech.helpsaap.ui.home.CategoriesManageFragment"
         tools:layout="@layout/fragment_manage_categories">
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/ppFragment"
+        android:name="com.janustech.helpsaap.ui.home.PrivacyPolicyFragment"
+        tools:layout="@layout/fragment_webv_privay_policy">
 
     </fragment>
 

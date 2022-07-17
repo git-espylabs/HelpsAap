@@ -13,11 +13,12 @@ electronic typesetting, remaining essentially unchanged. It was popularised in t
 sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker
 including versions of Lorem Ipsum</string>
     <string name="prompt_tnc"><u>Terms &amp; Conditions</u></string>
+    <string name="prompt_pp"><u>Privacy Policy</u></string>
 
     <string name="text_login">Log In</string>
     <string name="text_hint_name">Name</string>
     <string name="text_hint_username">Email</string>
-    <string name="text_hint_password">Password</string>
+    <string name="text_hint_password">Password\nMinimum 6 Characters</string>
     <string name="text_signup_prompt">Haven’t registered yet? Register Now</string>
     <string name="text_continue">Continue</string>
     <string name="text_hint_mob">Mobile Number</string>

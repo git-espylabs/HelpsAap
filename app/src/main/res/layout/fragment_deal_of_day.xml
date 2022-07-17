@@ -159,7 +159,7 @@
                 android:fontFamily="@font/segoui"
                 android:gravity="center"
                 android:textFontWeight="400"
-                android:text="Add photo or business Logo/Visiting Card Etc..."
+                android:text="Add Photos Or Posters"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 

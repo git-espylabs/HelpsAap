@@ -15,6 +15,7 @@ import android.provider.MediaStore
 import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
+import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -233,9 +234,13 @@ class FragmentDealOfDay: BaseFragmentWithBinding<FragmentDealOfDayBinding>(R.lay
                     locationData.let {
                         val locName = it.toString()
                         val locId = it.id
-                        locationsList.add(it)
-                        appHomeViewModel.selectedDealLocations.add(it.id)
-                        binding.locListAdapter?.notifyItemInserted(locationsList.size - 1)
+                        if (locationsList.size < 4) {
+                            locationsList.add(it)
+                            appHomeViewModel.selectedDealLocations.add(it.id)
+                            binding.locListAdapter?.notifyItemInserted(locationsList.size - 1)
+                        } else {
+                            showAlertDialog("You cal select up to 4 location only!")
+                        }
                     }
                     (activity as AppHomeActivity).hideKeyboard()
 

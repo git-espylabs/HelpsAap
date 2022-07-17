@@ -12,7 +12,7 @@ class TermsConditionsFragment : BaseFragmentWithBinding<FragmentTermsConditionsB
     var tcText = ""
     val args: TermsConditionsFragmentArgs by navArgs()
 
-            override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         tcText = args.tnc
         binding.apply {
