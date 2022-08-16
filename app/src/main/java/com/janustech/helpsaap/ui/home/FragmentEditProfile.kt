@@ -114,6 +114,12 @@ class FragmentEditProfile  : BaseFragmentWithBinding<FragmentEditProfileBinding>
             tvPrivacy.setOnClickListener {
                 findNavController().navigate(FragmentEditProfileDirections.actionEditProfileFragmentToPpFragment())
             }
+            tvRefund.setOnClickListener {
+                findNavController().navigate(FragmentEditProfileDirections.actionEditProfileFragmentToRefundFragment())
+            }
+            editLocation.setOnClickListener {
+
+            }
         }
 
         populatePercentage()
@@ -124,7 +130,10 @@ class FragmentEditProfile  : BaseFragmentWithBinding<FragmentEditProfileBinding>
         binding.ivLogo.apply {
             if (AppPreferences.userImageUrl.isNotEmpty()){
                 Glide.with(this).load(BuildConfig.IMAGE_URL + AppPreferences.userImageUrl).into(this)
-            }else if (AppPreferences.userImageDisk.isNotEmpty()){
+            }
+            //else
+
+                if (AppPreferences.userImageDisk.isNotEmpty()){
                 Glide.with(this).load(AppPreferences.userImageDisk).into(this)
             }
             setOnClickListener {

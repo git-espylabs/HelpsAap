@@ -51,7 +51,11 @@ interface HelpsAapApis {
         @Part cusname: MultipartBody.Part,
         @Part phone_number: MultipartBody.Part,
         @Part language: MultipartBody.Part,
-        @Part image: MultipartBody.Part
+        @Part image: MultipartBody.Part,
+       @Part businessname: MultipartBody.Part,
+        @Part whatsapp: MultipartBody.Part,
+        @Part website: MultipartBody.Part,
+        @Part  areaname: MultipartBody.Part
     ): MultipartApiResponse
 
     @POST(HttpEndPoints.ADDON_CATEGORIES)

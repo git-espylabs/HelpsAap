@@ -140,7 +140,7 @@
                 android:textStyle="bold"
                 android:fontFamily="@font/segoeui_heavy"
                 android:textFontWeight="700"
-                android:text="Make your HelpsAap Profile"
+                android:text="Make Your Business Profile"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 

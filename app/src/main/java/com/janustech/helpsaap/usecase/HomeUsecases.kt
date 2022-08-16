@@ -4,7 +4,6 @@ import com.janustech.helpsaap.network.Resource
 import com.janustech.helpsaap.network.requests.*
 import com.janustech.helpsaap.network.response.*
 import com.janustech.helpsaap.repositories.HomeRepository
-import com.janustech.helpsaap.repositories.ProfileRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
@@ -88,11 +87,15 @@ class HomeUsecases@Inject constructor(
         cusname: MultipartBody.Part,
         phone_number: MultipartBody.Part,
         language: MultipartBody.Part,
-        image: MultipartBody.Part
+        image: MultipartBody.Part,
+        businessname: MultipartBody.Part,
+        whatsapp: MultipartBody.Part,
+        website: MultipartBody.Part,
+        areaname: MultipartBody.Part
     ): Flow<Resource<MultipartApiResponse>> {
         return flow {
             homeRepository.editProfile(
-                customer_id, cusname, phone_number, language, image
+                customer_id, cusname, phone_number, language, image,businessname,whatsapp,website,areaname
             ).collect {
                 emit(it)
             }

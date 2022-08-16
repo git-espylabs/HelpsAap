@@ -18,7 +18,7 @@ including versions of Lorem Ipsum</string>
     <string name="text_login">Log In</string>
     <string name="text_hint_name">Name</string>
     <string name="text_hint_username">Email</string>
-    <string name="text_hint_password">Password\nMinimum 6 Characters</string>
+    <string name="text_hint_password">Password\nMaximum 6 Characters</string>
     <string name="text_signup_prompt">Haven’t registered yet? Register Now</string>
     <string name="text_continue">Continue</string>
     <string name="text_hint_mob">Mobile Number</string>
@@ -33,5 +33,6 @@ including versions of Lorem Ipsum</string>
     <string name="add_categories"><u>Add Categories</u></string>
     <string name="view_map"><u>View in Map</u></string>
     <string name="forgot_pass_desc">We will send an OTP to your registered email id, use the OTP to verify your account and then Reset your password.</string>
+    <string name="refund">Refund</string>
 
 </resources>

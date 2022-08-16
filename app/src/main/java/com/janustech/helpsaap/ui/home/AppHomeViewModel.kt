@@ -7,8 +7,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
 import com.janustech.helpsaap.map.toProfileCategoryModel
-import com.janustech.helpsaap.model.LanguageDataModel
-import com.janustech.helpsaap.model.LocationDataModel
 import com.janustech.helpsaap.model.UserData
 import com.janustech.helpsaap.network.MultiPartRequestHelper
 import com.janustech.helpsaap.network.Resource
@@ -19,7 +17,6 @@ import com.janustech.helpsaap.usecase.AppIntroUseCase
 import com.janustech.helpsaap.usecase.HomeUsecases
 import com.janustech.helpsaap.utils.CommonUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
@@ -59,6 +56,12 @@ class AppHomeViewModel @Inject constructor(private val appIntroUseCase: AppIntro
     var selectedPublicLocationId = ""
     var selectedPublicLocationType = ""
     var selectedAMount = ""
+
+    //
+    var edtBusinessName=""
+    var edtWhatsapp=""
+    var edtWebsite=""
+    var edtAreaName=""
 
 
 
@@ -136,6 +139,12 @@ class AppHomeViewModel @Inject constructor(private val appIntroUseCase: AppIntro
         editPassword = userData?.password?:""
         editLangId = AppPreferences.userLanguageId
         editOfferPercent = userData?.offerpercentage?:"0"
+
+        //
+        edtBusinessName=userData?.businessname?:""
+        edtWhatsapp=userData?.whatsapp?:""
+        edtWebsite=userData?.website?:""
+        edtAreaName=userData?.areaname?:""
     }
 
     private fun getUserObjectFromPreference(): UserData{
@@ -143,7 +152,7 @@ class AppHomeViewModel @Inject constructor(private val appIntroUseCase: AppIntro
         return Gson().fromJson(json, UserData::class.java)
     }
 
-    fun updateUserDataWithEditSuccess(){
+    /*fun updateUserDataWithEditSuccess(){
         val data = UserData(
             userData?.userId?:"",
             editUsername,
@@ -160,6 +169,26 @@ class AppHomeViewModel @Inject constructor(private val appIntroUseCase: AppIntro
             userData?.long?:"",
             userData?.areaname?:"",
             editLangId)
+        AppPreferences.userData = Gson().toJson(data)
+    }*/
+
+    fun updateUserDataWithEditSuccess(){
+        val data = UserData(
+            userData?.userId?:"",
+            editUsername,
+            editEditMob,
+            edtWhatsapp,
+            editEmail,
+            edtWebsite,
+            userData?.currentLocation?:"",
+            userData?.photo?:"",
+            userData?.otp?:"",
+            userData?.password?:"",
+            userData?.offerpercentage?:"0",
+            userData?.lat?:"",
+            userData?.long?:"",
+            edtAreaName,
+            editLangId,edtBusinessName)
         AppPreferences.userData = Gson().toJson(data)
     }
 
@@ -382,8 +411,16 @@ class AppHomeViewModel @Inject constructor(private val appIntroUseCase: AppIntro
                 val partLanguage = MultiPartRequestHelper.createRequestBody("language", editLangId)
                 val partFile = MultiPartRequestHelper.createFileRequestBody(editProfImg, "image", context)
 
+
+                //new fields
+                val businessname = MultiPartRequestHelper.createRequestBody("businessname", edtBusinessName)
+                val whatsapp = MultiPartRequestHelper.createRequestBody("whatsapp", edtWhatsapp)
+                val website = MultiPartRequestHelper.createRequestBody("website", edtWebsite)
+                val areaname = MultiPartRequestHelper.createRequestBody("areaname", edtAreaName)
+
+
                 homeUseCases.editProfile(
-                    partCusId, partCusname, partMob, partLanguage, partFile
+                    partCusId, partCusname, partMob, partLanguage, partFile,businessname,whatsapp,website,areaname
                 )
                     .onStart { _editSubmitStatusReceiver.value = Resource.loading() }
                     .collect {  apiResponse ->

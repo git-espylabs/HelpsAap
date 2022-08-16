@@ -148,6 +148,7 @@ class AppIntroHomeFragment: BaseFragmentWithBinding<FragmentAppIntroHomeBinding>
         super.onResume()
         if (appIntroViewModel.userSelectedCategory.isNotEmpty()){
             appIntroViewModel.getDealsOfTheDay(appIntroViewModel.userSelectedCategory)
+
         }
     }
 
@@ -163,6 +164,11 @@ class AppIntroHomeFragment: BaseFragmentWithBinding<FragmentAppIntroHomeBinding>
             appIntroViewModel.userLocationName = it.toString()
             appIntroViewModel.userLocationId = it.id
             binding.tvLocation.text = it.toString()
+
+            if (appIntroViewModel.userSelectedCategory.isNotEmpty()){
+                appIntroViewModel.getDealsOfTheDay(appIntroViewModel.userSelectedCategory)
+
+            }
         }
     }
 
@@ -186,20 +192,26 @@ class AppIntroHomeFragment: BaseFragmentWithBinding<FragmentAppIntroHomeBinding>
         }
 
         appIntroViewModel.dealsOfDay.observe(viewLifecycleOwner){
-            when(it.status){
-                Status.SUCCESS ->{
-                    (activity as AppIntroActivity).hideProgress()
-                    val dataList = it.data?.data
-                    setDealsOfDay(dataList?.map { dOd -> dOd.toDealsOfDayDataModel() } ?: listOf())
-                    appIntroViewModel.getAdsList(appIntroViewModel.userSelectedCategory)
-                }
-                Status.LOADING -> {
-                    (activity as AppIntroActivity).showProgress()
-                }
-                else ->{
-                    (activity as AppIntroActivity).hideProgress()
-                    setDealsOfDay(listOf())
-                    appIntroViewModel.getAdsList(appIntroViewModel.userSelectedCategory)
+            if(it!=null) {
+                when (it.status) {
+                    Status.SUCCESS -> {
+                        (activity as AppIntroActivity).hideProgress()
+                        val dataList = it.data?.data
+                        setDealsOfDay(
+                            dataList?.map {
+                                    dOd -> dOd.toDealsOfDayDataModel() }
+                            ?: listOf())
+                        appIntroViewModel.getAdsList(appIntroViewModel.userSelectedCategory)
+
+                    }
+                    Status.LOADING -> {
+                        (activity as AppIntroActivity).showProgress()
+                    }
+                    else -> {
+                        (activity as AppIntroActivity).hideProgress()
+                        setDealsOfDay(listOf())
+                        appIntroViewModel.getAdsList(appIntroViewModel.userSelectedCategory)
+                    }
                 }
             }
         }
@@ -343,9 +355,12 @@ class AppIntroHomeFragment: BaseFragmentWithBinding<FragmentAppIntroHomeBinding>
                         currentPageDeals = position
                     }
                 }
+
                 rvDealOfDay.adapter = DealsListPagerAdapter(requireContext(), dOdList){ userId ->
                     findNavController().navigate(AppIntroHomeFragmentDirections.actionAppIntroHomeToDealOrAdOwnerDetailsFragment(userId?:"0"))
                 }
+
+
                 rvDealOfDay.registerOnPageChangeCallback(slidingCallback)
                 startAutoSwipeDeals(dOdList.size)
             }
@@ -355,6 +370,7 @@ class AppIntroHomeFragment: BaseFragmentWithBinding<FragmentAppIntroHomeBinding>
                 rvDealOfDay.visibility = View.GONE
             }
         }
+
     }
 
     private fun setAdsList(adsList: List<AdsDataModel>?){
@@ -437,6 +453,7 @@ class AppIntroHomeFragment: BaseFragmentWithBinding<FragmentAppIntroHomeBinding>
         }
         popup.show()
     }
+
 
 
 }

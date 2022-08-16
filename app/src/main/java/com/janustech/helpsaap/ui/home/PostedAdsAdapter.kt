@@ -23,7 +23,7 @@ class PostedAdsAdapter internal constructor(private val context: Context, privat
                 executePendingBindings()
 
                 if (obj.start_date.isNotEmpty() && obj.end_date.isNotEmpty()){
-                    val period = CommonUtils.getConvertedDateWithMonthN(obj.start_date) + " to " + CommonUtils.getConvertedDateWithMonthN(obj.start_date)
+                    val period = CommonUtils.getConvertedDateWithMonthN(obj.start_date) + " to " + CommonUtils.getConvertedDateWithMonthN(obj.end_date)
                     tvDate.text = period
                 }
 

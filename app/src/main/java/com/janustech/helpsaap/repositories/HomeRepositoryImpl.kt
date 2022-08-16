@@ -84,11 +84,15 @@ class HomeRepositoryImpl(private val apiService: HelpsAapApis): HomeRepository {
         cusname: MultipartBody.Part,
         phone_number: MultipartBody.Part,
         language: MultipartBody.Part,
-        image: MultipartBody.Part
+        image: MultipartBody.Part,
+        businessname: MultipartBody.Part,
+        whatsapp: MultipartBody.Part,
+        website: MultipartBody.Part,
+        areaname: MultipartBody.Part
     ): Flow<Resource<MultipartApiResponse>> {
         return flow {
             emit(safeApiCall { apiService.editProfile(
-                customer_id, cusname, phone_number, language, image
+                customer_id, cusname, phone_number, language, image,businessname,whatsapp,website,areaname
             ) })
         }.flowOn(Dispatchers.IO)
     }
