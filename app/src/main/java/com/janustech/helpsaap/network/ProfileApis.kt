@@ -7,6 +7,7 @@ import com.janustech.helpsaap.network.requests.VerifyOtpRequest
 import com.janustech.helpsaap.network.response.ApiResponse
 import com.janustech.helpsaap.network.response.LoginResponseData
 import com.janustech.helpsaap.network.response.MultipartApiResponse
+import com.janustech.helpsaap.network.response.SignupResponse
 import okhttp3.MultipartBody
 import retrofit2.http.Body
 import retrofit2.http.Multipart
@@ -40,7 +41,7 @@ interface ProfileApis {
         @Part language: MultipartBody.Part,
         @Part offerpercentage: MultipartBody.Part,
         @Part image: MultipartBody.Part
-    ): MultipartApiResponse
+    ): ApiResponse<SignupResponse>
 
     @POST(HttpEndPoints.SEND_OTP)
     suspend fun sendOtp(

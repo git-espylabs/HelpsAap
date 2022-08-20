@@ -7,6 +7,7 @@ import android.webkit.WebViewClient
 import com.janustech.helpsaap.R
 import com.janustech.helpsaap.databinding.FragmentTermsConditions1Binding
 import com.janustech.helpsaap.ui.base.BaseFragmentWithBinding
+import com.janustech.helpsaap.ui.startup.SignupActivity
 
 class TermsConditionsFragment : BaseFragmentWithBinding<FragmentTermsConditions1Binding>(R.layout.fragment_terms_conditions1) {
 
@@ -22,7 +23,11 @@ class TermsConditionsFragment : BaseFragmentWithBinding<FragmentTermsConditions1
 
 
 
-        (activity as AppHomeActivity).showProgress()
+        if (activity is AppHomeActivity) {
+            (activity as AppHomeActivity).showProgress()
+        } else if (activity is SignupActivity) {
+            (activity as SignupActivity).showProgress()
+        }
         binding.webView.apply {
             loadUrl(tc_url)
             settings.also {
@@ -31,7 +36,11 @@ class TermsConditionsFragment : BaseFragmentWithBinding<FragmentTermsConditions1
             }
             webViewClient = object : WebViewClient() {
                 override fun onPageFinished(view: WebView, url: String) {
-                    (activity as AppHomeActivity).hideProgress()
+                    if (activity is AppHomeActivity) {
+                        (activity as AppHomeActivity).hideProgress()
+                    } else if (activity is SignupActivity) {
+                        (activity as SignupActivity).hideProgress()
+                    }
                 }
             }
         }

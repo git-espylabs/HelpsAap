@@ -57,4 +57,6 @@ interface HomeRepository {
 
     fun deleteUserCategory(deleteCategoryRequest: DeleteCategoryRequest):Flow<Resource<ApiResponse<String>>>
 
+    fun updateUserLocationFromMap(updateMapLocationRequest: UpdateMapLocationRequest):Flow<Resource<ApiResponse<String>>>
+
 }

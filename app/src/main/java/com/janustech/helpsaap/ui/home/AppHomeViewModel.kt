@@ -62,6 +62,8 @@ class AppHomeViewModel @Inject constructor(private val appIntroUseCase: AppIntro
     var edtWhatsapp=""
     var edtWebsite=""
     var edtAreaName=""
+    var edtUserLat=""
+    var edtUserLon=""
 
 
 
@@ -125,6 +127,11 @@ class AppHomeViewModel @Inject constructor(private val appIntroUseCase: AppIntro
     var userCatRemoveReceiver: LiveData<Resource<ApiResponse<String>>>? = null
         get() = _userCatRemoveReceiver
 
+
+    var _userMapLocationUpdateResponseReceiver = MutableLiveData<Resource<ApiResponse<String>>>()
+    var userMapLocationUpdateResponseReceiver: LiveData<Resource<ApiResponse<String>>>? = null
+        get() = _userMapLocationUpdateResponseReceiver
+
     init {
         userLocationName = AppPreferences.userLocation
         userLocationId = AppPreferences.userLocationId
@@ -139,6 +146,8 @@ class AppHomeViewModel @Inject constructor(private val appIntroUseCase: AppIntro
         editPassword = userData?.password?:""
         editLangId = AppPreferences.userLanguageId
         editOfferPercent = userData?.offerpercentage?:"0"
+        edtUserLat = userData?.lat?:"0.0"
+        edtUserLon = userData?.long?:"0.0"
 
         //
         edtBusinessName=userData?.businessname?:""
@@ -207,6 +216,26 @@ class AppHomeViewModel @Inject constructor(private val appIntroUseCase: AppIntro
             editOfferPercent,
             userData?.lat?:"",
             userData?.long?:"",
+            userData?.areaname?:"",
+            AppPreferences.userLanguageId)
+        AppPreferences.userData = Gson().toJson(data)
+    }
+
+    fun updateUserDataWithLatLon(){
+        val data = UserData(
+            userData?.userId?:"",
+            userData?.customerName?:"",
+            userData?.phoneNumber?:"",
+            userData?.whatsapp?:"",
+            userData?.email?:"",
+            userData?.website?:"",
+            userData?.currentLocation?:"",
+            userData?.photo?:"",
+            userData?.otp?:"",
+            userData?.password?:"",
+            userData?.offerpercentage?:"0",
+            edtUserLat,
+            edtUserLon,
             userData?.areaname?:"",
             AppPreferences.userLanguageId)
         AppPreferences.userData = Gson().toJson(data)
@@ -568,6 +597,22 @@ class AppHomeViewModel @Inject constructor(private val appIntroUseCase: AppIntro
                     }
                 }
 
+        }
+    }
+
+    fun updateUserLocationFromMap(){
+        viewModelScope.launch {
+            homeUseCases.updateUserLocationFromMap(UpdateMapLocationRequest(AppPreferences.userId, edtUserLat, edtUserLon))
+                .onStart { _userMapLocationUpdateResponseReceiver.value = Resource.loading() }
+                .collect { apiResponse ->
+                    apiResponse.let {
+                        it.data?.let {
+                            _userMapLocationUpdateResponseReceiver.value = apiResponse
+                        }?: run {
+                            _userMapLocationUpdateResponseReceiver.value = Resource.dataError("Invalid server response!")
+                        }
+                    }
+                }
         }
     }
 

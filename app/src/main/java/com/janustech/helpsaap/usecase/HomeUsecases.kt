@@ -138,4 +138,10 @@ class HomeUsecases@Inject constructor(
         }.flowOn(Dispatchers.IO)
     }
 
+    suspend fun updateUserLocationFromMap(updateMapLocationRequest: UpdateMapLocationRequest):Flow<Resource<ApiResponse<String>>>{
+        return flow {
+            homeRepository.updateUserLocationFromMap(updateMapLocationRequest).collect { emit(it) }
+        }.flowOn(Dispatchers.IO)
+    }
+
 }

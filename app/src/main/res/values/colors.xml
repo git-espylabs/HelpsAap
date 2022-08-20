@@ -23,5 +23,7 @@
     <color name="red100">#EC493D</color>
     <color name="grey_10">#E8E6E5</color>
     <color name="orange_100">#E0F13D</color>
+    <color name="transparency_full">#00555555</color>
+    <color name="disabled_app_accent_color">#9DD3B1</color>
 
 </resources>

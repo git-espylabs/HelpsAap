@@ -118,7 +118,10 @@ class FragmentEditProfile  : BaseFragmentWithBinding<FragmentEditProfileBinding>
                 findNavController().navigate(FragmentEditProfileDirections.actionEditProfileFragmentToRefundFragment())
             }
             editLocation.setOnClickListener {
-
+                EditMapLocationBottomSheetDialogFragment(appHomeViewModel).show(
+                    childFragmentManager,
+                    "EditMapLocationBottomSheetDialogFragment"
+                )
             }
         }
 
@@ -131,11 +134,7 @@ class FragmentEditProfile  : BaseFragmentWithBinding<FragmentEditProfileBinding>
             if (AppPreferences.userImageUrl.isNotEmpty()){
                 Glide.with(this).load(BuildConfig.IMAGE_URL + AppPreferences.userImageUrl).into(this)
             }
-            //else
 
-                if (AppPreferences.userImageDisk.isNotEmpty()){
-                Glide.with(this).load(AppPreferences.userImageDisk).into(this)
-            }
             setOnClickListener {
                 showPhotoPickOption()
             }
@@ -332,6 +331,32 @@ class FragmentEditProfile  : BaseFragmentWithBinding<FragmentEditProfileBinding>
                                 findNavController().navigate(FragmentEditProfileDirections.actionEditProfileFragmentToTncFragment(tnc))
                             } else {
                                 (activity as AppHomeActivity).showAlertDialog("Error occurred! Please try again")
+                            }
+                        }
+                        Status.LOADING -> {
+                            (activity as AppHomeActivity).showProgress()
+                        }
+                        else ->{
+                            (activity as AppHomeActivity).hideProgress()
+                            (activity as AppHomeActivity).showToast(it.message?:"Invalid Server Response")
+                        }
+                    }
+                }
+            } catch (e: Exception) {
+            }
+        }
+
+        appHomeViewModel.userMapLocationUpdateResponseReceiver?.observe(viewLifecycleOwner){ res->
+            try {
+                res?.let {
+                    when(it.status){
+                        Status.SUCCESS ->{
+                            (activity as AppHomeActivity).hideProgress()
+                            if (it.data?.isResponseSuccess() == true) {
+                                appHomeViewModel.updateUserDataWithLatLon()
+                                (activity as AppHomeActivity).showAlertDialog("Location updated successfully!")
+                            } else {
+                                (activity as AppHomeActivity).showAlertDialog("Couldn't update location! Please try again")
                             }
                         }
                         Status.LOADING -> {

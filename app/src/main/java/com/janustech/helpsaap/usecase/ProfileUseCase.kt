@@ -8,6 +8,7 @@ import com.janustech.helpsaap.network.requests.VerifyOtpRequest
 import com.janustech.helpsaap.network.response.ApiResponse
 import com.janustech.helpsaap.network.response.LoginResponseData
 import com.janustech.helpsaap.network.response.MultipartApiResponse
+import com.janustech.helpsaap.network.response.SignupResponse
 import com.janustech.helpsaap.repositories.ProfileRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -46,7 +47,7 @@ class ProfileUseCase @Inject constructor(
         language: MultipartBody.Part,
         offerpercentage: MultipartBody.Part,
         image: MultipartBody.Part
-    ): Flow<Resource<MultipartApiResponse>> {
+    ): Flow<Resource<ApiResponse<SignupResponse>>> {
         return flow {
             profileRepository.register(
                 phonenumber,

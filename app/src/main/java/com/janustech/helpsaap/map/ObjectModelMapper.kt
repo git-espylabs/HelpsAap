@@ -25,6 +25,26 @@ internal fun LoginResponseData.toUserData() = UserData(
 
 )
 
+internal fun SignupResponse.toUserData() = UserData(
+    userId = id?:"0",
+    customerName = cus_name?:"0",
+    phoneNumber = phone_number?:"0",
+    whatsapp = whatsapp?:"0",
+    email  = email?:"0",
+    website = webesite?:"0",
+    currentLocation  = location_id?:"",
+    photo  = photo?:"",
+    otp  ="",
+    password = password?:"",
+    offerpercentage = offerpercentage?:"0",
+    lat = lat?:"",
+    long = long?:"",
+    areaname = areaname?:"",
+    language = language?:"",
+    businessname = businessname?:""
+
+)
+
 internal fun LanguageListResponseData.toLanguageDataModel() = LanguageDataModel(
     id = id,
     langImage = lang_image?:"",

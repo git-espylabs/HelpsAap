@@ -136,4 +136,12 @@ class HomeRepositoryImpl(private val apiService: HelpsAapApis): HomeRepository {
             })
         }.flowOn(Dispatchers.IO)
     }
+
+    override fun updateUserLocationFromMap(updateMapLocationRequest: UpdateMapLocationRequest): Flow<Resource<ApiResponse<String>>> {
+        return flow {
+            emit(safeApiCall {
+                apiService.updateUserLocationFromMap(updateMapLocationRequest)
+            })
+        }.flowOn(Dispatchers.IO)
+    }
 }

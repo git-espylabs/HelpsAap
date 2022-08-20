@@ -4,21 +4,25 @@ import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Color
+import android.graphics.Typeface
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.provider.MediaStore
-import android.text.Editable
-import android.text.TextUtils
-import android.text.TextWatcher
+import android.text.*
+import android.text.method.LinkMovementMethod
+import android.text.style.ClickableSpan
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.ImageView
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import com.google.gson.Gson
 import com.janustech.helpsaap.R
 import com.janustech.helpsaap.app.AppPermission
@@ -33,6 +37,8 @@ import com.janustech.helpsaap.map.toUserData
 import com.janustech.helpsaap.model.CategoryDataModel
 import com.janustech.helpsaap.model.UserData
 import com.janustech.helpsaap.network.Status
+import com.janustech.helpsaap.network.response.LoginResponseData
+import com.janustech.helpsaap.network.response.SignupResponse
 import com.janustech.helpsaap.preference.AppPreferences
 import com.janustech.helpsaap.ui.base.BaseFragmentWithBinding
 import com.janustech.helpsaap.ui.home.AppHomeActivity
@@ -95,6 +101,8 @@ class SignupFragmentSecond : BaseFragmentWithBinding<FragmentRegisterSecondBindi
         binding.apply {
             viewModel = profileViewModel
 
+            btnFinish.isEnabled = false
+            btnFinish.backgroundTintList = ContextCompat.getColorStateList(requireContext(), R.color.disabled_app_accent_color)
             btnFinish.setOnClickListener {
                 activity?.let {
                     profileViewModel.registerApp(it)
@@ -104,10 +112,42 @@ class SignupFragmentSecond : BaseFragmentWithBinding<FragmentRegisterSecondBindi
             promptFileSelect.setOnClickListener {
                 showPhotoPickOption()
             }
+
+            cbTnc.setOnCheckedChangeListener { _, isChecked ->
+                btnFinish.isEnabled = isChecked
+                if (isChecked) {
+                    btnFinish.backgroundTintList = ContextCompat.getColorStateList(requireContext(), R.color.app_accent_color)
+                }else{
+                    btnFinish.backgroundTintList = ContextCompat.getColorStateList(requireContext(), R.color.disabled_app_accent_color)
+                }
+            }
         }
+
+        setTncPromptText()
 
         setObserver()
         setSearchList()
+    }
+
+    private fun setTncPromptText(){
+        val ss = SpannableString(getString(R.string.agree_tnc2))
+        val clickableSpan: ClickableSpan = object : ClickableSpan() {
+            override fun onClick(textView: View) {
+                findNavController().navigate(SignupFragmentSecondDirections.actionSignupFragmentSecondToTncFragment(""))
+            }
+
+            override fun updateDrawState(ds: TextPaint) {
+                super.updateDrawState(ds)
+                ds.isUnderlineText = true
+            }
+        }
+        ss.setSpan(clickableSpan, 9, getString(R.string.agree_tnc2).length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        binding.tvPromptTnc.apply {
+            movementMethod = LinkMovementMethod.getInstance()
+            highlightColor = Color.TRANSPARENT
+            setTypeface(this.typeface, Typeface.BOLD)
+            text = ss
+        }
     }
 
     override fun onTakePhotoSelected() {
@@ -133,33 +173,7 @@ class SignupFragmentSecond : BaseFragmentWithBinding<FragmentRegisterSecondBindi
             when(it.status){
                 Status.SUCCESS -> {
                     (activity as SignupActivity).hideProgress()
-
-                    AppPreferences.userId = it.data?.data?:""
-                    val userData = profileViewModel.run {
-                        UserData(it.data?.data?:"",
-                            regName,
-                            regMob,
-                            regWhatsapNo,
-                            regEmail,
-                            regWeb,
-                            regPin,
-                            "",
-                            "",
-                            regPass,
-                            "",
-                            regLatitude,
-                            regLongitude,
-                            regLocalArea,
-                            AppPreferences.userLanguageId)
-                    }
-                    AppPreferences.userData = Gson().toJson(userData)
-
-
-                    showToast("Registration Success")
-                    activity?.launchActivity<AppHomeActivity>{
-                        addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                    }
-                    activity?.finish()
+                    handleSignupResponse(it.data?.data)
                 }
                 Status.LOADING -> {
                     (activity as SignupActivity).showProgress()
@@ -198,6 +212,26 @@ class SignupFragmentSecond : BaseFragmentWithBinding<FragmentRegisterSecondBindi
                 }
             }
         }
+    }
+
+
+
+    private fun handleSignupResponse(signupResponse: SignupResponse?){
+        signupResponse?.apply {
+            val userData = signupResponse.toUserData()
+            AppPreferences.userId = userData.userId
+            AppPreferences.userData = Gson().toJson(userData)
+            if (userData.photo != null) {
+                AppPreferences.userImageUrl = userData.photo
+            }
+            activity?.launchActivity<AppHomeActivity>{
+                addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            }
+            activity?.finish()
+        }?: run {
+            showAlertDialog("Invalid Server Response")
+        }
+
     }
 
     private fun showPhotoPickOption() {

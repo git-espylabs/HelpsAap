@@ -14,6 +14,8 @@ sheets containing Lorem Ipsum passages, and more recently with desktop publishin
 including versions of Lorem Ipsum</string>
     <string name="prompt_tnc"><u>Terms &amp; Conditions</u></string>
     <string name="prompt_pp"><u>Privacy Policy</u></string>
+    <string name="agree_tnc">Agree to <b><u>Terms &amp; Conditions</u></b></string>
+    <string name="agree_tnc2">Agree to Terms &amp; Conditions</string>
 
     <string name="text_login">Log In</string>
     <string name="text_hint_name">Name</string>

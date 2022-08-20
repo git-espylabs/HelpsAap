@@ -57,8 +57,8 @@ class ProfileViewModel @Inject constructor(
     val loginResponseReceiver: LiveData<Resource<ApiResponse<LoginResponseData>>>
         get() = _loginResponseReceiver
 
-    private val _registerResponseReceiver = MutableLiveData<Resource<MultipartApiResponse>>()
-    val registerResponseReceiver: LiveData<Resource<MultipartApiResponse>>
+    private val _registerResponseReceiver = MutableLiveData<Resource<ApiResponse<SignupResponse>>>()
+    val registerResponseReceiver: LiveData<Resource<ApiResponse<SignupResponse>>>
             get() = _registerResponseReceiver
 
     private val _categoriesReceiver = MutableLiveData<Resource<ApiResponse<List<CategoryResponseData>>>>()
@@ -184,7 +184,7 @@ class ProfileViewModel @Inject constructor(
                         apiResponse.let {
                             it.data?.let { resp ->
                                 CommonUtils.writeLogFile(context, "registerApp() -> Response: \n$resp")
-                                if (resp.isResponseSuccess() && resp.data != null && resp.data.isNotEmpty()) {
+                                if (resp.isResponseSuccess() && resp.data != null) {
                                     CommonUtils.writeLogFile(context, "registerApp() -> Response: ResponseSuccess -> data:\n" + resp.data.toString())
                                     AppPreferences.userImageDisk = regImage
                                     _registerResponseReceiver.value = apiResponse

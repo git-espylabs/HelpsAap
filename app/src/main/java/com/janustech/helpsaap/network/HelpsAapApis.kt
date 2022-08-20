@@ -86,5 +86,10 @@ interface HelpsAapApis {
         @Body deleteCategoryRequest: DeleteCategoryRequest
     ): ApiResponse<String>
 
+    @POST(HttpEndPoints.UPDATE_LOCATION_FROM_MAP)
+    suspend fun updateUserLocationFromMap(
+        @Body updateMapLocationRequest: UpdateMapLocationRequest
+    ): ApiResponse<String>
+
 
 }
