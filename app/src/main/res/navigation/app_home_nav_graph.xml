@@ -57,6 +57,10 @@
             android:id="@+id/action_editProfileFragment_to_ppFragment"
             app:destination="@id/ppFragment">
         </action>
+        <action
+            android:id="@+id/action_editProfileFragment_to_refundFragment"
+            app:destination="@id/refundFragment">
+        </action>
 
     </fragment>
 
@@ -113,6 +117,14 @@
         tools:layout="@layout/fragment_webv_privay_policy">
 
     </fragment>
+
+    <fragment
+        android:id="@+id/refundFragment"
+        android:name="com.janustech.helpsaap.ui.home.RefundsFragment"
+        tools:layout="@layout/fragment_refunds">
+
+    </fragment>
+
 
 
 </navigation>

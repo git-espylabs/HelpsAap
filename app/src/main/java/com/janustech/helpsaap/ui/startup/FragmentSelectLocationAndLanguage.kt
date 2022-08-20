@@ -13,10 +13,8 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.janustech.helpsaap.R
 import com.janustech.helpsaap.databinding.FragmentSelectLocationAndLanguageBinding
-import com.janustech.helpsaap.extension.setCompoundDrawableStartIcon
 import com.janustech.helpsaap.map.toLanguageDataModel
 import com.janustech.helpsaap.map.toLocationDataModel
-import com.janustech.helpsaap.model.LanguageDataModel
 import com.janustech.helpsaap.model.LocationDataModel
 import com.janustech.helpsaap.network.Status
 import com.janustech.helpsaap.network.response.LanguageListResponseData
@@ -36,7 +34,7 @@ class FragmentSelectLocationAndLanguage: BaseFragmentWithBinding<FragmentSelectL
 
     private val TRIGGER_AUTO_COMPLETE = 100
     private val AUTO_COMPLETE_DELAY: Long = 300
-
+    private var selectedPosition = -1
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.apply {
@@ -178,7 +176,7 @@ class FragmentSelectLocationAndLanguage: BaseFragmentWithBinding<FragmentSelectL
         if (languageList != null && languageList.isNotEmpty()){
             binding.myAdapter = LanguageListAdapter(requireContext(), languageList.map {
                 it.toLanguageDataModel()
-            }){ model ->
+            },selectedPosition){ model ->
 
                 model.let {
                     val lanName = it.lang

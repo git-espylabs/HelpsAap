@@ -38,7 +38,11 @@ interface HomeRepository {
         cusname: MultipartBody.Part,
         phone_number: MultipartBody.Part,
         language: MultipartBody.Part,
-        image: MultipartBody.Part
+        image: MultipartBody.Part,
+        businessname: MultipartBody.Part,
+        whatsapp: MultipartBody.Part,
+        website: MultipartBody.Part,
+        areaname: MultipartBody.Part
     ): Flow<Resource<MultipartApiResponse>>
 
     fun addCategories(addCategoriesRequest: AddCategoriesRequest):Flow<Resource<ApiResponse<String>>>
