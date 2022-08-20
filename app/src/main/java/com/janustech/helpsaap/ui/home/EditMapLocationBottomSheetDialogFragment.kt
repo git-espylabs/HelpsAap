@@ -172,7 +172,7 @@ class EditMapLocationBottomSheetDialogFragment
     }
 
     override fun onLocationDisabled() {
-        TODO("Not yet implemented")
+
     }
 
 
