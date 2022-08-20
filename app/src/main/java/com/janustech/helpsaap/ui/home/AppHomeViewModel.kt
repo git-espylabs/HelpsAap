@@ -137,23 +137,51 @@ class AppHomeViewModel @Inject constructor(private val appIntroUseCase: AppIntro
         userLocationId = AppPreferences.userLocationId
         userData = getUserObjectFromPreference()
         userNameIc = getUserNameIcon()
-        userName = userData?.customerName?: ""
-        editUserID = userData?.userId?:""
-        editUsername = userData?.customerName?: ""
-        editEmail = userData?.email?: ""
-        editEditMob = userData?.phoneNumber?: ""
-        editProfImg = userData?.photo?:""
-        editPassword = userData?.password?:""
-        editLangId = AppPreferences.userLanguageId
-        editOfferPercent = userData?.offerpercentage?:"0"
-        edtUserLat = userData?.lat?:"0.0"
-        edtUserLon = userData?.long?:"0.0"
+        userData?.apply {
+            if (customerName.isNullOrEmpty().not()){
+                userName = customerName
+                editUsername = customerName
+            }
+            if (userId.isNullOrEmpty().not()){
+                editUserID = userId
+            }
+            if (email.isNullOrEmpty().not()){
+                editEmail = email
+            }
+            if (phoneNumber.isNullOrEmpty().not()){
+                editEditMob = phoneNumber
+            }
+            if (photo.isNullOrEmpty().not()){
+                editProfImg = photo
+            }
+            if (password.isNullOrEmpty().not()){
+                editPassword = password
+            }
+            if (offerpercentage.isNullOrEmpty().not()){
+                editOfferPercent = offerpercentage
+            }
+            if (lat.isNullOrEmpty().not()){
+                edtUserLat = lat
+            }
+            if (long.isNullOrEmpty().not()){
+                edtUserLon = long
+            }
+            if (businessname.isNullOrEmpty().not()){
+                edtBusinessName = businessname
+            }
+            if (whatsapp.isNullOrEmpty().not()){
+                edtWhatsapp = whatsapp
+            }
+            if (website.isNullOrEmpty().not()){
+                edtWebsite = website
+            }
+            if (areaname.isNullOrEmpty().not()){
+                edtAreaName = areaname
+            }
+        }
 
-        //
-        edtBusinessName=userData?.businessname?:""
-        edtWhatsapp=userData?.whatsapp?:""
-        edtWebsite=userData?.website?:""
-        edtAreaName=userData?.areaname?:""
+        editLangId = AppPreferences.userLanguageId
+
     }
 
     private fun getUserObjectFromPreference(): UserData{
@@ -190,7 +218,7 @@ class AppHomeViewModel @Inject constructor(private val appIntroUseCase: AppIntro
             editEmail,
             edtWebsite,
             userData?.currentLocation?:"",
-            userData?.photo?:"",
+            editProfImg,
             userData?.otp?:"",
             userData?.password?:"",
             userData?.offerpercentage?:"0",
@@ -438,8 +466,8 @@ class AppHomeViewModel @Inject constructor(private val appIntroUseCase: AppIntro
                 val partCusname = MultiPartRequestHelper.createRequestBody("cusname", editUsername)
                 val partMob = MultiPartRequestHelper.createRequestBody("phone_number", editEditMob)
                 val partLanguage = MultiPartRequestHelper.createRequestBody("language", editLangId)
-                val partFile = MultiPartRequestHelper.createFileRequestBody(editProfImg, "image", context)
-
+                val partFilePair = MultiPartRequestHelper.createFileRequestBodyN(editProfImg, "image", context)
+                val partFile = partFilePair.first
 
                 //new fields
                 val businessname = MultiPartRequestHelper.createRequestBody("businessname", edtBusinessName)
@@ -459,6 +487,7 @@ class AppHomeViewModel @Inject constructor(private val appIntroUseCase: AppIntro
                                 if (resp.isResponseSuccess() && resp.data != null && resp.data.isNotEmpty()) {
                                     CommonUtils.writeLogFile(context, "editProfile() -> Response: ResponseSuccess -> data:\n" + resp.data.toString())
                                     AppPreferences.userImageDisk = editProfImg
+                                    editProfImg = partFilePair.second
                                     _editSubmitStatusReceiver_.value = apiResponse
                                 }else if (resp.isResponseSuccess().not()){
                                     CommonUtils.writeLogFile(context, "editProfile() -> Response: ResponseFail:\n" + resp.message )

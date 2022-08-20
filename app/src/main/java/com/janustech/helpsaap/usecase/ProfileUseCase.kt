@@ -16,6 +16,8 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import okhttp3.MultipartBody
+import okhttp3.Response
+import okhttp3.ResponseBody
 import javax.inject.Inject
 
 class ProfileUseCase @Inject constructor(

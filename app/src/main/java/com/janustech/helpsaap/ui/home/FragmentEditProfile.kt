@@ -27,9 +27,9 @@ import com.janustech.helpsaap.BuildConfig
 import com.janustech.helpsaap.R
 import com.janustech.helpsaap.app.AppPermission
 import com.janustech.helpsaap.databinding.FragmentEditProfileBinding
-import com.janustech.helpsaap.extension.handlePermission
+import com.janustech.helpsaap.extension.*
 import com.janustech.helpsaap.extension.isNumeric
-import com.janustech.helpsaap.extension.requestPermission
+import com.janustech.helpsaap.location.GpsManager
 import com.janustech.helpsaap.map.toCategoryDataModel
 import com.janustech.helpsaap.map.toLanguageDataModel
 import com.janustech.helpsaap.model.CategoryDataModel
@@ -39,6 +39,7 @@ import com.janustech.helpsaap.network.response.LanguageListResponseData
 import com.janustech.helpsaap.preference.AppPreferences
 import com.janustech.helpsaap.ui.base.BaseFragmentWithBinding
 import com.janustech.helpsaap.ui.profile.PhotoOptionBottomSheetDialogFragment
+import com.janustech.helpsaap.ui.startup.SignupActivity
 import com.janustech.helpsaap.utils.CommonUtils
 import com.janustech.helpsaap.utils.PhotoOptionListener
 import dagger.hilt.android.AndroidEntryPoint
@@ -78,8 +79,13 @@ class FragmentEditProfile  : BaseFragmentWithBinding<FragmentEditProfileBinding>
         registerForActivityResult(
             ActivityResultContracts.RequestMultiplePermissions()
         ) { permissions ->
-            if (permissions[AppPermission.PERMISSION_STORAGE[0]] == true) {
+            if (permissions[AppPermission.PERMISSION_STORAGE[1]] == true) {
                 dispatchPickPhotoIntent()
+            }else if (permissions[AppPermission.PERMISSION_LOCATION[0]] == true && permissions[AppPermission.PERMISSION_LOCATION[1]] == true) {
+                EditMapLocationBottomSheetDialogFragment(appHomeViewModel).show(
+                    childFragmentManager,
+                    "EditMapLocationBottomSheetDialogFragment"
+                )
             }
         }
 
@@ -118,9 +124,19 @@ class FragmentEditProfile  : BaseFragmentWithBinding<FragmentEditProfileBinding>
                 findNavController().navigate(FragmentEditProfileDirections.actionEditProfileFragmentToRefundFragment())
             }
             editLocation.setOnClickListener {
-                EditMapLocationBottomSheetDialogFragment(appHomeViewModel).show(
-                    childFragmentManager,
-                    "EditMapLocationBottomSheetDialogFragment"
+                handlePermission(AppPermission.ACCESS_FINE_LOCATION,
+                    onGranted = {
+                        EditMapLocationBottomSheetDialogFragment(appHomeViewModel).show(
+                            childFragmentManager,
+                            "EditMapLocationBottomSheetDialogFragment"
+                        )
+                    },
+                    onRationaleNeeded = {
+                        showPermissionRationaleDialog()
+                    },
+                    onDenied = {
+                        requestPermission(requestPermissionLauncher, AppPermission.PERMISSION_LOCATION)
+                    }
                 )
             }
         }
@@ -131,8 +147,8 @@ class FragmentEditProfile  : BaseFragmentWithBinding<FragmentEditProfileBinding>
         setSelectedCategoryListView()
 
         binding.ivLogo.apply {
-            if (AppPreferences.userImageUrl.isNotEmpty()){
-                Glide.with(this).load(BuildConfig.IMAGE_URL + AppPreferences.userImageUrl).into(this)
+            if (appHomeViewModel.editProfImg.isNotEmpty()){
+                Glide.with(this).load(BuildConfig.IMAGE_URL + appHomeViewModel.editProfImg).into(this)
             }
 
             setOnClickListener {
@@ -170,6 +186,18 @@ class FragmentEditProfile  : BaseFragmentWithBinding<FragmentEditProfileBinding>
         )
     }
 
+
+    private fun showPermissionRationaleDialog(){
+        requireContext().showAppDialog(cancelable = false, cancelableTouchOutside = false){
+            setMessage("Permission required. Request Again")
+            positiveButton {
+                requestPermission(requestPermissionLauncher, AppPermission.PERMISSION_LOCATION)
+            }
+            negativeButton {
+
+            }
+        }
+    }
 
     private fun setObserver(){
         /*appHomeViewModel.categoriesReceiver.observe(viewLifecycleOwner){
@@ -385,7 +413,7 @@ class FragmentEditProfile  : BaseFragmentWithBinding<FragmentEditProfileBinding>
             list
         )
 
-        binding.tvDropdownLang.apply {
+        /*binding.tvDropdownLang.apply {
             if (AppPreferences.userLanguageId.isNotEmpty()){
                 setText(list.find { langData-> langData.id == AppPreferences.userLanguageId }?.lang?:"")
             }
@@ -394,12 +422,12 @@ class FragmentEditProfile  : BaseFragmentWithBinding<FragmentEditProfileBinding>
                 appHomeViewModel.editLangName = list[position].lang
             }
             setAdapter(langListAdapter)
-        }
+        }*/
     }
 
     private fun setSearchList(){
 
-        binding.ivClearSearch.setOnClickListener {
+        /*binding.ivClearSearch.setOnClickListener {
             binding.actCategory.setText("")
         }
 
@@ -450,7 +478,7 @@ class FragmentEditProfile  : BaseFragmentWithBinding<FragmentEditProfileBinding>
                 }
                 false
             }
-        }
+        }*/
     }
 
 

@@ -1,5 +1,6 @@
 package com.janustech.helpsaap.ui.home
 
+import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.DialogInterface
 import android.location.Geocoder
@@ -9,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.lifecycleScope
@@ -25,9 +27,10 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.janustech.helpsaap.R
 import com.janustech.helpsaap.app.AppPermission
 import com.janustech.helpsaap.databinding.FragmentEditMapLocationBottomSheetBinding
-import com.janustech.helpsaap.extension.handlePermission
+import com.janustech.helpsaap.extension.*
 import com.janustech.helpsaap.location.GpsListener
 import com.janustech.helpsaap.location.GpsManager
+import com.janustech.helpsaap.ui.startup.SignupActivity
 import kotlinx.coroutines.launch
 import java.io.IOException
 
@@ -45,6 +48,7 @@ class EditMapLocationBottomSheetDialogFragment
     var lattitude = "0.0"
     var longitude = "0.0"
     var locationMarker: Marker? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -105,22 +109,10 @@ class EditMapLocationBottomSheetDialogFragment
                 isZoomControlsEnabled = true
                 setAllGesturesEnabled(true)
             }
-
-            handlePermission(
-                AppPermission.ACCESS_FINE_LOCATION,
-                onGranted = {
-                    (activity as AppHomeActivity).showProgress()
-                    setOnMyLocationButtonClickListener(this@EditMapLocationBottomSheetDialogFragment)
-                    setOnMyLocationClickListener(this@EditMapLocationBottomSheetDialogFragment)
-                    GpsManager(this@EditMapLocationBottomSheetDialogFragment, requireActivity()).getLastLocation()
-                },
-                onRationaleNeeded = {
-
-                },
-                onDenied = {
-
-                }
-            )
+            (activity as AppHomeActivity).showProgress()
+            setOnMyLocationButtonClickListener(this@EditMapLocationBottomSheetDialogFragment)
+            setOnMyLocationClickListener(this@EditMapLocationBottomSheetDialogFragment)
+            GpsManager(this@EditMapLocationBottomSheetDialogFragment, requireActivity()).getLastLocation()
 
             setOnMapClickListener {
                 locationMarker?.apply {  ->
@@ -176,7 +168,6 @@ class EditMapLocationBottomSheetDialogFragment
     }
 
 
-
     private fun configureCameraIdle(){
         onCameraIdleListener = GoogleMap.OnCameraIdleListener {
             val latLng = mMap!!.cameraPosition.target
@@ -213,11 +204,18 @@ class EditMapLocationBottomSheetDialogFragment
             val posLatLng = LatLng(this@EditMapLocationBottomSheetDialogFragment.lattitude.toDouble(), this@EditMapLocationBottomSheetDialogFragment.longitude.toDouble())
             val addressList = geocoder.getFromLocation(posLatLng.latitude, posLatLng.longitude, 1)
             if (addressList != null && addressList.size > 0) {
-                val addressL = addressList[0].getAddressLine(0)
-                val locality = addressList[0].locality
-                val area = addressList[0].adminArea
 
-                data = "$addressL\n$locality\n$area" + "\nLatitude, Longitude: \n" + this@EditMapLocationBottomSheetDialogFragment.lattitude + ", " + this@EditMapLocationBottomSheetDialogFragment.longitude
+                if (addressList[0].getAddressLine(0).isNullOrEmpty().not() && addressList[0].getAddressLine(0) != "null"){
+                    data += addressList[0].getAddressLine(0)
+                }
+
+                if (addressList[0].locality.isNullOrEmpty().not() && addressList[0].locality != "null"){
+                    data += "\n" + addressList[0].locality
+                }
+
+                if (addressList[0].adminArea.isNullOrEmpty().not() && addressList[0].adminArea != "null"){
+                    data += "\n" + addressList[0].adminArea
+                }
 
                 binding?.latlng.text = data
             }else{

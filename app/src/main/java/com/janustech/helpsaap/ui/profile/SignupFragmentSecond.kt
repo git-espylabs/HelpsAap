@@ -82,7 +82,7 @@ class SignupFragmentSecond : BaseFragmentWithBinding<FragmentRegisterSecondBindi
         registerForActivityResult(
             ActivityResultContracts.RequestMultiplePermissions()
         ) { permissions ->
-            if (permissions[AppPermission.PERMISSION_STORAGE[0]] == true) {
+            if (permissions[AppPermission.PERMISSION_STORAGE[1]] == true) {
                 dispatchPickPhotoIntent()
             }
         }

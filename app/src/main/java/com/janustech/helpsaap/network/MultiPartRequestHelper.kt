@@ -41,6 +41,30 @@ object MultiPartRequestHelper {
         return createFormData(fileName, file.name, requestFile)
     }
 
+    fun createFileRequestBodyN(imageFile: String?, fileName: String, context: Context): Pair<MultipartBody.Part, String> {
+        var file: File? = null
+        var inputStream: InputStream? = null
+
+        inputStream = if ((imageFile != null && imageFile.isNotEmpty())) {
+            val fileExtn =imageFile.substring(imageFile.lastIndexOf("."))
+            if (fileExtn !=SUFFIX) {
+                FileInputStream(imageFile)
+            } else {
+                getPlaceHolderFromAssets(context)
+            }
+        } else {
+            getPlaceHolderFromAssets(context)
+        }
+
+        val bin = BufferedInputStream(inputStream)
+        file = stream2file(bin)
+
+        val requestFile = file!!.asRequestBody("multipart/form-data".toMediaTypeOrNull())
+
+
+        return Pair(createFormData(fileName, file.name, requestFile), file.name)
+    }
+
     private fun getPlaceHolderFromAssets(context: Context): InputStream?{
         return try {
             val am = context.assets

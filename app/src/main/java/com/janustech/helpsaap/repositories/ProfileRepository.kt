@@ -11,6 +11,8 @@ import com.janustech.helpsaap.network.response.MultipartApiResponse
 import com.janustech.helpsaap.network.response.SignupResponse
 import kotlinx.coroutines.flow.Flow
 import okhttp3.MultipartBody
+import okhttp3.Response
+import okhttp3.ResponseBody
 import retrofit2.http.Part
 
 interface ProfileRepository {
