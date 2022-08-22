@@ -55,7 +55,8 @@ interface HelpsAapApis {
        @Part businessname: MultipartBody.Part,
         @Part whatsapp: MultipartBody.Part,
         @Part website: MultipartBody.Part,
-        @Part  areaname: MultipartBody.Part
+        @Part  areaname: MultipartBody.Part,
+        @Part  imFlag: MultipartBody.Part
     ): MultipartApiResponse
 
     @POST(HttpEndPoints.ADDON_CATEGORIES)

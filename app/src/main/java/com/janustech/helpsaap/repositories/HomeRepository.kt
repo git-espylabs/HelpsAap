@@ -42,7 +42,8 @@ interface HomeRepository {
         businessname: MultipartBody.Part,
         whatsapp: MultipartBody.Part,
         website: MultipartBody.Part,
-        areaname: MultipartBody.Part
+        areaname: MultipartBody.Part,
+        imFlag: MultipartBody.Part
     ): Flow<Resource<MultipartApiResponse>>
 
     fun addCategories(addCategoriesRequest: AddCategoriesRequest):Flow<Resource<ApiResponse<String>>>

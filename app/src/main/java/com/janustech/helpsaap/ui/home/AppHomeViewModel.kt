@@ -466,6 +466,13 @@ class AppHomeViewModel @Inject constructor(private val appIntroUseCase: AppIntro
                 val partCusname = MultiPartRequestHelper.createRequestBody("cusname", editUsername)
                 val partMob = MultiPartRequestHelper.createRequestBody("phone_number", editEditMob)
                 val partLanguage = MultiPartRequestHelper.createRequestBody("language", editLangId)
+                var isImgEdited = "0"
+                isImgEdited = if (editProfImg != (userData?.photo ?: "")) {
+                    "1"
+                } else {
+                    "0"
+                }
+                val imFag = MultiPartRequestHelper.createRequestBody("imFag", isImgEdited)
                 val partFilePair = MultiPartRequestHelper.createFileRequestBodyN(editProfImg, "image", context)
                 val partFile = partFilePair.first
 
@@ -477,7 +484,7 @@ class AppHomeViewModel @Inject constructor(private val appIntroUseCase: AppIntro
 
 
                 homeUseCases.editProfile(
-                    partCusId, partCusname, partMob, partLanguage, partFile,businessname,whatsapp,website,areaname
+                    partCusId, partCusname, partMob, partLanguage, partFile,businessname,whatsapp,website,areaname,imFag
                 )
                     .onStart { _editSubmitStatusReceiver.value = Resource.loading() }
                     .collect {  apiResponse ->
@@ -487,7 +494,9 @@ class AppHomeViewModel @Inject constructor(private val appIntroUseCase: AppIntro
                                 if (resp.isResponseSuccess() && resp.data != null && resp.data.isNotEmpty()) {
                                     CommonUtils.writeLogFile(context, "editProfile() -> Response: ResponseSuccess -> data:\n" + resp.data.toString())
                                     AppPreferences.userImageDisk = editProfImg
-                                    editProfImg = partFilePair.second
+                                    if (editProfImg != (userData?.photo ?: "")) {
+                                        editProfImg = partFilePair.second
+                                    }
                                     _editSubmitStatusReceiver_.value = apiResponse
                                 }else if (resp.isResponseSuccess().not()){
                                     CommonUtils.writeLogFile(context, "editProfile() -> Response: ResponseFail:\n" + resp.message )
