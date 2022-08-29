@@ -1,6 +1,7 @@
 package com.janustech.helpsaap.ui.profile
 
 import android.app.Activity
+import android.app.Dialog
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -15,40 +16,40 @@ import android.text.*
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.view.View
+import android.view.Window
+import android.view.WindowManager
+import android.webkit.WebView
+import android.webkit.WebViewClient
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.fragment.app.activityViewModels
-import androidx.navigation.fragment.findNavController
 import com.google.gson.Gson
 import com.janustech.helpsaap.R
 import com.janustech.helpsaap.app.AppPermission
-import com.janustech.helpsaap.databinding.FragmentRegisterBinding
 import com.janustech.helpsaap.databinding.FragmentRegisterSecondBinding
 import com.janustech.helpsaap.extension.handlePermission
 import com.janustech.helpsaap.extension.launchActivity
 import com.janustech.helpsaap.extension.requestPermission
-import com.janustech.helpsaap.location.GpsManager
 import com.janustech.helpsaap.map.toCategoryDataModel
 import com.janustech.helpsaap.map.toUserData
 import com.janustech.helpsaap.model.CategoryDataModel
-import com.janustech.helpsaap.model.UserData
 import com.janustech.helpsaap.network.Status
-import com.janustech.helpsaap.network.response.LoginResponseData
 import com.janustech.helpsaap.network.response.SignupResponse
 import com.janustech.helpsaap.preference.AppPreferences
 import com.janustech.helpsaap.ui.base.BaseFragmentWithBinding
 import com.janustech.helpsaap.ui.home.AppHomeActivity
-import com.janustech.helpsaap.ui.startup.AppIntroActivity
 import com.janustech.helpsaap.ui.startup.SignupActivity
 import com.janustech.helpsaap.utils.CommonUtils
 import com.janustech.helpsaap.utils.PhotoOptionListener
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
 import java.io.IOException
+
 
 @AndroidEntryPoint
 class SignupFragmentSecond : BaseFragmentWithBinding<FragmentRegisterSecondBinding>(R.layout.fragment_register_second),
@@ -133,7 +134,7 @@ class SignupFragmentSecond : BaseFragmentWithBinding<FragmentRegisterSecondBindi
         val ss = SpannableString(getString(R.string.agree_tnc2))
         val clickableSpan: ClickableSpan = object : ClickableSpan() {
             override fun onClick(textView: View) {
-                findNavController().navigate(SignupFragmentSecondDirections.actionSignupFragmentSecondToTncFragment(""))
+                //findNavController().navigate(SignupFragmentSecondDirections.actionSignupFragmentSecondToTncFragment(""))
             }
 
             override fun updateDrawState(ds: TextPaint) {
@@ -148,6 +149,47 @@ class SignupFragmentSecond : BaseFragmentWithBinding<FragmentRegisterSecondBindi
             setTypeface(this.typeface, Typeface.BOLD)
             text = ss
         }
+
+        binding.tvPromptTnc.setOnClickListener {
+            showDialog()
+
+        }
+
+    }
+
+    private fun showDialog() {
+        val dialog = Dialog(activity!!)
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setCancelable(false)
+        dialog.setContentView(R.layout.fragment_terms_conditions)
+        val tv_close = dialog.findViewById(R.id.tv_close) as TextView
+        val webView = dialog.findViewById(R.id.webView) as WebView
+        val layoutParams = dialog.window!!.attributes
+        dialog.window!!.setLayout(
+            WindowManager.LayoutParams.MATCH_PARENT,
+            WindowManager.LayoutParams.MATCH_PARENT
+        )
+        dialog.window!!.attributes = layoutParams
+        var tc_url = "https://helpsaap.com/terms"
+        webView.apply {
+            loadUrl(tc_url)
+            settings.also {
+                it.loadsImagesAutomatically = true
+                it.javaScriptEnabled = true;
+            }
+            webViewClient = object : WebViewClient() {
+                override fun onPageFinished(view: WebView, url: String) {
+                    /*if (activity is AppHomeActivity) {
+                        (activity as AppHomeActivity).hideProgress()
+                    } else if (activity is SignupActivity) {
+                        (activity as SignupActivity).hideProgress()
+                    }*/
+                }
+            }
+        }
+        tv_close.setOnClickListener { dialog.dismiss() }
+        dialog.show()
+
     }
 
     override fun onTakePhotoSelected() {

@@ -1,9 +1,11 @@
 package com.janustech.helpsaap.ui.home
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import androidx.activity.addCallback
 import com.janustech.helpsaap.R
 import com.janustech.helpsaap.databinding.FragmentTermsConditions1Binding
 import com.janustech.helpsaap.ui.base.BaseFragmentWithBinding
@@ -44,5 +46,9 @@ class TermsConditionsFragment : BaseFragmentWithBinding<FragmentTermsConditions1
                 }
             }
         }
+
+
     }
+
+
 }
