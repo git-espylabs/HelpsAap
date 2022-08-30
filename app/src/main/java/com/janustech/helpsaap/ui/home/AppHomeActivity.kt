@@ -1,8 +1,12 @@
 package com.janustech.helpsaap.ui.home
 
+import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
 import android.view.*
+import android.webkit.WebView
+import android.webkit.WebViewClient
+import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.PopupMenu
@@ -242,12 +246,50 @@ class AppHomeActivity : BaseActivity<ActivityAppHomeBinding>(), View.OnClickList
                     this.finish()
                 }
                 R.id.actionAbout-> {
-                    appHomeViewModel.getAboutUs()
+                    //appHomeViewModel.getAboutUs()
+                    showAboutUsDialog()
                 }
             }
             true
         }
         popup.show()
+    }
+
+    private fun showAboutUsDialog() {
+        val dialog = Dialog(this)
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setCancelable(false)
+        dialog.setContentView(R.layout.fragment_terms_conditions)
+        val title = dialog.findViewById(R.id.title) as TextView
+        title.text = "About Us"
+        val tv_close = dialog.findViewById(R.id.tv_close) as TextView
+        val webView = dialog.findViewById(R.id.webView) as WebView
+        val layoutParams = dialog.window!!.attributes
+        dialog.window!!.setLayout(
+            WindowManager.LayoutParams.MATCH_PARENT,
+            WindowManager.LayoutParams.MATCH_PARENT
+        )
+        dialog.window!!.attributes = layoutParams
+        var tc_url = "https://helpsaap.com/aboutus"
+        webView.apply {
+            loadUrl(tc_url)
+            settings.also {
+                it.loadsImagesAutomatically = true
+                it.javaScriptEnabled = true;
+            }
+            webViewClient = object : WebViewClient() {
+                override fun onPageFinished(view: WebView, url: String) {
+                    /*if (activity is AppHomeActivity) {
+                        (activity as AppHomeActivity).hideProgress()
+                    } else if (activity is SignupActivity) {
+                        (activity as SignupActivity).hideProgress()
+                    }*/
+                }
+            }
+        }
+        tv_close.setOnClickListener { dialog.dismiss() }
+        dialog.show()
+
     }
 
     private fun showAboutPopup(text: String){
