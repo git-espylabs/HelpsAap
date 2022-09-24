@@ -68,6 +68,8 @@ class FragmentEditProfile  : BaseFragmentWithBinding<FragmentEditProfileBinding>
     private var isCameraImage = true
     private lateinit var langListAdapter: ArrayAdapter<LanguageDataModel>
 
+    private var isImageEditing = false
+
 
     private var cameraLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
@@ -147,17 +149,21 @@ class FragmentEditProfile  : BaseFragmentWithBinding<FragmentEditProfileBinding>
         setSelectedCategoryListView()
 
         binding.ivLogo.apply {
-            if (appHomeViewModel.editProfImg.isNotEmpty()){
-                Glide.with(this).load(BuildConfig.IMAGE_URL + appHomeViewModel.editProfImg).into(this)
+            if (appHomeViewModel.userData?.photo?.isNotEmpty() == true){
+//                Glide.with(this).load(BuildConfig.IMAGE_URL + appHomeViewModel.editProfImg).error(R.drawable.avatar).into(this)
+                url = appHomeViewModel.userData?.photo?:""
             }
 
             setOnClickListener {
+                isImageEditing = true
                 showPhotoPickOption()
             }
         }
 
         appHomeViewModel.getLanguages()
     }
+
+
 
     override fun onStop() {
         super.onStop()
@@ -258,6 +264,7 @@ class FragmentEditProfile  : BaseFragmentWithBinding<FragmentEditProfileBinding>
                         Status.SUCCESS ->{
                             (activity as AppHomeActivity).hideProgress()
                             if (it.data?.isResponseSuccess() == true) {
+                                isImageEditing = false
                                 appHomeViewModel.updateUserDataWithEditSuccess()
                                 AppPreferences.userLanguageId = appHomeViewModel.editLangId
                                 AppPreferences.userLanguage = appHomeViewModel.editLangName
@@ -574,8 +581,6 @@ class FragmentEditProfile  : BaseFragmentWithBinding<FragmentEditProfileBinding>
         image?.let {
             binding.ivLogo.apply {
                 setImageBitmap(image)
-                scaleType = ImageView.ScaleType.CENTER_CROP
-                setPadding(0, 0, 0, 0)
             }
         }
     }
