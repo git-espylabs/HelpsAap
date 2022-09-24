@@ -185,7 +185,7 @@
                 android:drawableStart="@drawable/ic_search"
                 android:drawablePadding="7dp"
                 android:layout_marginTop="36dp"
-                android:hint="Search Location"
+                android:hint="Post Publishing Location"
                 android:layout_width="match_parent"
                 android:layout_height="52dp"/>
 

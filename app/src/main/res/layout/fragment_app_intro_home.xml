@@ -114,7 +114,8 @@
                 android:drawableStart="@drawable/ic_search"
                 android:drawablePadding="7dp"
                 android:layout_marginTop="16dp"
-                android:hint="Search Category"
+                android:hint="Search Here.. "
+                android:fontFamily="@font/avenir_medium"
                 android:layout_width="match_parent"
                 android:layout_height="52dp"/>
 
@@ -137,10 +138,10 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 android:textSize="18sp"
                 android:textColor="@color/app_accent_color"
-                android:textStyle="bold"
-                android:fontFamily="@font/segoeui_heavy"
+                android:textStyle="normal"
                 android:textFontWeight="700"
                 android:text="Make Your Business Profile"
+                android:fontFamily="@font/avenir_medium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
@@ -155,6 +156,7 @@
                 android:textSize="16sp"
                 android:textAllCaps="false"
                 android:paddingHorizontal="24dp"
+                android:fontFamily="@font/avenir_light"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
@@ -192,7 +194,7 @@
                         android:textSize="18sp"
                         android:textColor="@color/black"
                         android:textStyle="bold"
-                        android:fontFamily="@font/segoeui_heavy"
+                        android:fontFamily="@font/avenir_heavy"
                         android:textFontWeight="500"
                         android:text="Deals for the Day"
                         android:layout_width="wrap_content"
@@ -216,9 +218,9 @@
                         android:textSize="18sp"
                         android:textColor="@color/black"
                         android:textStyle="bold"
-                        android:fontFamily="@font/segoeui_heavy"
+                        android:fontFamily="@font/avenir_heavy"
                         android:textFontWeight="500"
-                        android:text="Advertisement"
+                        android:text="Advertisements"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
 

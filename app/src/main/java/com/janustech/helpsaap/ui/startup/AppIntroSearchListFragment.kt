@@ -28,7 +28,8 @@ import com.janustech.helpsaap.utils.EditLocationListener
 import java.util.*
 
 
-class AppIntroSearchListFragment: BaseFragmentWithBinding<FragmentAppIntroSearchListBinding>(R.layout.fragment_app_intro_search_list),
+class AppIntroSearchListFragment :
+    BaseFragmentWithBinding<FragmentAppIntroSearchListBinding>(R.layout.fragment_app_intro_search_list),
     EditLocationListener {
 
     private val appIntroViewModel: AppIntroViewModel by activityViewModels()
@@ -37,9 +38,12 @@ class AppIntroSearchListFragment: BaseFragmentWithBinding<FragmentAppIntroSearch
         super.onViewCreated(view, savedInstanceState)
         binding.apply {
             viewModel = appIntroViewModel
-            btnLogin.setOnClickListener { activity?.launchActivity<LoginActivity>()}
+            btnLogin.setOnClickListener { activity?.launchActivity<LoginActivity>() }
             tvLocation.setOnClickListener {
-                EditLocationBottomSheetDialogFragment(appIntroViewModel, this@AppIntroSearchListFragment).show(
+                EditLocationBottomSheetDialogFragment(
+                    appIntroViewModel,
+                    this@AppIntroSearchListFragment
+                ).show(
                     childFragmentManager,
                     "EditLocationFragment"
                 )
@@ -49,13 +53,13 @@ class AppIntroSearchListFragment: BaseFragmentWithBinding<FragmentAppIntroSearch
                 showPopup(it)
             }
 
-            if (AppPreferences.userId.isNotEmpty()){
+            if (AppPreferences.userId.isNotEmpty()) {
                 btnLogin.visibility = View.INVISIBLE
                 btnLogin.isEnabled = false
 
                 btnProfileIco.visibility = View.VISIBLE
                 btnProfileIco.isEnabled = true
-            }else{
+            } else {
                 btnLogin.visibility = View.VISIBLE
                 btnLogin.isEnabled = true
 
@@ -76,103 +80,125 @@ class AppIntroSearchListFragment: BaseFragmentWithBinding<FragmentAppIntroSearch
         }
     }
 
-    private fun setObserver(){
-        appIntroViewModel.companyListReceiver.observe(viewLifecycleOwner){
-            when(it.status){
-                Status.SUCCESS ->{
+    private fun setObserver() {
+        appIntroViewModel.companyListReceiver.observe(viewLifecycleOwner) {
+            when (it.status) {
+                Status.SUCCESS -> {
                     (activity as AppIntroActivity).hideProgress()
                     val dataList = it.data?.data
-                    setCompanyList(dataList?.map { obj-> obj.toCompanyDataModel() })
+                    setCompanyList(dataList?.map { obj -> obj.toCompanyDataModel() })
                 }
                 Status.LOADING -> {
                     (activity as AppIntroActivity).showProgress()
                 }
-                else ->{
+                else -> {
                     (activity as AppIntroActivity).hideProgress()
-                    (activity as AppIntroActivity).showAlertDialog(it.message?:"Invalid Server Response")
+                    (activity as AppIntroActivity).showAlertDialog(
+                        it.message ?: "Invalid Server Response"
+                    )
                 }
             }
         }
     }
 
-    private fun setCompanyList(companyList: List<CompanyDataModel>?){
-        if (companyList != null && companyList.isNotEmpty()){
+    private fun setCompanyList(companyList: List<CompanyDataModel>?) {
+        if (companyList != null && companyList.isNotEmpty()) {
 
-            binding.cmpnyAdapter = CompanyListAdapter(companyList){ model, action ->
-                when(action){
-                    "call" ->{
+            binding.cmpnyAdapter = CompanyListAdapter(companyList) { model, action ->
+                when (action) {
+                    "call" -> {
                         model.phone_number.let {
-                            if (it.isValidPhoneNumber()){
+                            if (it.isValidPhoneNumber()) {
                                 val intent = Intent(Intent.ACTION_DIAL)
                                 intent.data = Uri.parse("tel:" + model.phone_number)
                                 startActivity(intent)
                             }
                         }
                     }
-                    "share" ->{
+                    "share" -> {
                         CommonUtils.share(requireContext(), createShareContent(model))
                     }
-                    "whatsap" ->{
-                        if (model.phone_number.isValidPhoneNumber()){
+                    "whatsap" -> {
+                        if (model.phone_number.isValidPhoneNumber()) {
                             when {
                                 isAppInstalled(requireContext(), "com.whatsapp.w4b") -> {
-                                    CommonUtils.openWhatsApp(requireContext(), model.phone_number, "com.whatsapp.w4b")
+                                    CommonUtils.openWhatsApp(
+                                        requireContext(),
+                                        model.phone_number,
+                                        "com.whatsapp.w4b"
+                                    )
                                 }
                                 isAppInstalled(requireContext(), "com.whatsapp") -> {
-                                    CommonUtils.openWhatsApp(requireContext(), model.phone_number, "com.whatsapp")
+                                    CommonUtils.openWhatsApp(
+                                        requireContext(),
+                                        model.phone_number,
+                                        "com.whatsapp"
+                                    )
                                 }
                                 else -> {
                                     showAlertDialog("whatsApp is not installed")
                                 }
                             }
-                        }else{
-                            Toast.makeText(requireContext(), "Not a valid number", Toast.LENGTH_SHORT).show()
+                        } else {
+                            Toast.makeText(
+                                requireContext(),
+                                "Not a valid number",
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
                     }
-                    "loc" ->{
+                    "loc" -> {
                         if (model.lat.isNotEmpty() && model.longi.isNotEmpty()) {
                             var markerName = model.businessname.ifEmpty { model.cus_name }
                             markerName = markerName + ", " + model.areaname
                             gotToLocation(markerName, model.lat.toFloat(), model.longi.toFloat())
                         }
                     }
-                    "web" ->{
+                    "web" -> {
                         openWeb(model.website)
                     }
                 }
             }
-        }else{
+        } else {
             showAlertDialog("No companies found!")
         }
     }
 
-    private fun createShareContent(obj: CompanyDataModel): String{
+    private fun createShareContent(obj: CompanyDataModel): String {
         var name = obj.businessname.ifEmpty { obj.cus_name }
         var area = obj.areaname
 
         var data = name + " - " + appIntroViewModel.userSelectedCategoryName + "\n"
-        if (area.isNotEmpty()){
-            data =  data + area +"\n"
+        if (area.isNotEmpty()) {
+            data = data + area + "\n"
         }
-        if (obj.address.isNotEmpty()){
+        if (obj.address.isNotEmpty()) {
             data = data + obj.address + "\n"
         }
-        if (obj.phone_number.isNotEmpty()){
+        if (obj.phone_number.isNotEmpty()) {
             data = data + "Phone: " + obj.phone_number + "\n"
         }
-        if (obj.website.isNotEmpty()){
-            data = data + "Website: " + obj.website
+        if (obj.website.isNotEmpty()) {
+            data = data + "Website: " + obj.website + "\n"
         }
+        if (obj.lat.isNotEmpty() && obj.longi.isNotEmpty()) {
+            data =
+                data + "Location : " + "https://www.google.com/maps/search/?api=1&query=" + obj.lat + "," + obj.longi + "\n"
+        }
+        data =
+            "$data Playstore Link: https://play.google.com/store/apps/details?id=com.janustech.helpsaap \n"
+
 
         return data
     }
 
-    private fun openMap(latitude: Double, longitude: Double){
+    private fun openMap(latitude: Double, longitude: Double) {
         try {
-            val uri: String = java.lang.String.format(Locale.ENGLISH, "geo:%f,%f", latitude, longitude)
+            val uri: String =
+                java.lang.String.format(Locale.ENGLISH, "geo:%f,%f", latitude, longitude)
             val intent = Intent(Intent.ACTION_VIEW, Uri.parse(uri))
             requireContext().startActivity(intent)
-        }catch (e: Exception){
+        } catch (e: Exception) {
         }
     }
 
@@ -191,31 +217,31 @@ class AppIntroSearchListFragment: BaseFragmentWithBinding<FragmentAppIntroSearch
         }
     }
 
-    private fun openWeb(url:String){
+    private fun openWeb(url: String) {
         try {
-            if (url.isNotEmpty()){
+            if (url.isNotEmpty()) {
                 val i = Intent(Intent.ACTION_VIEW)
                 i.data = Uri.parse("http://$url")
                 startActivity(i)
-            }else{
+            } else {
                 showToast("No website found!")
             }
-        }catch (e: Exception){
+        } catch (e: Exception) {
             showToast("No website found!")
         }
     }
 
-    private fun showPopup(v : View){
+    private fun showPopup(v: View) {
         val popup = PopupMenu(requireActivity(), v)
         val inflater: MenuInflater = popup.menuInflater
         inflater.inflate(R.menu.menu_sub_home, popup.menu)
         popup.setOnMenuItemClickListener { menuItem ->
-            when(menuItem.itemId){
-                R.id.actionLogout-> {
+            when (menuItem.itemId) {
+                R.id.actionLogout -> {
                     AppPreferences.clearAll()
                     findNavController().navigate(AppIntroSearchListFragmentDirections.actionAppIntroSearchListToSelectLocationFragment())
                 }
-                R.id.actionProfile ->{
+                R.id.actionProfile -> {
                     activity?.launchActivity<AppHomeActivity>()
                     activity?.finish()
                 }

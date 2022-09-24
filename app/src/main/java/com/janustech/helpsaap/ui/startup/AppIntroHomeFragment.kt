@@ -115,7 +115,7 @@ class AppIntroHomeFragment: BaseFragmentWithBinding<FragmentAppIntroHomeBinding>
                 val str = appIntroViewModel.userLanguage
                 val content = SpannableString(str)
                 content.setSpan(UnderlineSpan(), 0, str.length, 0)
-                it.text = content
+                it.text = str
                 it.setOnClickListener {
                     appIntroViewModel.getEditLanguages()
                 }
@@ -178,7 +178,7 @@ class AppIntroHomeFragment: BaseFragmentWithBinding<FragmentAppIntroHomeBinding>
                 val str = languageModel.lang
                 val content = SpannableString(str)
                 content.setSpan(UnderlineSpan(), 0, str.length, 0)
-                it.text = content
+                it.text = str
             }
         }
     }
@@ -412,7 +412,7 @@ class AppIntroHomeFragment: BaseFragmentWithBinding<FragmentAppIntroHomeBinding>
             override fun run() {
                 handlerAdsList.post(update)
             }
-        }, 2000L, 2000L)
+        }, 4000L, 4000L)
     }
 
     private fun startAutoSwipeDeals(pageSize:Int) {
@@ -429,7 +429,7 @@ class AppIntroHomeFragment: BaseFragmentWithBinding<FragmentAppIntroHomeBinding>
             override fun run() {
                 handlerDeals.post(update)
             }
-        }, 2000L, 2000L)
+        }, 4000L, 4000L)
     }
 
     private fun showPopup(v : View){

@@ -84,13 +84,13 @@ android {
 
     applicationVariants.all {
         val appBaseUrl = when (flavorName) {
-            "staging" -> "helpadmin.espylabs.com/public/api/"
-            "production" -> "helpadmin.espylabs.com/public/api/"
+            "staging" -> "helpsaap.com/public/api/"
+            "production" -> "helpsaap.com/public/api/"
             else -> null
         }
         val imageUrl = when (flavorName) {
-            "staging" -> "helpadmin.espylabs.com/public/img/"
-            "production" -> "helpadmin.espylabs.com/public/img/"
+            "staging" -> "helpsaap.com/public/img/"
+            "production" -> "helpsaap.com/public/img/"
             else -> null
         }
 
