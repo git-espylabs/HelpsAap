@@ -66,6 +66,10 @@ class AppIntroViewModel
     var languageEditListReceiver: LiveData<Resource<ApiResponse<List<LanguageListResponseData>>>>? = null
         get() = _languageEditListReceiver
 
+    var _appversionResponseReceiver = MutableLiveData<Resource<ApiResponse<List<AppVersionResponse>>>>()
+    var appversionResponseReceiver: LiveData<Resource<ApiResponse<List<AppVersionResponse>>>>? = null
+        get() = _appversionResponseReceiver
+
     var _langugaeUpdatedFlow = MutableSharedFlow<LanguageDataModel>()
 
     init {
@@ -222,6 +226,22 @@ class AppIntroViewModel
                             _profileDataReceiver.value = apiResponse
                         }?: run {
                             _profileDataReceiver.value = Resource.dataError("Invalid server response!")
+                        }
+                    }
+                }
+        }
+    }
+
+    fun getAppVersion(){
+        viewModelScope.launch {
+            appIntroUseCase.getAppVersion()
+                .onStart { _appversionResponseReceiver.value = Resource.loading() }
+                .collect { apiResponse ->
+                    apiResponse.let{
+                        it.data?.let{
+                            _appversionResponseReceiver.value = apiResponse
+                        }?: run {
+                            _appversionResponseReceiver.value = Resource.dataError("Invalid server response!")
                         }
                     }
                 }

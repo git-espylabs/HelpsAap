@@ -70,4 +70,12 @@ class AppIntroUseCase @Inject constructor(
             }
         }.flowOn(Dispatchers.IO)
     }
+
+    suspend fun getAppVersion(): Flow<Resource<ApiResponse<List<AppVersionResponse>>>> {
+        return flow {
+            appIntroRepository.getAppVersion().collect {
+                emit(it)
+            }
+        }.flowOn(Dispatchers.IO)
+    }
 }

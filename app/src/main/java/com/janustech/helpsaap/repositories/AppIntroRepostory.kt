@@ -20,4 +20,6 @@ interface AppIntroRepository {
     fun getCompanyList(companyListRequest: CompanyListRequest): Flow<Resource<ApiResponse<List<CompanyResponseData>>>>
 
     fun getProfileData(profileDataRequest: ProfileDataRequest): Flow<Resource<ApiResponse<List<ProfileViewResponseData>>>>
+
+    fun getAppVersion(): Flow<Resource<ApiResponse<List<AppVersionResponse>>>>
 }

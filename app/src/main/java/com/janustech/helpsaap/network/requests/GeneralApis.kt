@@ -40,4 +40,9 @@ interface GeneralApis {
     suspend fun getProfileData(
         @Body profileDataRequest: ProfileDataRequest
     ): ApiResponse<List<ProfileViewResponseData>>
+
+    @POST(HttpEndPoints.APP_VERSION)
+    suspend fun getAppVersion(
+        @Body appVersionRequest: AppVersionRequest
+    ): ApiResponse<List<AppVersionResponse>>
 }

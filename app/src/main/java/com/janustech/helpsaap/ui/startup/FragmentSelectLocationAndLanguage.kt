@@ -1,5 +1,7 @@
 package com.janustech.helpsaap.ui.startup
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -9,10 +11,15 @@ import android.text.TextWatcher
 import android.view.View
 import android.widget.AdapterView.OnItemClickListener
 import android.widget.ArrayAdapter
+import androidx.annotation.StringRes
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.janustech.helpsaap.R
 import com.janustech.helpsaap.databinding.FragmentSelectLocationAndLanguageBinding
+import com.janustech.helpsaap.extension.negativeButton
+import com.janustech.helpsaap.extension.positiveButton
+import com.janustech.helpsaap.extension.showAppDialog
 import com.janustech.helpsaap.map.toLanguageDataModel
 import com.janustech.helpsaap.map.toLocationDataModel
 import com.janustech.helpsaap.model.LocationDataModel
@@ -35,6 +42,10 @@ class FragmentSelectLocationAndLanguage: BaseFragmentWithBinding<FragmentSelectL
     private val TRIGGER_AUTO_COMPLETE = 100
     private val AUTO_COMPLETE_DELAY: Long = 300
     private var selectedPosition = -1
+
+//    var versionAlertDialog: AlertDialog? = null
+
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.apply {
@@ -69,6 +80,7 @@ class FragmentSelectLocationAndLanguage: BaseFragmentWithBinding<FragmentSelectL
                             (activity as AppIntroActivity).showAlertDialog(it.message?:"Invalid Server Response")
                         }
                     }
+                }?: run {
                 }
             } catch (e: Exception) {
             }
@@ -103,6 +115,7 @@ class FragmentSelectLocationAndLanguage: BaseFragmentWithBinding<FragmentSelectL
             }
         }
     }
+
 
     private fun setLocationDropdown(){
 

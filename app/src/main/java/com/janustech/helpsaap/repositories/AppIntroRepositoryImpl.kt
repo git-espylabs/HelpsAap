@@ -52,4 +52,10 @@ class AppIntroRepositoryImpl(private val apiService: GeneralApis): AppIntroRepos
             emit(safeApiCall { apiService.getProfileData(profileDataRequest) })
         }.flowOn(Dispatchers.IO)
     }
+
+    override fun getAppVersion(): Flow<Resource<ApiResponse<List<AppVersionResponse>>>> {
+        return flow {
+            emit(safeApiCall { apiService.getAppVersion(AppVersionRequest()) })
+        }.flowOn(Dispatchers.IO)
+    }
 }

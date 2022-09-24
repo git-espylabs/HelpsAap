@@ -26,5 +26,6 @@ internal class HttpEndPoints {
         const val USER_CATS = "usercategory"
         const val USER_CATS_DEL = "deletecategory"
         const val UPDATE_LOCATION_FROM_MAP = "updatelocation"
+        const val APP_VERSION = "get_app_version"
     }
 }
