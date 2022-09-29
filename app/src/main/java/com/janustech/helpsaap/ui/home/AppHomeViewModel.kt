@@ -472,7 +472,7 @@ class AppHomeViewModel @Inject constructor(private val appIntroUseCase: AppIntro
                 } else {
                     "0"
                 }
-                val imFag = MultiPartRequestHelper.createRequestBody("imFag", isImgEdited)
+                val imFag = MultiPartRequestHelper.createRequestBody("imFlage", isImgEdited)
                 val partFilePair = MultiPartRequestHelper.createFileRequestBodyN(editProfImg, "image", context)
                 val partFile = partFilePair.first
 

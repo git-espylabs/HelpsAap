@@ -92,11 +92,11 @@ class HomeUsecases@Inject constructor(
         whatsapp: MultipartBody.Part,
         website: MultipartBody.Part,
         areaname: MultipartBody.Part,
-        imFlag: MultipartBody.Part
+        imFlage: MultipartBody.Part
     ): Flow<Resource<MultipartApiResponse>> {
         return flow {
             homeRepository.editProfile(
-                customer_id, cusname, phone_number, language, image,businessname,whatsapp,website,areaname,imFlag
+                customer_id, cusname, phone_number, language, image,businessname,whatsapp,website,areaname,imFlage
             ).collect {
                 emit(it)
             }

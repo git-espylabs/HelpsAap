@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Helps Aap</string>
+    <string name="app_name">HelpsAap</string>
     <string name="permission_required_text">Requires Location Permission</string>
     <string name="location_disabled">GPS not available!\nYour GPS is either not available or set to a low accuracy.
         Please ensure GPS settings enabled with high accuracy and try again for better results.\n

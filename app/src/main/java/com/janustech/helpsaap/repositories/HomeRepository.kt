@@ -43,7 +43,7 @@ interface HomeRepository {
         whatsapp: MultipartBody.Part,
         website: MultipartBody.Part,
         areaname: MultipartBody.Part,
-        imFlag: MultipartBody.Part
+        imFlage: MultipartBody.Part
     ): Flow<Resource<MultipartApiResponse>>
 
     fun addCategories(addCategoriesRequest: AddCategoriesRequest):Flow<Resource<ApiResponse<String>>>
