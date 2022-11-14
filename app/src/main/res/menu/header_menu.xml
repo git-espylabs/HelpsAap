@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/privacy_policy"
+        android:title="Privacy policy" />
+    <item
+        android:id="@+id/terms"
+        android:title="Terms and conditions" />
+    <item
+        android:id="@+id/refund_policy"
+        android:title="Refund policy" />
+
+    <item
+        android:id="@+id/products_pricing"
+        android:title="Products &amp; pricing" />
+
+    <item
+        android:id="@+id/about_us"
+        android:title="About us" />
+
+    <item
+        android:id="@+id/contact_us"
+        android:title="Contact us" />
+
+
+</menu>

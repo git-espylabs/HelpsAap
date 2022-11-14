@@ -1,5 +1,6 @@
 package com.janustech.helpsaap.ui.startup
 
+import android.app.Dialog
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -8,10 +9,12 @@ import android.text.SpannableString
 import android.text.TextUtils
 import android.text.TextWatcher
 import android.text.style.UnderlineSpan
-import android.view.MenuInflater
-import android.view.View
+import android.view.*
+import android.webkit.WebView
+import android.webkit.WebViewClient
 import android.widget.AdapterView.OnItemClickListener
 import android.widget.ArrayAdapter
+import android.widget.TextView
 import androidx.appcompat.widget.PopupMenu
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
@@ -31,7 +34,6 @@ import com.janustech.helpsaap.ui.base.BaseFragmentWithBinding
 import com.janustech.helpsaap.ui.home.AppHomeActivity
 import com.janustech.helpsaap.ui.home.EditLocationBottomSheetDialogFragment
 import com.janustech.helpsaap.ui.profile.LoginActivity
-import com.janustech.helpsaap.ui.profile.PhotoOptionBottomSheetDialogFragment
 import com.janustech.helpsaap.utils.EditLocationListener
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
@@ -121,10 +123,50 @@ class AppIntroHomeFragment: BaseFragmentWithBinding<FragmentAppIntroHomeBinding>
                 }
             }
 
+            tvSettings.setOnClickListener {
+
+                showSettingsPopup(it)
+
+            }
+
         }
 
         setObserver()
         setSearchList()
+    }
+
+    private fun showSettingsPopup(view: View) {
+        val popup = PopupMenu(activity!!, view)
+        popup.inflate(R.menu.header_menu)
+
+        popup.setOnMenuItemClickListener { item: MenuItem? ->
+
+            when (item!!.itemId) {
+                R.id.privacy_policy -> {
+                    showSettingsPopDialog("Privacy Policy","privacypolicy")
+                }
+                R.id.terms -> {
+                    showSettingsPopDialog("Terms and Conditions","terms")
+                }
+                R.id.refund_policy -> {
+                    showSettingsPopDialog("Refund Policy","refundpolicy")
+                }
+                R.id.products_pricing -> {
+                    showSettingsPopDialog("Products and Pricing","productpricing")
+                }
+                R.id.about_us -> {
+
+                    showSettingsPopDialog("About Us","aboutus")
+                }
+                R.id.contact_us -> {
+                    showSettingsPopDialog("Contact Us","contactus")
+                }
+            }
+
+            true
+        }
+
+        popup.show()
     }
 
     override fun onPause() {
@@ -454,6 +496,81 @@ class AppIntroHomeFragment: BaseFragmentWithBinding<FragmentAppIntroHomeBinding>
         popup.show()
     }
 
+
+
+    private fun showSettingsPopDialog(header :String?,page: String?) {
+        val dialog = Dialog(activity!!)
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setCancelable(false)
+        dialog.setContentView(R.layout.fragment_terms_conditions)
+        val title = dialog.findViewById(R.id.title) as TextView
+        if(TextUtils.equals(page,"privacypolicy")) {
+            title.text = header
+        }
+        else if(TextUtils.equals(page,"terms")) {
+            title.text = header
+        }
+        else if(TextUtils.equals(page,"refundpolicy")) {
+            title.text = header
+        }
+        else if(TextUtils.equals(page,"productpricing")) {
+            title.text = header
+        }
+        else if(TextUtils.equals(page,"aboutus")) {
+            title.text = header
+        }
+        else if(TextUtils.equals(page,"contactus")) {
+            title.text = header
+        }
+        val tv_close = dialog.findViewById(R.id.tv_close) as TextView
+        val webView = dialog.findViewById(R.id.webView) as WebView
+        val layoutParams = dialog.window!!.attributes
+        dialog.window!!.setLayout(
+            WindowManager.LayoutParams.MATCH_PARENT,
+            WindowManager.LayoutParams.MATCH_PARENT
+        )
+        dialog.window!!.attributes = layoutParams
+        var tc_url=""
+
+        if(TextUtils.equals(page,"privacypolicy")) {
+            tc_url = "https://helpsaap.com/privacy"
+        }
+        else if(TextUtils.equals(page,"terms")) {
+            tc_url = "https://helpsaap.com/aboutus"
+        }
+        else if(TextUtils.equals(page,"refundpolicy")) {
+            tc_url = "https://helpsaap.com/refund"
+        }
+        else if(TextUtils.equals(page,"productpricing")) {
+            tc_url = "https://helpsaap.com/aboutus"
+        }
+        else if(TextUtils.equals(page,"aboutus")) {
+            tc_url = "https://helpsaap.com/aboutus"
+        }
+        else if(TextUtils.equals(page,"contactus")) {
+            tc_url = "https://helpsaap.com/contact"
+        }
+
+        webView.apply {
+            loadUrl(tc_url)
+            settings.also {
+                it.loadsImagesAutomatically = true
+                it.javaScriptEnabled = true;
+            }
+            webViewClient = object : WebViewClient() {
+                override fun onPageFinished(view: WebView, url: String) {
+                    /*if (activity is AppHomeActivity) {
+                        (activity as AppHomeActivity).hideProgress()
+                    } else if (activity is SignupActivity) {
+                        (activity as SignupActivity).hideProgress()
+                    }*/
+                }
+            }
+        }
+        tv_close.setOnClickListener { dialog.dismiss() }
+        dialog.show()
+
+    }
 
 
 }
