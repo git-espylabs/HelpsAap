@@ -536,13 +536,13 @@ class AppIntroHomeFragment: BaseFragmentWithBinding<FragmentAppIntroHomeBinding>
             tc_url = "https://helpsaap.com/privacy"
         }
         else if(TextUtils.equals(page,"terms")) {
-            tc_url = "https://helpsaap.com/aboutus"
+            tc_url = "http://helpsaap.com/terms"
         }
         else if(TextUtils.equals(page,"refundpolicy")) {
             tc_url = "https://helpsaap.com/refund"
         }
         else if(TextUtils.equals(page,"productpricing")) {
-            tc_url = "https://helpsaap.com/aboutus"
+            tc_url = "https://helpsaap.com/product_pricing"
         }
         else if(TextUtils.equals(page,"aboutus")) {
             tc_url = "https://helpsaap.com/aboutus"
