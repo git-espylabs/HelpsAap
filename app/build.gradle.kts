@@ -94,8 +94,9 @@ android {
             else -> null
         }
         val razorPayKid = when (flavorName) {
-            "staging" -> "rzp_live_XXXXXXXXXXXXXX"
-            "production" -> "rzp_live_oqFRHDM5RkE9WO"
+            "staging" -> "rzp_test_a00LyyxnLDqwhk"
+//            "production" -> "rzp_live_oqFRHDM5RkE9WO"
+            "production" -> "rzp_test_a00LyyxnLDqwhk"
             else -> null
         }
 

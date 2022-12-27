@@ -57,8 +57,7 @@ class AppHomeFragment : BaseFragmentWithBinding<FragmentAppHomeBinding>(R.layout
                 )
             }
             R.id.layPostedAds -> {
-                PaymentUtils(requireActivity()).startPayment()
-//                findNavController().navigate(AppHomeFragmentDirections.actionAppHomeFragmentToPostedAdsFragment())
+                findNavController().navigate(AppHomeFragmentDirections.actionAppHomeFragmentToPostedAdsFragment())
             }
             R.id.ivNeedsBg -> {
                 activity?.apply {

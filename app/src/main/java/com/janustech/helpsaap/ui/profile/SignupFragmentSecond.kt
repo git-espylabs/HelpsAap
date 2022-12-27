@@ -45,6 +45,7 @@ import com.janustech.helpsaap.ui.base.BaseFragmentWithBinding
 import com.janustech.helpsaap.ui.home.AppHomeActivity
 import com.janustech.helpsaap.ui.startup.SignupActivity
 import com.janustech.helpsaap.utils.CommonUtils
+import com.janustech.helpsaap.utils.PaymentUtils
 import com.janustech.helpsaap.utils.PhotoOptionListener
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
@@ -105,9 +106,8 @@ class SignupFragmentSecond : BaseFragmentWithBinding<FragmentRegisterSecondBindi
             btnFinish.isEnabled = false
             btnFinish.backgroundTintList = ContextCompat.getColorStateList(requireContext(), R.color.disabled_app_accent_color)
             btnFinish.setOnClickListener {
-                activity?.let {
-                    profileViewModel.registerApp(it)
-                }
+                val amt = 99 * 100;
+                PaymentUtils(requireActivity()).startPayment( amt.toString(), "Yearly Membership Charges")
             }
 
             promptFileSelect.setOnClickListener {
@@ -128,6 +128,11 @@ class SignupFragmentSecond : BaseFragmentWithBinding<FragmentRegisterSecondBindi
 
         setObserver()
         setSearchList()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        profileViewModel._registerPayStatusRZP.value = null
     }
 
     private fun setTncPromptText(){
@@ -253,6 +258,29 @@ class SignupFragmentSecond : BaseFragmentWithBinding<FragmentRegisterSecondBindi
                     (activity as SignupActivity).showAlertDialog(it.message?:"Invalid Server Response")
                 }
             }
+        }
+
+        profileViewModel.registerPayStatusRZP?.observe(viewLifecycleOwner){ res->
+            try {
+                res?.let {
+                    when(it.first){
+                        true ->{
+                            showToast("Payment Success! Transaction Id: " + it.second)
+                            completeRegistration(it.second)
+                        }
+                        false -> {
+                            showAlertDialog("Payment Failed!\n" + it.second)
+                        }
+                    }
+                }
+            } catch (e: Exception) {
+            }
+        }
+    }
+
+    private fun completeRegistration(transId: String){
+        activity?.let {
+            profileViewModel.registerApp(it, transId)
         }
     }
 

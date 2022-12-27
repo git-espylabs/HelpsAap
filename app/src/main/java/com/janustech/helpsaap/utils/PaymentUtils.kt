@@ -2,13 +2,17 @@ package com.janustech.helpsaap.utils
 
 import android.app.Activity
 import android.content.Context
+import com.google.gson.Gson
 import com.janustech.helpsaap.BuildConfig
+import com.janustech.helpsaap.R
+import com.janustech.helpsaap.model.UserData
+import com.janustech.helpsaap.preference.AppPreferences
 import com.razorpay.Checkout
 import org.json.JSONObject
 
 class PaymentUtils(var activity: Activity) {
 
-    fun startPayment() {
+    fun startPayment(amount: String = "100", desc: String = "Helps Aap Payment") {
         /*
         *  You need to pass the current activity to let Razorpay create CheckoutActivity
         * */
@@ -17,28 +21,36 @@ class PaymentUtils(var activity: Activity) {
 
         try {
             val options = JSONObject()
-            options.put("name", "Razorpay Corp")
-            options.put("description", "Demoing Charges")
-            //You can omit the image option to fetch the image from the dashboard
-//            options.put("image", "https://s3.amazonaws.com/rzp-mobile/images/rzp.jpg")
+            options.put("name", activity.getString(R.string.app_name))
+            options.put("description", desc)
             options.put("theme.color", "#3399cc");
             options.put("currency", "INR");
-//            options.put("order_id", "order_DBJOWzybf0sJbb");
-            options.put("amount", "10")//pass amount in currency subunits
+            options.put("amount", amount)
 
             val retryObj = JSONObject();
             retryObj.put("enabled", true);
             retryObj.put("max_count", 4);
             options.put("retry", retryObj);
 
-            val prefill = JSONObject()
-            prefill.put("email", "gaurav.kumar@example.com")
-            prefill.put("contact", "9876543210")
+            getUserObjectFromPreference()?.let { user->
+                val prefill = JSONObject()
+                prefill.put("email", user.email)
+                prefill.put("contact", user.phoneNumber)
 
-            options.put("prefill", prefill)
+                options.put("prefill", prefill)
+            }
             co.open(activity, options)
         } catch (e: Exception) {
             e.printStackTrace()
+        }
+    }
+
+    private fun getUserObjectFromPreference(): UserData? {
+        val json = AppPreferences.userData
+        return try {
+            Gson().fromJson(json, UserData::class.java)
+        } catch (e: Exception) {
+            null
         }
     }
 }

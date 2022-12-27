@@ -102,6 +102,7 @@ class FragmentAdvertisement: BaseFragmentWithBinding<FragmentAdvertisementBindin
     override fun onStop() {
         super.onStop()
         appHomeViewModel._publishAdsResponseReceiver.value = null
+        appHomeViewModel._advertPayStatusRZP.value = null
     }
 
     override fun onClick(p0: View?) {
@@ -117,9 +118,7 @@ class FragmentAdvertisement: BaseFragmentWithBinding<FragmentAdvertisementBindin
                 showPhotoPickOption()
             }
             R.id.btnPost -> {
-                PaymentUtils(requireActivity()).startPayment()
-
-                /*if (appHomeViewModel.adsImage.isEmpty()){
+                if (appHomeViewModel.adsImage.isEmpty()){
                     showAlertDialog("Please select an Ad Image")
                 }else if(selectedPackageDuration <= 0 ||
                     appHomeViewModel.selectedAMount.isEmpty() ||
@@ -127,23 +126,33 @@ class FragmentAdvertisement: BaseFragmentWithBinding<FragmentAdvertisementBindin
                     appHomeViewModel.selectedPublicLocationType.isEmpty()){
                     showAlertDialog("Please select a valid publishing location & package")
                 }else{
-                    val curDateString = SimpleDateFormat(DATE_FORMAT_SERVER, Locale.US).format(Calendar.getInstance().time)
-                    val currentDate = SimpleDateFormat(DATE_FORMAT_SERVER, Locale.US).parse(curDateString)
-
-                    val expDateCal = Calendar.getInstance().apply {
-                        time = currentDate as Date
-                        add(Calendar.MONTH,selectedPackageDuration)
+                    var amt = 0;
+                    try {
+                        amt = appHomeViewModel.selectedAMount.toInt() * 100;
+                        PaymentUtils(requireActivity()).startPayment(amt.toString(), "Ad Publish Charges")
+                    } catch (e: Exception) {
+                        PaymentUtils(requireActivity()).startPayment()
                     }
-                    val expDateString = SimpleDateFormat(DATE_FORMAT_SERVER, Locale.US).format(expDateCal.time)
-
-                    appHomeViewModel.selectedFromAdsDate = curDateString
-                    appHomeViewModel.selectedToAdsDate = expDateString
-
-                    appHomeViewModel.postAds(requireContext())
-                }*/
+                }
             }
 
         }
+    }
+
+    private fun finishProcess(transId: String){
+        val curDateString = SimpleDateFormat(DATE_FORMAT_SERVER, Locale.US).format(Calendar.getInstance().time)
+        val currentDate = SimpleDateFormat(DATE_FORMAT_SERVER, Locale.US).parse(curDateString)
+
+        val expDateCal = Calendar.getInstance().apply {
+            time = currentDate as Date
+            add(Calendar.MONTH,selectedPackageDuration)
+        }
+        val expDateString = SimpleDateFormat(DATE_FORMAT_SERVER, Locale.US).format(expDateCal.time)
+
+        appHomeViewModel.selectedFromAdsDate = curDateString
+        appHomeViewModel.selectedToAdsDate = expDateString
+
+        appHomeViewModel.postAds(requireContext(), transId)
     }
 
     override fun onTakePhotoSelected() {
@@ -200,6 +209,23 @@ class FragmentAdvertisement: BaseFragmentWithBinding<FragmentAdvertisementBindin
                     (activity as AppHomeActivity).hideProgress()
                     (activity as AppHomeActivity).showAlertDialog(it.message?:"Invalid Server Response")
                 }
+            }
+        }
+
+        appHomeViewModel.advertPayStatusRZP?.observe(viewLifecycleOwner){ res->
+            try {
+                res?.let {
+                    when(it.first){
+                        true ->{
+                            showToast("Payment Success! Transaction Id: " + it.second)
+                            finishProcess(it.second)
+                        }
+                        false -> {
+                            showAlertDialog("Payment Failed!\n" + it.second)
+                        }
+                    }
+                }
+            } catch (e: Exception) {
             }
         }
     }

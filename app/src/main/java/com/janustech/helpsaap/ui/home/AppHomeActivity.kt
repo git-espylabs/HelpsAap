@@ -27,8 +27,11 @@ import com.janustech.helpsaap.preference.AppPreferences
 import com.janustech.helpsaap.ui.base.BaseActivity
 import com.janustech.helpsaap.ui.startup.AppIntroActivity
 import com.janustech.helpsaap.utils.EditLocationListener
+import com.razorpay.PaymentData
 import com.razorpay.PaymentResultListener
+import com.razorpay.PaymentResultWithDataListener
 import dagger.hilt.android.AndroidEntryPoint
+import org.json.JSONObject
 
 
 @AndroidEntryPoint
@@ -315,11 +318,25 @@ class AppHomeActivity : BaseActivity<ActivityAppHomeBinding>(),
             .build()
     }
 
-    override fun onPaymentSuccess(p0: String?) {
-        Log.e("Payyyy", "onPaymentSuccess")
+    override fun onPaymentSuccess(razorpayPaymentID: String?) {
+        Log.e("Payyyy", "onPaymentSuccess: " + razorpayPaymentID)
+        appHomeViewModel.updateRazorpayStatusAdvertPayment(true, razorpayPaymentID?:"0")
     }
 
-    override fun onPaymentError(p0: Int, p1: String?) {
-        Log.e("Payyyy", "onPaymentError: " + p1)
+    override fun onPaymentError(code: Int, response: String?) {
+        try {
+            Log.e("Payyyy", "onPaymentError: " + response)
+            response?.let {
+                val resObj = JSONObject(response)
+                val error = resObj.getString("error")
+                val errorObj = JSONObject(error)
+                val errDesc = errorObj.getString("description")
+                appHomeViewModel.updateRazorpayStatusAdvertPayment(false, errDesc?:"0")
+            }?: run {
+                appHomeViewModel.updateRazorpayStatusAdvertPayment(false, "Could not complete payment. Something went wrong.")
+            }
+        } catch (e: Exception) {
+            appHomeViewModel.updateRazorpayStatusAdvertPayment(false, "Could not complete payment. Something went wrong.")
+        }
     }
 }

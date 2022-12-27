@@ -82,6 +82,11 @@ class ProfileViewModel @Inject constructor(
     val resetPassStatusReceiver: LiveData<Resource<ApiResponse<String>>>
         get() = _resetPassStatusReceiver
 
+
+    var _registerPayStatusRZP = MutableLiveData<Pair<Boolean, String>>()
+    var registerPayStatusRZP: LiveData<Pair<Boolean, String>>? = null
+        get() = _registerPayStatusRZP
+
     init {
         if (BuildConfig.DEBUG){
             userName = "7559946600"
@@ -128,7 +133,7 @@ class ProfileViewModel @Inject constructor(
         }
     }
 
-    fun registerApp(context: Context){
+    fun registerApp(context: Context, transId: String){
         CommonUtils.writeLogFile(context, "registerApp() -> Request Data ->\n" +
                 "phonenumber: " + regMob + "\n" +
                 "password: " + regMob + "\n" +
@@ -152,7 +157,7 @@ class ProfileViewModel @Inject constructor(
                 val partWhatsapp = MultiPartRequestHelper.createRequestBody("whatsapp", regWhatsapNo)
                 val partWebsite = MultiPartRequestHelper.createRequestBody("website", regWeb)
                 val partCategoryid = MultiPartRequestHelper.createRequestBody("categoryid", regCategoryId)
-                val partTransactionId = MultiPartRequestHelper.createRequestBody("transaction_id", ((100000..1000000).random()).toString())
+                val partTransactionId = MultiPartRequestHelper.createRequestBody("transaction_id", transId /*((100000..1000000).random()).toString()*/)
                 val partAmount = MultiPartRequestHelper.createRequestBody("amount", "99")
                 val partLatitude = MultiPartRequestHelper.createRequestBody("latitude", regLatitude)
                 val partLongitude = MultiPartRequestHelper.createRequestBody("longitube", regLongitude)
@@ -320,5 +325,9 @@ class ProfileViewModel @Inject constructor(
 
             }
         }
+    }
+
+    fun updateRazorpayStatusRegisterPayment(status: Boolean, message: String){
+        _registerPayStatusRZP.value = Pair(status, message)
     }
 }

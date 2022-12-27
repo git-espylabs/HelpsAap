@@ -55,7 +55,7 @@ class AppHomeViewModel @Inject constructor(private val appIntroUseCase: AppIntro
     var adsImage = ""
     var selectedPublicLocationId = ""
     var selectedPublicLocationType = ""
-    var selectedAMount = ""
+    var selectedAMount = "0"
 
     //
     var edtBusinessName=""
@@ -131,6 +131,11 @@ class AppHomeViewModel @Inject constructor(private val appIntroUseCase: AppIntro
     var _userMapLocationUpdateResponseReceiver = MutableLiveData<Resource<ApiResponse<String>>>()
     var userMapLocationUpdateResponseReceiver: LiveData<Resource<ApiResponse<String>>>? = null
         get() = _userMapLocationUpdateResponseReceiver
+
+
+    var _advertPayStatusRZP = MutableLiveData<Pair<Boolean, String>>()
+    var advertPayStatusRZP: LiveData<Pair<Boolean, String>>? = null
+        get() = _advertPayStatusRZP
 
     init {
         userLocationName = AppPreferences.userLocation
@@ -376,13 +381,13 @@ class AppHomeViewModel @Inject constructor(private val appIntroUseCase: AppIntro
         }
     }
 
-    fun postAds(context: Context){
+    fun postAds(context: Context, transId: String){
         viewModelScope.launch {
             try {
                 val partCusId = MultiPartRequestHelper.createRequestBody("cus_id", userData?.userId?:"")
                 val partStartDate = MultiPartRequestHelper.createRequestBody("start_date", selectedFromAdsDate)
                 val partEndDate = MultiPartRequestHelper.createRequestBody("end_date", selectedToAdsDate)
-                val partTxId = MultiPartRequestHelper.createRequestBody("transaction_id", ((100000..1000000).random()).toString())
+                val partTxId = MultiPartRequestHelper.createRequestBody("transaction_id", transId/*((100000..1000000).random()).toString()*/)
                 val partAmount = MultiPartRequestHelper.createRequestBody("amount", selectedAMount)
                 val partAdsName = MultiPartRequestHelper.createRequestBody("ads_name", "nil")
                 val partLocationType = MultiPartRequestHelper.createRequestBody("locationtype", selectedPublicLocationType)
@@ -652,6 +657,10 @@ class AppHomeViewModel @Inject constructor(private val appIntroUseCase: AppIntro
                     }
                 }
         }
+    }
+
+    fun updateRazorpayStatusAdvertPayment(status: Boolean, message: String){
+        _advertPayStatusRZP.value = Pair(status, message)
     }
 
 
