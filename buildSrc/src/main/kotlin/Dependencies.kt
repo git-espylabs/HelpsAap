@@ -41,7 +41,8 @@ object Libs {
         "androidx.cardview:cardview:${Versions.cardView}",
         "de.hdodenhof:circleimageview:${Versions.hdodenhof}",
         "io.github.chaosleung:pinview:${Versions.otp_view}",
-        "com.codesgood:justifiedtextview:${Versions.justified_textview}"
+        "com.codesgood:justifiedtextview:${Versions.justified_textview}",
+        "com.razorpay:checkout:1.6.26"
     )
 
     val testImplementations = listOf(

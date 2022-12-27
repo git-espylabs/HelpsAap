@@ -3,6 +3,7 @@ package com.janustech.helpsaap.ui.home
 import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.webkit.WebView
 import android.webkit.WebViewClient
@@ -26,11 +27,16 @@ import com.janustech.helpsaap.preference.AppPreferences
 import com.janustech.helpsaap.ui.base.BaseActivity
 import com.janustech.helpsaap.ui.startup.AppIntroActivity
 import com.janustech.helpsaap.utils.EditLocationListener
+import com.razorpay.PaymentResultListener
 import dagger.hilt.android.AndroidEntryPoint
 
 
 @AndroidEntryPoint
-class AppHomeActivity : BaseActivity<ActivityAppHomeBinding>(), View.OnClickListener, NavController.OnDestinationChangedListener, EditLocationListener {
+class AppHomeActivity : BaseActivity<ActivityAppHomeBinding>(),
+    View.OnClickListener,
+    NavController.OnDestinationChangedListener,
+    EditLocationListener,
+    PaymentResultListener{
 
 
     private val appHomeViewModel: AppHomeViewModel by viewModels()
@@ -307,5 +313,13 @@ class AppHomeActivity : BaseActivity<ActivityAppHomeBinding>(), View.OnClickList
             .setPopEnterAnim(R.anim.slide_from_left)
             .setPopExitAnim(R.anim.slide_out_right)
             .build()
+    }
+
+    override fun onPaymentSuccess(p0: String?) {
+        Log.e("Payyyy", "onPaymentSuccess")
+    }
+
+    override fun onPaymentError(p0: Int, p1: String?) {
+        Log.e("Payyyy", "onPaymentError: " + p1)
     }
 }

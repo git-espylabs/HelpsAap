@@ -93,6 +93,11 @@ android {
             "production" -> "helpsaap.com/public/img/"
             else -> null
         }
+        val razorPayKid = when (flavorName) {
+            "staging" -> "rzp_live_XXXXXXXXXXXXXX"
+            "production" -> "rzp_live_oqFRHDM5RkE9WO"
+            else -> null
+        }
 
         appBaseUrl?.let {
             buildConfigField("String", "BASE_URL", "\"https://$it\"")
@@ -100,6 +105,10 @@ android {
 
         imageUrl?.let {
             buildConfigField("String", "IMAGE_URL", "\"https://$it\"")
+        }
+
+        razorPayKid?.let {
+            buildConfigField("String", "RZP_KID", "\"$it\"")
         }
     }
 

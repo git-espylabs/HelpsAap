@@ -32,6 +32,7 @@ import com.janustech.helpsaap.network.Status
 import com.janustech.helpsaap.ui.base.BaseFragmentWithBinding
 import com.janustech.helpsaap.ui.profile.PhotoOptionBottomSheetDialogFragment
 import com.janustech.helpsaap.utils.CommonUtils
+import com.janustech.helpsaap.utils.PaymentUtils
 import com.janustech.helpsaap.utils.PhotoOptionListener
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
@@ -116,8 +117,9 @@ class FragmentAdvertisement: BaseFragmentWithBinding<FragmentAdvertisementBindin
                 showPhotoPickOption()
             }
             R.id.btnPost -> {
+                PaymentUtils(requireActivity()).startPayment()
 
-                if (appHomeViewModel.adsImage.isEmpty()){
+                /*if (appHomeViewModel.adsImage.isEmpty()){
                     showAlertDialog("Please select an Ad Image")
                 }else if(selectedPackageDuration <= 0 ||
                     appHomeViewModel.selectedAMount.isEmpty() ||
@@ -138,7 +140,7 @@ class FragmentAdvertisement: BaseFragmentWithBinding<FragmentAdvertisementBindin
                     appHomeViewModel.selectedToAdsDate = expDateString
 
                     appHomeViewModel.postAds(requireContext())
-                }
+                }*/
             }
 
         }

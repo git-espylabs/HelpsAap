@@ -84,8 +84,8 @@ class ProfileViewModel @Inject constructor(
 
     init {
         if (BuildConfig.DEBUG){
-            userName = "8848468233"
-            password = "test@1"
+            userName = "7559946600"
+            password = "God123"
         }
     }
 

@@ -10,6 +10,7 @@ import com.janustech.helpsaap.extension.launchActivity
 import com.janustech.helpsaap.network.Status
 import com.janustech.helpsaap.ui.base.BaseFragmentWithBinding
 import com.janustech.helpsaap.ui.startup.AppIntroActivity
+import com.janustech.helpsaap.utils.PaymentUtils
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -56,7 +57,8 @@ class AppHomeFragment : BaseFragmentWithBinding<FragmentAppHomeBinding>(R.layout
                 )
             }
             R.id.layPostedAds -> {
-                findNavController().navigate(AppHomeFragmentDirections.actionAppHomeFragmentToPostedAdsFragment())
+                PaymentUtils(requireActivity()).startPayment()
+//                findNavController().navigate(AppHomeFragmentDirections.actionAppHomeFragmentToPostedAdsFragment())
             }
             R.id.ivNeedsBg -> {
                 activity?.apply {
