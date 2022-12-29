@@ -107,7 +107,12 @@ class SignupFragmentSecond : BaseFragmentWithBinding<FragmentRegisterSecondBindi
             btnFinish.backgroundTintList = ContextCompat.getColorStateList(requireContext(), R.color.disabled_app_accent_color)
             btnFinish.setOnClickListener {
                 val amt = 99 * 100;
-                PaymentUtils(requireActivity()).startPayment( amt.toString(), "Yearly Membership Charges")
+                PaymentUtils(requireActivity()).startPayment(
+                    amt.toString(),
+                    "Yearly Membership Charges",
+                    userEmail = profileViewModel.regEmail,
+                    userPhone = profileViewModel.regMob
+                )
             }
 
             promptFileSelect.setOnClickListener {

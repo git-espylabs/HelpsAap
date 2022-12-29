@@ -12,7 +12,12 @@ import org.json.JSONObject
 
 class PaymentUtils(var activity: Activity) {
 
-    fun startPayment(amount: String = "100", desc: String = "Helps Aap Payment") {
+    fun startPayment(
+        amount: String = "100",
+        desc: String = "Helps Aap Payment",
+        userEmail: String = "",
+        userPhone: String = ""
+    ) {
         /*
         *  You need to pass the current activity to let Razorpay create CheckoutActivity
         * */
@@ -36,6 +41,16 @@ class PaymentUtils(var activity: Activity) {
                 val prefill = JSONObject()
                 prefill.put("email", user.email)
                 prefill.put("contact", user.phoneNumber)
+
+                options.put("prefill", prefill)
+            }?: run {
+                val prefill = JSONObject()
+                if (userEmail.isNotEmpty()){
+                    prefill.put("email", userEmail)
+                }
+                if (userPhone.isNotEmpty()){
+                    prefill.put("contact", userPhone)
+                }
 
                 options.put("prefill", prefill)
             }
