@@ -1,10 +1,7 @@
 package com.janustech.helpsaap.repositories
 
 import com.janustech.helpsaap.network.Resource
-import com.janustech.helpsaap.network.requests.LoginRequest
-import com.janustech.helpsaap.network.requests.OtpSendRequest
-import com.janustech.helpsaap.network.requests.ResetPasswordRequest
-import com.janustech.helpsaap.network.requests.VerifyOtpRequest
+import com.janustech.helpsaap.network.requests.*
 import com.janustech.helpsaap.network.response.ApiResponse
 import com.janustech.helpsaap.network.response.LoginResponseData
 import com.janustech.helpsaap.network.response.MultipartApiResponse
@@ -44,4 +41,6 @@ interface ProfileRepository {
     fun verifyOtp(verifyOtpRequest: VerifyOtpRequest): Flow<Resource<ApiResponse<LoginResponseData>>>
 
     fun resetPassword(resetPasswordRequest: ResetPasswordRequest): Flow<Resource<ApiResponse<String>>>
+
+    fun verifyMobile(verifyPhoneRequest: VerifyPhoneRequest): Flow<Resource<ApiResponse<String>>>
 }

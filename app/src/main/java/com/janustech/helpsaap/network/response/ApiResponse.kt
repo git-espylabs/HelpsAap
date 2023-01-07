@@ -10,4 +10,6 @@ data class ApiResponse<out T>(
     val message: String = "",
 ){
     fun isResponseSuccess(): Boolean = (error.equals("false", true) && message.equals("Success", true))
+
+    fun isVerifyPhoneResponseSuccess(): Boolean = (error.equals("false", true) && message.equals("Already Exist", true))
 }

@@ -358,8 +358,10 @@ class AppIntroHomeFragment: BaseFragmentWithBinding<FragmentAppIntroHomeBinding>
                             binding.ivClearSearch.visibility = View.GONE
                         }
                     }
-                    autoCompleteTextHandler?.removeMessages(TRIGGER_AUTO_COMPLETE)
-                    autoCompleteTextHandler?.sendEmptyMessageDelayed(TRIGGER_AUTO_COMPLETE, AUTO_COMPLETE_DELAY)
+                    if (s.toString().isNotEmpty() && s.toString().length >= 2) {
+                        autoCompleteTextHandler?.removeMessages(TRIGGER_AUTO_COMPLETE)
+                        autoCompleteTextHandler?.sendEmptyMessageDelayed(TRIGGER_AUTO_COMPLETE, AUTO_COMPLETE_DELAY)
+                    }
                 }
             })
 

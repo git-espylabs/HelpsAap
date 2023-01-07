@@ -1,10 +1,7 @@
 package com.janustech.helpsaap.usecase
 
 import com.janustech.helpsaap.network.Resource
-import com.janustech.helpsaap.network.requests.LoginRequest
-import com.janustech.helpsaap.network.requests.OtpSendRequest
-import com.janustech.helpsaap.network.requests.ResetPasswordRequest
-import com.janustech.helpsaap.network.requests.VerifyOtpRequest
+import com.janustech.helpsaap.network.requests.*
 import com.janustech.helpsaap.network.response.ApiResponse
 import com.janustech.helpsaap.network.response.LoginResponseData
 import com.janustech.helpsaap.network.response.MultipartApiResponse
@@ -94,6 +91,14 @@ class ProfileUseCase @Inject constructor(
     suspend fun resetPassword(resetPasswordRequest: ResetPasswordRequest): Flow<Resource<ApiResponse<String>>> {
         return flow {
             profileRepository.resetPassword(resetPasswordRequest).collect {
+                emit(it)
+            }
+        }.flowOn(Dispatchers.IO)
+    }
+
+    suspend fun verifyMobile(verifyPhoneRequest: VerifyPhoneRequest): Flow<Resource<ApiResponse<String>>> {
+        return flow {
+            profileRepository.verifyMobile(verifyPhoneRequest).collect {
                 emit(it)
             }
         }.flowOn(Dispatchers.IO)

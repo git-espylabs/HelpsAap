@@ -2,10 +2,7 @@ package com.janustech.helpsaap.repositories
 
 import com.janustech.helpsaap.network.ProfileApis
 import com.janustech.helpsaap.network.Resource
-import com.janustech.helpsaap.network.requests.LoginRequest
-import com.janustech.helpsaap.network.requests.OtpSendRequest
-import com.janustech.helpsaap.network.requests.ResetPasswordRequest
-import com.janustech.helpsaap.network.requests.VerifyOtpRequest
+import com.janustech.helpsaap.network.requests.*
 import com.janustech.helpsaap.network.response.ApiResponse
 import com.janustech.helpsaap.network.response.LoginResponseData
 import com.janustech.helpsaap.network.response.MultipartApiResponse
@@ -84,6 +81,12 @@ class ProfileRepositoryImpl(private val apiService: ProfileApis): ProfileReposit
     override fun resetPassword(resetPasswordRequest: ResetPasswordRequest): Flow<Resource<ApiResponse<String>>> {
         return flow {
             emit(safeApiCall { apiService.resetPassword(resetPasswordRequest) })
+        }.flowOn(Dispatchers.IO)
+    }
+
+    override fun verifyMobile(verifyPhoneRequest: VerifyPhoneRequest): Flow<Resource<ApiResponse<String>>> {
+        return flow {
+            emit(safeApiCall { apiService.verifyMobile(verifyPhoneRequest) })
         }.flowOn(Dispatchers.IO)
     }
 

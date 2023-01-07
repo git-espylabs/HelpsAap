@@ -36,5 +36,8 @@ including versions of Lorem Ipsum</string>
     <string name="view_map"><u>View in Map</u></string>
     <string name="forgot_pass_desc">We will send an OTP to your registered email id, use the OTP to verify your account and then Reset your password.</string>
     <string name="refund">Refund</string>
+    <string name="signup_confirmation">You will be redirected to the Payment section and will be charged ₹99 for an annual membership.\nPlease confirm the details provided.</string>
+    <string name="confirm_dlg_positive_confirm">Confirm</string>
+    <string name="confirm_dlg_negetive_cancel">Cancel</string>
 
 </resources>

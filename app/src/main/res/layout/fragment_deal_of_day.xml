@@ -163,9 +163,24 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
+            <TextView
+                android:id="@+id/promptUploadRec"
+                app:layout_constraintTop_toBottomOf="@+id/promptUpload"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginTop="4dp"
+                android:textColor="@color/grey_100"
+                android:textSize="12sp"
+                android:fontFamily="@font/segoui"
+                android:gravity="center"
+                android:textFontWeight="200"
+                android:text="File Size Recommendation: 300 X 150"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
             <View
                 android:id="@+id/dummyV2"
-                app:layout_constraintTop_toBottomOf="@+id/promptUpload"
+                app:layout_constraintTop_toBottomOf="@+id/promptUploadRec"
                 android:layout_width="match_parent"
                 android:layout_height="16dp"/>
 

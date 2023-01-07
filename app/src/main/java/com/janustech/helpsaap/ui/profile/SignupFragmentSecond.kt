@@ -106,13 +106,19 @@ class SignupFragmentSecond : BaseFragmentWithBinding<FragmentRegisterSecondBindi
             btnFinish.isEnabled = false
             btnFinish.backgroundTintList = ContextCompat.getColorStateList(requireContext(), R.color.disabled_app_accent_color)
             btnFinish.setOnClickListener {
-                val amt = 99 * 100;
-                PaymentUtils(requireActivity()).startPayment(
-                    amt.toString(),
-                    "Yearly Membership Charges",
-                    userEmail = profileViewModel.regEmail,
-                    userPhone = profileViewModel.regMob
-                )
+                if (profileViewModel.regImage.isNotEmpty() && profileViewModel.regCategoryId.isNotEmpty()) {
+                    (requireActivity() as SignupActivity).showConfirmAlertDialog(
+                        R.string.signup_confirmation,
+                        R.string.confirm_dlg_positive_confirm,
+                        R.string.confirm_dlg_negetive_cancel){
+                        continueToPayment()
+                    }
+
+                } else if (profileViewModel.regImage.isEmpty()) {
+                    showToast("Please upload an image!")
+                } else if (profileViewModel.regCategoryId.isEmpty()) {
+                    showToast("Please select a category!")
+                }
             }
 
             promptFileSelect.setOnClickListener {
@@ -138,6 +144,16 @@ class SignupFragmentSecond : BaseFragmentWithBinding<FragmentRegisterSecondBindi
     override fun onStop() {
         super.onStop()
         profileViewModel._registerPayStatusRZP.value = null
+    }
+
+    private fun continueToPayment(){
+        val amt = 99 * 100;
+        PaymentUtils(requireActivity()).startPayment(
+            amt.toString(),
+            "Yearly Membership Charge",
+            userEmail = profileViewModel.regEmail,
+            userPhone = profileViewModel.regMob
+        )
     }
 
     private fun setTncPromptText(){
@@ -270,7 +286,7 @@ class SignupFragmentSecond : BaseFragmentWithBinding<FragmentRegisterSecondBindi
                 res?.let {
                     when(it.first){
                         true ->{
-                            showToast("Payment Success! Transaction Id: " + it.second)
+                            showToast("Payment Success!")
                             completeRegistration(it.second)
                         }
                         false -> {
@@ -437,8 +453,10 @@ class SignupFragmentSecond : BaseFragmentWithBinding<FragmentRegisterSecondBindi
                             binding.ivClearSearch.visibility = View.GONE
                         }
                     }
-                    autoCompleteTextHandler?.removeMessages(TRIGGER_AUTO_COMPLETE)
-                    autoCompleteTextHandler?.sendEmptyMessageDelayed(TRIGGER_AUTO_COMPLETE, AUTO_COMPLETE_DELAY)
+                    if (s.toString().isNotEmpty() && s.toString().length >= 2) {
+                        autoCompleteTextHandler?.removeMessages(TRIGGER_AUTO_COMPLETE)
+                        autoCompleteTextHandler?.sendEmptyMessageDelayed(TRIGGER_AUTO_COMPLETE, AUTO_COMPLETE_DELAY)
+                    }
                 }
             })
 

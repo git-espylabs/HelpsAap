@@ -84,7 +84,7 @@ class SignupFragmentFirst : BaseFragmentWithBinding<FragmentRegisterBinding>(R.l
             viewModel = profileViewModel
 
             btnContinue.setOnClickListener {
-                findNavController().navigate(SignupFragmentFirstDirections.actionSignupFragmentFirstToSignupFragmentSecond())
+                verifyMobileNum()
             }
         }
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
@@ -192,6 +192,40 @@ class SignupFragmentFirst : BaseFragmentWithBinding<FragmentRegisterBinding>(R.l
 
     }
 
+    private fun verifyMobileNum(){
+        if (profileViewModel.regMob.isNotEmpty() && profileViewModel.regMob.isValidPhoneNumber()){
+            profileViewModel.verifyMobileNumber(profileViewModel.regMob)
+        }else{
+            binding.etMobNo.error = "Mobile"
+            showToast("Please enter a valid mobile number!")
+        }
+    }
+
+    private fun verifyInputsAndContinueReg(){
+        if (profileViewModel.regName.isNotEmpty()
+            && profileViewModel.regPass.isNotEmpty()
+            && profileViewModel.regPin.isNotEmpty()
+            && profileViewModel.regCmpny.isNotEmpty()
+            && profileViewModel.regEmail.isNotEmpty()){
+            findNavController().navigate(SignupFragmentFirstDirections.actionSignupFragmentFirstToSignupFragmentSecond())
+        }else if (profileViewModel.regName.isEmpty()){
+            binding.etUserName.error = "Name"
+            showToast("Please enter a valid name!")
+        }else if (profileViewModel.regPass.isEmpty()){
+            binding.etPassword.error = "Password"
+            showToast("Please enter a password!")
+        }else if (profileViewModel.regPin.isEmpty()){
+            binding.etPin.error = "Required"
+            showToast("Please enter a Panchayath/Municipality!")
+        }else if (profileViewModel.regCmpny.isEmpty()){
+            binding.etCmpny.error = "Business Name"
+            showToast("Please enter a Buisness Name!")
+        }else if (profileViewModel.regEmail.isEmpty()){
+            binding.etEmail.error = "Email"
+            showToast("Please enter a valid Email address!")
+        }
+    }
+
     private fun configureCameraIdle(){
         onCameraIdleListener = GoogleMap.OnCameraIdleListener {
             val latLng = mMap!!.cameraPosition.target
@@ -260,6 +294,22 @@ class SignupFragmentFirst : BaseFragmentWithBinding<FragmentRegisterBinding>(R.l
                 }
             }
         }
+
+        profileViewModel.vverifyMobileReceiver.observe(viewLifecycleOwner){
+            when(it.status){
+                Status.SUCCESS ->{
+                    (activity as SignupActivity).hideProgress()
+                    verifyInputsAndContinueReg()
+                }
+                Status.LOADING -> {
+                    (activity as SignupActivity).showProgress()
+                }
+                else ->{
+                    (activity as SignupActivity).hideProgress()
+                    (activity as SignupActivity).showAlertDialog(it.message?:"Invalid Server Response")
+                }
+            }
+        }
     }
 
     private fun setLocationDropdown(){
@@ -289,8 +339,10 @@ class SignupFragmentFirst : BaseFragmentWithBinding<FragmentRegisterBinding>(R.l
                             binding.ivClearSearch.visibility = View.GONE
                         }
                     }
-                    autoCompleteTextHandler?.removeMessages(TRIGGER_AUTO_COMPLETE)
-                    autoCompleteTextHandler?.sendEmptyMessageDelayed(TRIGGER_AUTO_COMPLETE, AUTO_COMPLETE_DELAY)
+                    if (s.toString().isNotEmpty() && s.toString().length >= 2) {
+                        autoCompleteTextHandler?.removeMessages(TRIGGER_AUTO_COMPLETE)
+                        autoCompleteTextHandler?.sendEmptyMessageDelayed(TRIGGER_AUTO_COMPLETE, AUTO_COMPLETE_DELAY)
+                    }
                 }
             })
 

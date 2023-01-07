@@ -82,6 +82,10 @@ class ProfileViewModel @Inject constructor(
     val resetPassStatusReceiver: LiveData<Resource<ApiResponse<String>>>
         get() = _resetPassStatusReceiver
 
+    private val _vverifyMobileReceiver = MutableLiveData<Resource<ApiResponse<String>>>()
+    val vverifyMobileReceiver: LiveData<Resource<ApiResponse<String>>>
+        get() = _vverifyMobileReceiver
+
 
     var _registerPayStatusRZP = MutableLiveData<Pair<Boolean, String>>()
     var registerPayStatusRZP: LiveData<Pair<Boolean, String>>? = null
@@ -320,6 +324,33 @@ class ProfileViewModel @Inject constructor(
                         }
                     }?: run {
                         _resetPassStatusReceiver.value = Resource.dataError("Reset Password Failed! Try again.")
+                    }
+                }
+
+            }
+        }
+    }
+
+    fun verifyMobileNumber(phoneNum:String){
+        viewModelScope.launch {
+            profileUseCase.verifyMobile(VerifyPhoneRequest(phoneNum)).onStart {
+                _vverifyMobileReceiver.value = Resource.loading()
+            }.collect { apiResponse ->
+                apiResponse.let {
+                    it.data?.let { resp ->
+                        when {
+                            resp.isResponseSuccess() -> {
+                                _vverifyMobileReceiver.value = apiResponse
+                            }
+                            resp.isResponseSuccess().not() -> {
+                                _vverifyMobileReceiver.value = Resource.dataError(resp.message)
+                            }
+                            else -> {
+                                _vverifyMobileReceiver.value = Resource.dataError("Phone number already exist")
+                            }
+                        }
+                    }?: run {
+                        _vverifyMobileReceiver.value = Resource.dataError("Phone number already exist")
                     }
                 }
 
