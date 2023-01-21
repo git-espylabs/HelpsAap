@@ -4,6 +4,7 @@ import android.content.Intent
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
@@ -115,8 +116,16 @@ class AppIntroActivity : BaseActivity<ActivityAppIntroBinding>() {
         try {
             val pInfo: PackageInfo = packageManager.getPackageInfo(packageName, 0)
             val version = pInfo.versionName
-            val versionCode = pInfo.longVersionCode
-            ver = Pair(versionCode, version)
+            val versionCode = try {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P ) {
+                    pInfo.longVersionCode
+                } else {
+                    pInfo.versionCode
+                }
+            } catch (e: Exception) {
+                pInfo.versionCode
+            }
+            ver = Pair(versionCode as Long, version)
         } catch (e: PackageManager.NameNotFoundException) {
             e.printStackTrace()
         }
